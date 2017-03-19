@@ -7,6 +7,7 @@ import io.github.krindor.ffxivsimulator.Monk.Priority.Rotation;
 import io.github.krindor.ffxivsimulator.Monk.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Monk.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.Warrior;
+import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +32,7 @@ import java.util.Collections;
 public class Simulatorpart {
 
 
-    private ArrayList<Integer> stats;
+    private StatModel stats;
 
 
 
@@ -70,12 +71,6 @@ public class Simulatorpart {
     private double nextoGCD;
 
     private double totalDamage;
-
-    private double mainstat;
-    private double weaponDamage;
-    private double crit;
-    private double determination;
-    private double skillSpeed;
 
     private double dragonKickDamage;
     private double greasedLightningDamage;
@@ -125,9 +120,8 @@ public class Simulatorpart {
     private ArrayList<String> opener;
     private int openerNum;
 
-    public Simulatorpart(ArrayList<Integer> mainstats, int time, boolean MCH, boolean DRG, String openerType, ArrayList<String> Opener) {
-        stats = new ArrayList<>(mainstats);
-        stats = mainstats;
+    public Simulatorpart(StatModel stats, int time, boolean MCH, boolean DRG, String openerType, ArrayList<String> Opener) {
+        this.stats = stats;
         timer = time;
         rotation = new Rotation();
         defaultOpener = new DefaultOpener();
@@ -146,12 +140,7 @@ public class Simulatorpart {
 
         machinistHC = MCH;
         dragoonBL = DRG;
-        weaponDamage = stats.get(0);
-        mainstat = stats.get(1);
-        crit = stats.get(2);
-        determination = stats.get(3);
-        skillSpeed = stats.get(4);
-        statmultiplier = (1 + (weaponDamage * 0.0432544)) * (mainstat * 0.1027246) * (1 + (determination / 7290)) / 100;
+        statmultiplier = (1 + (stats.getWeaponDamage() * 0.0432544)) * (stats.getMainStat() * 0.1027246) * (1 + (stats.getDetermination() / 7290)) / 100;
 
         timers = new ArrayList<>(4);
 
@@ -161,7 +150,7 @@ public class Simulatorpart {
         timers.add(nextoGCD);
 
 
-        recaster = ((Math.floor((1 - ((Math.floor(((skillSpeed - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100));
+        recaster = ((Math.floor((1 - ((Math.floor(((stats.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100));
         aaRecast = 2.56;
 
     }
@@ -525,7 +514,7 @@ public class Simulatorpart {
         } else dragonKickDamage = 1;
 
         if (potionTime <= 270 && potionTime >= 255) {
-            potionDamage = (154 + mainstat) / mainstat;
+            potionDamage = (154 + stats.getMainStat()) / stats.getMainStat();
         } else potionDamage = 1;
 
         if (twinSnakesTime > 0) {
@@ -547,25 +536,25 @@ public class Simulatorpart {
         if (type.equals("Physical")) {
             if (bootcrit) {
                 bootcrit = false;
-                return (1 + (((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dragonKickDamage * twinSnakesDamage * greasedLightningDamage * 1.05;
+                return (1 + (((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dragonKickDamage * twinSnakesDamage * greasedLightningDamage * 1.05;
             } else {
-                return (1 + ((((crit - 354) / (858 * 5)) + 0.05 + iRDamage) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dragonKickDamage * twinSnakesDamage * greasedLightningDamage * 1.05;
+                return (1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + iRDamage) * ((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dragonKickDamage * twinSnakesDamage * greasedLightningDamage * 1.05;
             }
 
         } else if (type.equals("Auto Attack")) {
             {
 
-                return ((1 + ((((crit - 354) / (858 * 5)) + 0.05 + iRDamage) * ((crit - 354) / (858 * 5) + 0.45))) * (weaponDamage / (3 / 2.56) * 0.0593365489928915 + 1) * (mainstat * 0.0841892) * (determination / 6832.8 + 1) * bFBDamage * twinSnakesDamage * potionDamage * dragonKickDamage * greasedLightningDamage * 1.05);
+                return ((1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + iRDamage) * ((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * (stats.getDetermination() / 6832.8 + 1) * bFBDamage * twinSnakesDamage * potionDamage * dragonKickDamage * greasedLightningDamage * 1.05);
 
             }
         } else if (type.equals("ToD DoT")) {
-            return toddoTpotency * (1 + ((((crit - 354) / (858 * 5)) + 0.05 + todIR) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * todBfB * todTS * todPot * todGL * 1.05 * ((skillSpeed) / 6800 + 1);
+            return toddoTpotency * (1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + todIR) * ((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * todBfB * todTS * todPot * todGL * 1.05 * ((stats.getSkillSpeed()) / 6800 + 1);
 
         } else if (type.equals("Demolish DoT")) {
 
-            return demodoTpotency * (1 + ((((crit - 354) / (858 * 5)) + 0.05 + demoIR) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * demoBfB * demoTS * demoPot * demoGL * 1.05 * ((skillSpeed) / 6800 + 1);
+            return demodoTpotency * (1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + demoIR) * ((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * demoBfB * demoTS * demoPot * demoGL * 1.05 * ((stats.getSkillSpeed()) / 6800 + 1);
         } else if(type.equals("Fracture DoT")){
-            return fracturedoTpotency * (1 + ((((crit - 354) / (858 * 5)) + 0.05 + fractureIR) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * fractureBfB * fractureTS * fracturePot * fractureGL * 1.05 * ((skillSpeed) / 6800 + 1);
+            return fracturedoTpotency * (1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + fractureIR) * ((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * fractureBfB * fractureTS * fracturePot * fractureGL * 1.05 * ((stats.getSkillSpeed()) / 6800 + 1);
         }
 
         return multiplier;

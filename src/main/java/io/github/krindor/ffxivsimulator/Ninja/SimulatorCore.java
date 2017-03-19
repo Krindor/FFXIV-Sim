@@ -1,5 +1,6 @@
 package io.github.krindor.ffxivsimulator.Ninja;
 
+import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.concurrent.*;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class SimulatorCore implements Callable{
-    private static ArrayList<Integer> mainStat;
+    private static StatModel stats;
     private static ArrayList<String> custom;
     private static boolean warThere;
     private static int time;
@@ -39,13 +40,8 @@ public class SimulatorCore implements Callable{
         time = times;
     }
 
-    public void setMainStat(int WD, int Main, int Crit, int Det, int SS) {
-        mainStat = new ArrayList<>(5);
-        mainStat.add(WD);
-        mainStat.add(Main);
-        mainStat.add(Crit);
-        mainStat.add(Det);
-        mainStat.add(SS);
+    public void setMainStat(StatModel stats) {
+        this.stats = stats;
     }
 
     public void setWarThere(boolean war) {
@@ -84,7 +80,7 @@ public class SimulatorCore implements Callable{
         ArrayList<String> damageArray = new ArrayList<>(1000);
         for (int i = 0; i < 15000; i++) {
 
-            Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
+            Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, Opener);
             damageArray = Sim.runSim();
             numberSim.add(Double.parseDouble(damageArray.get(damageArray.size()-1)));
 

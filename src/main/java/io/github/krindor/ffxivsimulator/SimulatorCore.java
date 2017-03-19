@@ -1,6 +1,7 @@
 package io.github.krindor.ffxivsimulator;
 
 import io.github.krindor.ffxivsimulator.Ninja.Simulatorpart;
+import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * Created by andre on 2017-02-23.
  */
 public class SimulatorCore {
-    private static ArrayList<Integer> mainStat;
+    private static StatModel stats;
     private static ArrayList<String> custom;
     private static boolean warThere;
     private static int time;
@@ -23,13 +24,8 @@ public class SimulatorCore {
         time = times;
     }
 
-    public void setMainStat(int WD, int Main, int Crit, int Det, int SS) {
-        mainStat = new ArrayList<>(5);
-        mainStat.add(WD);
-        mainStat.add(Main);
-        mainStat.add(Crit);
-        mainStat.add(Det);
-        mainStat.add(SS);
+    public void setMainStat(StatModel stats) {
+        this.stats = stats;
     }
 
     public void setWarThere(boolean war) {
@@ -65,7 +61,7 @@ public class SimulatorCore {
     }
 
     public ArrayList<String> runSim() {
-        Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
+        Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, Opener);
         return Sim.runSim();
     }
 }
