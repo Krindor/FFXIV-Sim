@@ -1,0 +1,31 @@
+package io.github.krindor.ffxivsimulator.skills;
+
+public enum DarkKnightSkill {
+    Hard_Slash,
+    Shadowskin,
+    Spinning_Slash,
+    Scourge,
+    Unleash,
+    Low_Blow,
+    Syphon_Strike,
+    Unmend,
+    Blood_Weapon,
+    Reprisal,
+    Power_Slash,
+    Darkside,
+    Grit,
+    Dark_Dance,
+    Blood_Price,
+    Souleater,
+    Dark_Passenger,
+    Dark_Mind,
+    Dark_Arts,
+    Shadow_Wall,
+    Delirium,
+    Living_Dead,
+    Salted_Earth,
+    Plunge,
+    Abyssal_Drain,
+    Sole_Survivor,
+    Carve_And_Spit
+}
