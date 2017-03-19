@@ -3,6 +3,7 @@ package io.github.krindor.ffxivsimulator.JavaFX;
 
 
 import io.github.krindor.ffxivsimulator.Monk.SimulatorCore;
+import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -178,7 +179,7 @@ public class MonkSimController {
 
 
             SimulatorCore sim = new SimulatorCore();
-            sim.setMainStat(weaponDamage, mainStat, crit, det, skillSpeed);
+            sim.setMainStat(new StatModel(weaponDamage, mainStat, det, crit, skillSpeed, 0));
             sim.setTime(time);
 
             sim.setOpenerType(opener);

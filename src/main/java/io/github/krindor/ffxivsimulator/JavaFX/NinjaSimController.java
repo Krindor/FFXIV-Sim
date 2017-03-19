@@ -2,6 +2,7 @@ package io.github.krindor.ffxivsimulator.JavaFX;
 
 
 import io.github.krindor.ffxivsimulator.Ninja.SimulatorCore;
+import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -201,7 +202,7 @@ public class NinjaSimController {
 
        if (runneable) {
            SimulatorCore sim = new SimulatorCore();
-           sim.setMainStat(weaponDamage, mainStat, crit, det, skillSpeed);
+           sim.setMainStat(new StatModel(weaponDamage, mainStat, det, crit, skillSpeed, 0));
            sim.setTime(time);
            sim.setHutonTime(hutonTime);
            sim.setOpenerType(opener);

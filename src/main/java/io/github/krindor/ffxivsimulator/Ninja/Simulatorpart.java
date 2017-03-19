@@ -7,6 +7,7 @@ import io.github.krindor.ffxivsimulator.Ninja.Priority.DefaultOpener;
 import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.WeaponSkills;
+import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +18,7 @@ import java.util.Collections;
 public class Simulatorpart {
 
 
-    private ArrayList<Integer> stats;
+    private StatModel stats;
 
 
     private double timer;
@@ -52,12 +53,6 @@ public class Simulatorpart {
     private double nextoGCD;
 
     private double totalDamage;
-
-    private double mainstat;
-    private double weaponDamage;
-    private double crit;
-    private double determination;
-    private double skillSpeed;
 
     private double dancingEdgeDamage;
     private double tADamage;
@@ -98,9 +93,8 @@ public class Simulatorpart {
     private ArrayList<String> opener;
     private int openerNum;
 
-    public Simulatorpart(ArrayList<Integer> mainstats, int time, boolean MCH, boolean DRG, boolean WAR, String openerType, int hutonBeforePull, ArrayList<String> Opener) {
-        stats = new ArrayList<>(mainstats);
-        stats = mainstats;
+    public Simulatorpart(StatModel stats, int time, boolean MCH, boolean DRG, boolean WAR, String openerType, int hutonBeforePull, ArrayList<String> Opener) {
+        this.stats = stats;
         timer = time;
         rotation = new Rotation();
         defaultOpener = new DefaultOpener();
@@ -118,12 +112,7 @@ public class Simulatorpart {
         suitonUsed = false;
         machinistHC = MCH;
         dragoonBL = DRG;
-        weaponDamage = stats.get(0);
-        mainstat = stats.get(1);
-        crit = stats.get(2);
-        determination = stats.get(3);
-        skillSpeed = stats.get(4);
-        statmultiplier = (1 + (weaponDamage * 0.0432544)) * (mainstat * 0.1027246) * (1 + (determination / 7290)) / 100;
+        statmultiplier = (1 + (stats.getWeaponDamage() * 0.0432544)) * (stats.getMainStat() * 0.1027246) * (1 + ((double) this.stats.getDetermination() / 7290)) / 100;
 
         timers = new ArrayList<>(4);
 
@@ -139,7 +128,7 @@ public class Simulatorpart {
         mudraTime = 20 - hutonBeforePull;
         dualityUsed = false;
         kassatsuUsed = false;
-        recast = Math.floor(((Math.floor((1 - ((Math.floor(((skillSpeed - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100) * 0.85) * 100) / 100;
+        recast = Math.floor(((Math.floor((1 - ((Math.floor((((double) this.stats.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100) * 0.85) * 100) / 100;
         aaRecast = Math.floor((2.56 * 0.85) * 100) / 100;
 
     }
@@ -498,7 +487,7 @@ public class Simulatorpart {
         } else dancingEdgeDamage = 1;
 
         if (potionTime <= 270 && potionTime >= 255) {
-            potionDamage = (154 + mainstat) / mainstat;
+            potionDamage = (154 + stats.getMainStat()) / stats.getMainStat();
         } else potionDamage = 1;
 
         if (tATime <= 60 && tATime >= 50) {
@@ -523,36 +512,36 @@ public class Simulatorpart {
 
             } else if (iRTime <= 60 && iRTime >= 45) {
 
-                return (1 + ((((crit - 354) / (858 * 5) + 0.05 + 0.1)) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
+                return (1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.05 + 0.1)) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
             } else {
-                return (1 + ((((crit - 354) / (858 * 5)) + 0.05) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
+                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
             }
         } else if (type.equals("Magical")) {
             if (!mudraType.equals("NoN") && kassatsuUsed) {
                 kassatsuUsed = false;
-                return (1 + (((crit - 354) / (858 * 5)) + 0.45)) * statmultiplier * bFBDamage * potionDamage * tADamage;
+                return (1 + ((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.45)) * statmultiplier * bFBDamage * potionDamage * tADamage;
 
             } else if (iRTime <= 60 && iRTime >= 45) {
-                return (1 + ((((crit - 354) / (858 * 5)) + 0.05 + 0.1) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * tADamage;
+                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + 0.1) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * tADamage;
 
             } else {
-                return (1 + ((((crit - 354) / (858 * 5)) + 0.05) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * tADamage;
+                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * tADamage;
 
             }
         } else if (type.equals("Auto Attack")) {
             if (iRTime <= 60 && iRTime >= 45) {
-                return ((1 + ((((crit - 354) / (858 * 5)) + 0.05 + 0.1) * ((crit - 354) / (858 * 5) + 0.45))) * (weaponDamage / (3 / 2.56) * 0.0593365489928915 + 1) * (mainstat * 0.0841892) * (determination / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
+                return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + 0.1) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
             } else {
 
-                return ((1 + ((((crit - 354) / (858 * 5)) + 0.05) * ((crit - 354) / (858 * 5) + 0.45))) * (weaponDamage / (3 / 2.56) * 0.0593365489928915 + 1) * (mainstat * 0.0841892) * (determination / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
+                return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
 
             }
         } else if (type.equals("Mut DoT")) {
-            return mutdoTpotency * (1 + ((((crit - 354) / (858 * 5)) + 0.05 + mutIR) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * mutBfB * mutTA * mutPot * 1.2 * ((skillSpeed) / 6800 + 1);
+            return mutdoTpotency * (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + mutIR) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * mutBfB * mutTA * mutPot * 1.2 * (((double) stats.getSkillSpeed()) / 6800 + 1);
 
         } else if (type.equals("SF DoT")) {
 
-            return sfdoTpotency * (1 + ((((crit - 354) / (858 * 5)) + 0.05 + sfIR) * ((crit - 354) / (858 * 5) + 0.45))) * statmultiplier * sfBfB * sfTA * sfPot * 1.2 * ((skillSpeed) / 6800 + 1);
+            return sfdoTpotency * (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + sfIR) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * sfBfB * sfTA * sfPot * 1.2 * (((double) stats.getSkillSpeed()) / 6800 + 1);
         }
 
         return multiplier;
