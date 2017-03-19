@@ -23,7 +23,7 @@ import java.util.concurrent.*;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SimulatorCore implements Callable {
+public class SimulatorCore implements Callable{
     private static ArrayList<Integer> mainStat;
     private static ArrayList<String> custom;
     private static boolean warThere;
@@ -33,7 +33,8 @@ public class SimulatorCore implements Callable {
     private static ArrayList<String> Opener;
     private static ArrayList<ImageView> CurrentOpener;
     private static boolean openerCalled;
-    private static int numberSim;
+    private static ArrayList<Double> numberSim;
+
 
     public void setTime(int times) {
         time = times;
@@ -79,46 +80,54 @@ public class SimulatorCore implements Callable {
             return CurrentOpener;
         }
     }
-
     @Override
-    public ArrayList<String> call() throws Exception {
+    public ArrayList<String> call(){
         ArrayList<String> damageArray = new ArrayList<>(1000);
         for (int i = 0; i < 15000; i++) {
-            mainStat.set(1, mainStat.get(1) + 1);
+
             Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
             damageArray = Sim.runSim();
-            numberSim++;
+            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size()-1)));
 
         }
         return damageArray;
     }
 
 
+
     public ArrayList<String> runSim() {
+        numberSim = new ArrayList<>(50000);
         ExecutorService pool = Executors.newFixedThreadPool(4);
-
+        Long startTime = System.nanoTime();
         ArrayList<String> damage = new ArrayList<>(1000);
-        Task<ArrayList<String>> task1 = new Task<ArrayList<String>>() {
-            @Override
-            protected ArrayList<String> call() throws Exception {
-                long startTime = System.nanoTime();
-                ArrayList<String> damageArray = new ArrayList<>(1000);
-                for (int i = 0; i < 15000; i++) {
-                    mainStat.set(1, mainStat.get(1) + 1);
-                    Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
-                    damageArray = Sim.runSim();
-                    numberSim++;
+        Callable<ArrayList<String>> t1 = new SimulatorCore();
+        Future<ArrayList<String>> dps1 = pool.submit(t1);
+        Callable<ArrayList<String>> t2 = new SimulatorCore();
+        Future<ArrayList<String>> dps2 = pool.submit(t2);
+        Callable<ArrayList<String>> t3 = new SimulatorCore();
+        Future<ArrayList<String>> dps3 = pool.submit(t3);
+        Callable<ArrayList<String>> t4 = new SimulatorCore();
+        Future<ArrayList<String>> dps4 = pool.submit(t4);
+        try {
+            damage = dps1.get();
 
-                }
-                long endTime = System.nanoTime();
-                long duration = (endTime - startTime) / 1000000;
-                System.out.println(duration);
-                return damageArray;
-            }
+            damage.addAll(dps2.get());
+            damage.addAll(dps3.get());
+            damage.addAll(dps4.get());
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Exception");
+        }
 
-        };
-        pool.submit(task1);
-        System.out.println(numberSim);
+
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000000;
+        System.out.println(duration);
+
+        System.out.println(numberSim.size());
+        damage.set(damage.size() - 1, "Damage Per Second: " + damage.get(damage.size() -1));
+        damage.add("Simulation Time: " + String.valueOf(duration) + " seconds");
+
         return damage;
 
     }

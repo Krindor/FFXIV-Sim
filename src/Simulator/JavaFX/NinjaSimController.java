@@ -3,6 +3,7 @@ package Simulator.JavaFX;
 
 import Simulator.Ninja.SimulatorCore;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
@@ -204,13 +207,23 @@ public class NinjaSimController {
            sim.setHutonTime(hutonTime);
            sim.setOpenerType(opener);
            sim.setWarThere(warrior.selectedProperty().get());
+           ExecutorService pool = Executors.newFixedThreadPool(4);
+           Task task = new Task() {
+               @Override
+               protected Object call() throws Exception {
+                   log = sim.runSim();
+                   String logtext = "Sim start";
+                   for (String x : log) {
+                       logtext = logtext + "\n" + x;
+                   }
+                   damageLog.setText(logtext);
+                   return damageLog;
+               }
+           };
+           pool.submit(task);
 
-           log = sim.runSim();
-           String logtext = "Sim start";
-           for (String x : log) {
-               logtext = logtext + "\n" + x;
-           }
-           damageLog.setText(logtext);
+
+
        }
 
 
