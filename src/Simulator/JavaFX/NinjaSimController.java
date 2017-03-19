@@ -1,7 +1,7 @@
 package Simulator.JavaFX;
 
 
-import Simulator.SimulatorCore;
+import Simulator.Ninja.SimulatorCore;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,24 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.CheckBox;
 
 import javafx.scene.control.MenuItem;
+
+/**
+ FFXIV Simulator
+ Copyright (C) 2017  Andreas Lund
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 public class NinjaSimController {
     @FXML
@@ -96,55 +115,103 @@ public class NinjaSimController {
     }
 
    public void startSim() {
+        boolean runneable = true;
         damageLog.clear();
-       System.out.println("It's alive");
+
+
         int weaponDamage;
-        if (weaponText.getText() != null && !weaponText.getText().isEmpty()) {
-            weaponDamage = Integer.parseInt(weaponText.getText());
-        }else weaponDamage = 85;
+        weaponDamage = 85;
+        try {
+            if (weaponText.getText() != null && !weaponText.getText().isEmpty()) {
+                weaponDamage = Integer.parseInt(weaponText.getText());
+            }
+        }catch (RuntimeException e){
+            runneable = false;
+            damageLog.setText("Wrong Weapon Damage input");
+        }
 
         int mainStat;
-        if (dexText.getText() != null && !dexText.getText().isEmpty()) {
-            mainStat = Integer.parseInt(dexText.getText());
-        }else mainStat = 1589;
+        mainStat = 1589;
+        try {
+            if (dexText.getText() != null && !dexText.getText().isEmpty()) {
+                mainStat = Integer.parseInt(dexText.getText());
+            }
+        }catch (RuntimeException e){
+            runneable = false;
+            damageLog.setText("Wrong Dexterity input");
+        }
+
         int crit;
-        if (critText.getText() != null && !critText.getText().isEmpty()) {
-            crit = Integer.parseInt(critText.getText());
-        }else crit = 1366;
+        crit = 1366;
+        try {
+            if (critText.getText() != null && !critText.getText().isEmpty()) {
+                crit = Integer.parseInt(critText.getText());
+            }
+        }catch (RuntimeException e){
+            runneable = false;
+            damageLog.setText("Wrong Crit input");
+        }
+
         int det;
-        if (detText.getText() != null && !detText.getText().isEmpty()) {
-            det = Integer.parseInt(detText.getText());
-        }else det = 689;
+        det = 689;
+        try {
+            if (detText.getText() != null && !detText.getText().isEmpty()) {
+                det = Integer.parseInt(detText.getText());
+            }
+        }catch (RuntimeException e){
+            runneable = false;
+            damageLog.setText("Wrong Determination input");
+        }
         int skillSpeed;
-        if (ssText.getText() != null && !ssText.getText().isEmpty()) {
-            skillSpeed = Integer.parseInt(ssText.getText());
-        }else   skillSpeed = 444;
+
+        skillSpeed = 444;
+        try {
+            if (ssText.getText() != null && !ssText.getText().isEmpty()) {
+                skillSpeed = Integer.parseInt(ssText.getText());
+            }
+        }catch (RuntimeException e){
+            runneable = false;
+            damageLog.setText("Wrong SkillSpeed Input");
+        }
 
        int time;
-       if (simTimeText.getText() != null && !simTimeText.getText().isEmpty()) {
-           time = Integer.parseInt(simTimeText.getText());
-       }else time = 180;
+       time = 180;
+       try {
+           if (simTimeText.getText() != null && !simTimeText.getText().isEmpty()) {
+               time = Integer.parseInt(simTimeText.getText());
+           }
+       }catch (RuntimeException e){
+        runneable = false;
+        damageLog.setText("Wrong Time input");
+       }
 
        int hutonTime;
-       if (hutonText.getText() != null && !hutonText.getText().isEmpty()) {
-           hutonTime = Integer.parseInt(hutonText.getText());
-       }else hutonTime = 23;
+       hutonTime = 23;
+       try {
+           if (hutonText.getText() != null && !hutonText.getText().isEmpty()) {
+               hutonTime = Integer.parseInt(hutonText.getText());
 
-
-
-        SimulatorCore sim = new SimulatorCore();
-        sim.setMainStat(weaponDamage, mainStat, crit, det, skillSpeed);
-        sim.setTime(time);
-        sim.setHutonTime(hutonTime);
-        sim.setOpenerType(opener);
-        sim.setWarThere(warrior.selectedProperty().get());
-
-       log = sim.runSim();
-       String logtext = "Sim start";
-       for(String x: log){
-           logtext = logtext + "\n" + x;
+           }
+       }catch (RuntimeException e){
+           runneable = false;
+           damageLog.setText("Wrong Huton Pre-Pull input");
        }
+
+       if (runneable) {
+           SimulatorCore sim = new SimulatorCore();
+           sim.setMainStat(weaponDamage, mainStat, crit, det, skillSpeed);
+           sim.setTime(time);
+           sim.setHutonTime(hutonTime);
+           sim.setOpenerType(opener);
+           sim.setWarThere(warrior.selectedProperty().get());
+
+           log = sim.runSim();
+           String logtext = "Sim start";
+           for (String x : log) {
+               logtext = logtext + "\n" + x;
+           }
            damageLog.setText(logtext);
+       }
 
 
 

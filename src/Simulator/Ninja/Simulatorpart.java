@@ -104,7 +104,7 @@ public class Simulatorpart {
         timer = time;
         rotation = new Rotation();
         defaultOpener = new DefaultOpener();
-        System.out.println(Opener);
+
         if (openerType.equals("Default")) {
             opener = defaultOpener.getOpener();
         } else {
@@ -112,7 +112,7 @@ public class Simulatorpart {
 
 
         }
-        System.out.println(opener);
+
         openerNum = 0;
         cooldownReset();
         suitonUsed = false;
@@ -252,7 +252,8 @@ public class Simulatorpart {
         }
 
         damagePerSecond = totalDamage / timer;
-        damageLog.add("DPS:" + Math.floor(damagePerSecond));
+        double dps=Math.floor(damagePerSecond);
+        damageLog.add(Double.toString(dps));
         return damageLog;
     }
 

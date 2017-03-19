@@ -13,6 +13,20 @@
     -fx-background-color: transparent;
 }
 
+#monkButton{
+    -fx-background-color: transparent;
+    -fx-background-image: url("IconsForCSS/Mnk_Default.png");
+}
+
+#monkButton:hover{
+    -fx-background-image: url("IconsForCSS/Mnk_Blue.png");
+    -fx-background-color: transparent;
+}
+
+#monkButton:pressed{
+    -fx-background-image: url("IconsForCSS/Mnk_Red_Cross.png");
+    -fx-background-color: transparent;
+}
 
 
 #anchorPaneSim {

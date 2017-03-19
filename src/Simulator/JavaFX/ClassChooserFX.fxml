@@ -48,11 +48,6 @@
             <Image url="@../Images/Icons/War/War_Grey.png" />
          </image>
       </ImageView>
-        <ImageView fitHeight="64.0" fitWidth="59.0" layoutX="315.0" layoutY="175.0">
-         <image>
-            <Image url="@../Images/Icons/Mnk/Mnk_Grey.png" />
-         </image>
-      </ImageView>
         <ImageView fitHeight="64.0" fitWidth="64.0" layoutX="568.0" layoutY="175.0">
          <image>
             <Image url="@../Images/Icons/Mch/Mch_Grey.png" />
@@ -74,7 +69,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="315.0" layoutY="171.0" mnemonicParsing="false" opacity="0.0" prefHeight="72.0" prefWidth="64.0" text="Monk">
+      <Button fx:id="monkButton" layoutX="315.0" layoutY="171.0" mnemonicParsing="false" onAction="#monkSimChanger" prefHeight="60.0" prefWidth="60.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
