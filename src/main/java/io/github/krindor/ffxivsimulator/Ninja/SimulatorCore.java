@@ -80,51 +80,61 @@ public class SimulatorCore implements Callable{
         }
     }
     @Override
-    public ArrayList<String> call(){
+    public ArrayList<String> call() {
         ArrayList<String> damageArray = new ArrayList<>(1000);
-        for (int i = 0; i < 15000; i++) {
+        for (int i = 0; i < iterations / 4; i++) {
 
             Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
             damageArray = Sim.runSim();
-            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size()-1)));
+            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
 
         }
         return damageArray;
     }
 
 
-
     public ArrayList<String> runSim() {
-        numberSim = new ArrayList<>(50000);
-        ExecutorService pool = Executors.newFixedThreadPool(4);
-        Long startTime = System.nanoTime();
+        iterations = 1;
+
         ArrayList<String> damage = new ArrayList<>(1000);
-        Callable<ArrayList<String>> t1 = new SimulatorCore();
-        Future<ArrayList<String>> dps1 = pool.submit(t1);
-        Callable<ArrayList<String>> t2 = new SimulatorCore();
-        Future<ArrayList<String>> dps2 = pool.submit(t2);
-        Callable<ArrayList<String>> t3 = new SimulatorCore();
-        Future<ArrayList<String>> dps3 = pool.submit(t3);
-        Callable<ArrayList<String>> t4 = new SimulatorCore();
-        Future<ArrayList<String>> dps4 = pool.submit(t4);
-        try {
-            damage = dps1.get();
+        numberSim = new ArrayList<>(iterations);
+        long startTime = System.nanoTime();
+        if (iterations > 1001) {
 
-            damage.addAll(dps2.get());
-            damage.addAll(dps3.get());
-            damage.addAll(dps4.get());
-        } catch (InterruptedException | ExecutionException e) {
-            System.out.println("Exception");
+            ExecutorService pool = Executors.newFixedThreadPool(4);
+
+
+            Callable<ArrayList<String>> t1 = new SimulatorCore();
+            Future<ArrayList<String>> dps1 = pool.submit(t1);
+            Callable<ArrayList<String>> t2 = new SimulatorCore();
+            Future<ArrayList<String>> dps2 = pool.submit(t2);
+            Callable<ArrayList<String>> t3 = new SimulatorCore();
+            Future<ArrayList<String>> dps3 = pool.submit(t3);
+            Callable<ArrayList<String>> t4 = new SimulatorCore();
+            Future<ArrayList<String>> dps4 = pool.submit(t4);
+            try {
+                damage = dps1.get();
+
+                damage.addAll(dps2.get());
+                damage.addAll(dps3.get());
+                damage.addAll(dps4.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            for (int i = 0; i < iterations; i++) {
+                Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
+                damage = Sim.runSim();
+            }
         }
-
-
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000000;
         System.out.println(duration);
-
         System.out.println(numberSim.size());
-        damage.set(damage.size() - 1, "Damage Per Second: " + damage.get(damage.size() -1));
+
+        damage.set(damage.size() - 1, "Damage Per Second: " + damage.get(damage.size() - 1));
         damage.add("Simulation Time: " + String.valueOf(duration) + " seconds");
 
         return damage;
