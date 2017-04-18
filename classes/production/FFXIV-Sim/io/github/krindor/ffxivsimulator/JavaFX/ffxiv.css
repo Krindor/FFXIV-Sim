@@ -1,0 +1,141 @@
+#ninButton {
+    -fx-background-image: url("IconsForCSS/Nin_Default2.png");
+    -fx-background-color: transparent;
+}
+
+#ninButton:hover {
+    -fx-background-image: url("IconsForCSS/NinBlue.png");
+    -fx-background-color: transparent;
+}
+
+#ninButton:pressed {
+    -fx-background-image: url("IconsForCSS/Nin_Red.png");
+    -fx-background-color: transparent;
+}
+
+#monkButton{
+    -fx-background-color: transparent;
+    -fx-background-image: url("IconsForCSS/Mnk_Default.png");
+}
+
+#monkButton:hover{
+    -fx-background-image: url("IconsForCSS/Mnk_Blue.png");
+    -fx-background-color: transparent;
+}
+
+#monkButton:pressed{
+    -fx-background-image: url("IconsForCSS/Mnk_Red_Cross.png");
+    -fx-background-color: transparent;
+}
+
+
+#anchorPaneSim {
+    -fx-background-color: #2b2b2b;
+}
+
+
+
+.text-field{
+    -fx-background-color: #3c3e3f;
+    -fx-text-fill: #c9c9c9;
+}
+
+.label{
+    -fx-text-fill: #c9c9c9;
+}
+
+.label:hover{
+    -fx-text-fill: #ffffff;
+}
+
+#labelForCd{
+    -fx-text-fill: red;
+}
+
+.scroll-pane{
+    -fx-background-color: transparent;
+
+}
+
+.scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar{
+    -fx-background-color: #3c3e3f;
+}
+.text-area {
+    -fx-text-fill: #c9c9c9;
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-bar{
+    -fx-background-color: #3c3e3f;
+}
+
+.button {
+    -fx-background-color: #3c3e3f;
+    -fx-text-fill: #c9c9c9;
+}
+
+.button:hover{
+    -fx-background-color: #454748;
+    -fx-text-fill: #dbdbdb;
+}
+
+.button:pressed{
+    -fx-background-color: #383838;
+    -fx-text-fill: #aeaeae;
+}
+
+.menu-button{
+    -fx-background-color: #3c3e3f;
+    -fx-text-fill: #c9c9c9;
+}
+
+.menu-item{
+    -fx-background-color: #3c3e3f;
+    -fx-text-fill: #c9c9c9;
+}
+
+.check-box{
+    -fx-background-color: transparent;
+    -fx-text-fill: #c9c9c9;
+}
+
+.check-box .box{
+    -fx-background-color: #3c3e3f;
+}
+
+.check-box .mark{
+    -fx-fill: #c9c9c9;
+}
+
+.tab-pane .tab-content-area {
+
+    -fx-background-color: #2b2b2b;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #333333;
+}
+.tab-pane .tab-header-area .tab{
+    -fx-background-color: #3c3e3f;
+}
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: #c9c9c9;
+}
