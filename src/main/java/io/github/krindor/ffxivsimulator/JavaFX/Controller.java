@@ -31,55 +31,41 @@ import javafx.stage.Stage;
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Controller {
+public class Controller implements GUIinterface{
 
     @FXML
     private Pane barForGrab;
+    GUIclass guIclass = new GUIclass();
 
+    @Override
+    public void mainSceneChanger(ActionEvent event) throws Exception {
+        guIclass.mainSceneChanger(event);
+    }
 
     public void customizeSceneChanger(ActionEvent event) throws Exception{
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("CustomizeFX.fxml"));
-        Scene customizeScene = new Scene(customizeSceneParent);
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setScene(customizeScene);
-        customize.setTitle("Customize");
-        customize.show();
+        guIclass.customizeSceneChanger(event);
     }
 
     public void SimulatorClassChooserSceneChanger(ActionEvent event) throws Exception{
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("ClassChooserFX.fxml"));
-        Scene customizeScene = new Scene(customizeSceneParent);
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setScene(customizeScene);
-        customize.setTitle("ClassChooser");
-        customize.show();
+        guIclass.SimulatorClassChooserSceneChanger(event);
     }
 
     public void closeProgram(){
-        Platform.exit();
+        guIclass.closeProgram();
     }
 
     public void minimize(MouseEvent event){
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setIconified(true);
+        guIclass.minimize(event);
     }
 
-    double initialX;
-    double initialY;
+
 
     public void pressedMove(MouseEvent me) {
-        if (me.getButton() != MouseButton.MIDDLE) {
-            initialX = me.getSceneX();
-            initialY = me.getSceneY();
-
-        }
+        guIclass.pressedMove(me);
     }
 
 
     public void draggedMove(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() != MouseButton.MIDDLE) {
-            barForGrab.getScene().getWindow().setX(mouseEvent.getScreenX() - initialX);
-            barForGrab.getScene().getWindow().setY(mouseEvent.getScreenY() - initialY);
-        }
+        guIclass.draggedMove(mouseEvent, barForGrab);
     }
 }

@@ -71,31 +71,22 @@ public class MonkSimController {
 
     private ArrayList<String> log;
 
+    GUIclass guIclass = new GUIclass();
+
     public void mainSceneChanger(ActionEvent event) throws Exception {
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("MainFX.fxml"));
-        Scene customizeScene = new Scene(customizeSceneParent);
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setScene(customizeScene);
-        customize.setTitle("Main Menu");
-        customize.show();
+        guIclass.mainSceneChanger(event);
     }
 
     public void CharSceneChanger(ActionEvent event) throws Exception {
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("ClassChooserFX.fxml"));
-        Scene customizeScene = new Scene(customizeSceneParent);
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setScene(customizeScene);
-        customize.setTitle("Class Chooser");
-        customize.show();
+        guIclass.CharSceneChanger(event);
     }
 
     public void closeProgram(){
-        Platform.exit();
+        guIclass.closeProgram();
     }
 
     public void minimize(MouseEvent event){
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setIconified(true);
+        guIclass.minimize(event);
     }
 
     public void setOpener(ActionEvent event){
@@ -196,42 +187,19 @@ public class MonkSimController {
         }
     }
 
-    double initialX;
-    double initialY;
+
 
     public void pressedMove(MouseEvent me) {
-        if (me.getButton() != MouseButton.MIDDLE) {
-            initialX = me.getSceneX();
-            initialY = me.getSceneY();
-
-        }
+        guIclass.pressedMove(me);
     }
 
 
     public void draggedMove(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() != MouseButton.MIDDLE) {
-            barForGrab.getScene().getWindow().setX(mouseEvent.getScreenX() - initialX);
-            barForGrab.getScene().getWindow().setY(mouseEvent.getScreenY() - initialY);
-        }
+        guIclass.draggedMove(mouseEvent, barForGrab);
     }
 
     public void writeStringToFile(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH_mm_ss");
-        Date date = new Date();
-        File directory = new File(System.getProperty("user.home")+"/Documents/FFXIVSIM_Log/") ;
-        directory.mkdirs();
-        File file = new File(System.getProperty("user.home")+"/Documents/FFXIVSIM_Log/" + dateFormat.format(date) + ".txt");
-        try(PrintWriter out = new PrintWriter(file)){
-
-            for(String x: log){
-                out.println("\n" + x);
-            }
-            out.close();
-
-        }
-        catch (IOException e){
-            System.out.println("Exception");
-        }
+        guIclass.writeStringToFile(log);
     }
 
 

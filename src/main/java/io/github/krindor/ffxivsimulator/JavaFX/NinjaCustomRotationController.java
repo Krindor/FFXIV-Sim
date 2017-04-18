@@ -4,41 +4,34 @@ package io.github.krindor.ffxivsimulator.JavaFX;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.Dragoon;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.General;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.Monk;
+import io.github.krindor.ffxivsimulator.Ninja.SimulatorCore;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.WeaponSkills;
-import io.github.krindor.ffxivsimulator.Ninja.SimulatorCore;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
 /**
- FFXIV Simulator
- Copyright (C) 2017  Andreas Lund
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * FFXIV Simulator
+ * Copyright (C) 2017  Andreas Lund
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class NinjaCustomRotationController {
@@ -95,57 +88,36 @@ public class NinjaCustomRotationController {
     private double mutdoTTime;
     private double sfdoTTime;
 
+    GUIclass guIclass = new GUIclass();
 
-    public void mainSceneChanger(ActionEvent event) throws Exception{
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("MainFX.fxml"));
-        Scene customizeScene = new Scene(customizeSceneParent);
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setScene(customizeScene);
-        customize.setTitle("Main Menu");
-        customize.show();
+    public void mainSceneChanger(ActionEvent event) throws Exception {
+        guIclass.mainSceneChanger(event);
     }
 
     public void CharSceneChanger(ActionEvent event) throws Exception {
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("CustomizeFX.fxml"));
-        Scene customizeScene = new Scene(customizeSceneParent);
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setScene(customizeScene);
-        customize.setTitle("Class Chooser");
-        customize.show();
+        guIclass.CharSceneChanger(event);
     }
 
-    public void closeProgram(){
-        Platform.exit();
+    public void closeProgram() {
+        guIclass.closeProgram();
     }
 
-    public void minimize(MouseEvent event){
-        Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        customize.setIconified(true);
+    public void minimize(MouseEvent event) {
+        guIclass.minimize(event);
     }
 
-    double initialX;
-    double initialY;
 
     public void pressedMove(MouseEvent me) {
-        if (me.getButton() != MouseButton.MIDDLE) {
-            initialX = me.getSceneX();
-            initialY = me.getSceneY();
-
-        }
+        guIclass.pressedMove(me);
     }
 
 
     public void draggedMove(MouseEvent mouseEvent) {
-        if (mouseEvent.getButton() != MouseButton.MIDDLE) {
-            barForGrab.getScene().getWindow().setX(mouseEvent.getScreenX() - initialX);
-            barForGrab.getScene().getWindow().setY(mouseEvent.getScreenY() - initialY);
-        }
+        guIclass.draggedMove(mouseEvent, barForGrab);
     }
 
 
-
-
-    public void removeSkill(ImageView imageView){
+    public void removeSkill(ImageView imageView) {
         int forLoop = gridOpener.getChildren().indexOf(imageView);
 
         saveCurrent.remove(forLoop);
@@ -156,25 +128,25 @@ public class NinjaCustomRotationController {
 
         opener = new ArrayList<>(30);
         opener.add("Custom Opener");
-        for(ImageView imageLoop: saveCurrent){
+        for (ImageView imageLoop : saveCurrent) {
             opener.add((imageLoop.getId()));
             gridOpener.add(imageLoop, columnIndex, rowIndex);
-            if(columnIndex < 10) {
+            if (columnIndex < 10) {
                 columnIndex++;
-            }else if(columnIndex == 10) {
+            } else if (columnIndex == 10) {
                 rowIndex++;
                 columnIndex = 0;
             }
         }
     }
 
-    public void setOpener(){
+    public void setOpener() {
         SimulatorCore sim = new SimulatorCore();
         sim.setOpener(opener);
         sim.setCurentOpener(saveCurrent);
     }
 
-    public void loadCurrent(){
+    public void loadCurrent() {
         gridOpener.getChildren().clear();
         columnIndex = 0;
         rowIndex = 0;
@@ -182,19 +154,19 @@ public class NinjaCustomRotationController {
         saveCurrent = simulatorCore.loadCurrentOpener();
         opener = new ArrayList<>(30);
         opener.add("Custom Opener");
-        for(ImageView imageView: saveCurrent){
+        for (ImageView imageView : saveCurrent) {
             opener.add((imageView.getId()));
             gridOpener.add(imageView, columnIndex, rowIndex);
-            if(columnIndex < 10) {
+            if (columnIndex < 10) {
                 columnIndex++;
-            }else if(columnIndex == 10) {
+            } else if (columnIndex == 10) {
                 rowIndex++;
                 columnIndex = 0;
             }
         }
     }
 
-    public void newOpener(){
+    public void newOpener() {
         opener = new ArrayList<>(30);
         saveCurrent = new ArrayList<>(30);
 
@@ -204,12 +176,12 @@ public class NinjaCustomRotationController {
         rowIndex = 0;
     }
 
-    public void initializeController(){
+    public void initializeController() {
         opener = new ArrayList<>(30);
         saveCurrent = new ArrayList<>(30);
     }
 
-    public void addAnotherSkill(MouseEvent event){
+    public void addAnotherSkill(MouseEvent event) {
         ImageView newImage = new ImageView(((ImageView) event.getSource()).getImage());
         newImage.setOnMousePressed(event1 -> removeSkill(newImage));
         newImage.setId(((ImageView) event.getSource()).getId());
@@ -219,15 +191,15 @@ public class NinjaCustomRotationController {
         checkSkill(attack);
 
         gridOpener.add(newImage, columnIndex, rowIndex);
-        if(columnIndex < 10) {
+        if (columnIndex < 10) {
             columnIndex++;
-        }else if(columnIndex == 10) {
+        } else if (columnIndex == 10) {
             rowIndex++;
             columnIndex = 0;
         }
     }
 
-    private void checkSkill(String attack){
+    private void checkSkill(String attack) {
         Ability ability = new Ability();
         Monk monkCrossClass = new Monk();
         WeaponSkills weaponSkills = new WeaponSkills();
@@ -235,7 +207,6 @@ public class NinjaCustomRotationController {
         General potion = new General();
         type = null;
         mudraType = "NoN";
-
 
 
         if (attack.equals("Fuma_Shuriken")) {
@@ -393,7 +364,6 @@ public class NinjaCustomRotationController {
         machinistTime = machinistTime - change;
         dragoonTime = dragoonTime - change;
         potionTime = potionTime - change;
-
 
 
     }

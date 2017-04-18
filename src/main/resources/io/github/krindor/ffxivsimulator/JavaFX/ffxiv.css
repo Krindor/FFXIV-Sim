@@ -125,3 +125,17 @@
 .check-box .mark{
     -fx-fill: #c9c9c9;
 }
+
+.tab-pane .tab-content-area {
+
+    -fx-background-color: #2b2b2b;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #333333;
+}
+.tab-pane .tab-header-area .tab{
+    -fx-background-color: #3c3e3f;
+}
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-text-fill: #c9c9c9;
+}

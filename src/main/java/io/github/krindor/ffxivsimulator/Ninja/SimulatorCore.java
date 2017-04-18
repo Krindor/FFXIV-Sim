@@ -34,6 +34,7 @@ public class SimulatorCore implements Callable{
     private static ArrayList<ImageView> CurrentOpener;
     private static boolean openerCalled;
     private static ArrayList<Double> numberSim;
+    private static int iterations;
 
 
     public void setTime(int times) {
