@@ -1,5 +1,7 @@
 package io.github.krindor.ffxivsimulator.Ninja;
 
+import io.github.krindor.ffxivsimulator.CurrentJob;
+import io.github.krindor.ffxivsimulator.RunSimThreaded;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.scene.image.ImageView;
 
@@ -23,18 +25,20 @@ import java.util.concurrent.*;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SimulatorCore implements Callable{
+public class SimulatorCore{
     private static StatModel stats;
     private static ArrayList<String> custom;
     private static boolean warThere;
     private static int time;
     private static int hutonTime;
     private static String openerType;
-    private static ArrayList<String> Opener;
+    private static ArrayList<String> opener;
     private static ArrayList<ImageView> CurrentOpener;
     private static boolean openerCalled;
     private static ArrayList<Double> numberSim;
     private static int iterations;
+    private static boolean machinist = false;
+    private static boolean dragoon = false;
 
 
     public void setTime(int times) {
@@ -58,7 +62,7 @@ public class SimulatorCore implements Callable{
     }
 
     public void setOpener(ArrayList<String> opener) {
-        Opener = opener;
+        this.opener = opener;
 
 
     }
@@ -76,65 +80,53 @@ public class SimulatorCore implements Callable{
             return CurrentOpener;
         }
     }
-    @Override
-    public ArrayList<String> call() {
-        ArrayList<String> damageArray = new ArrayList<>(1000);
-        for (int i = 0; i < iterations / 4; i++) {
 
-            Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, Opener);
-            damageArray = Sim.runSim();
-            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
-
-        }
-        return damageArray;
+    public String getJob(){
+        return "Ninja";
     }
 
+    public StatModel getStats(){
+        return stats;
+    }
+
+    public int getTime(){
+        return time;
+    }
+
+    public int getHutonTime(){
+        return hutonTime;
+    }
+
+    public int getIterations(){
+        return iterations;
+    }
+
+    public boolean isMachinist(){
+        return machinist;
+    }
+
+    public boolean isDragoon(){
+        return dragoon;
+    }
+
+    public boolean isWarThere(){
+        return warThere;
+    }
+
+    public String getOpenerType(){
+        return openerType;
+    }
+
+    public ArrayList<String> getOpener(){
+        return opener;
+    }
 
     public ArrayList<String> runSim() {
-        iterations = 1;
-
-        ArrayList<String> damage = new ArrayList<>(1000);
-        numberSim = new ArrayList<>(iterations);
-        long startTime = System.nanoTime();
-        if (iterations > 1001) {
-
-            ExecutorService pool = Executors.newFixedThreadPool(4);
+        iterations = 10002;
+        CurrentJob job = new CurrentJob("Ninja");
+        RunSimThreaded simThreaded = new RunSimThreaded();
 
 
-            Callable<ArrayList<String>> t1 = new SimulatorCore();
-            Future<ArrayList<String>> dps1 = pool.submit(t1);
-            Callable<ArrayList<String>> t2 = new SimulatorCore();
-            Future<ArrayList<String>> dps2 = pool.submit(t2);
-            Callable<ArrayList<String>> t3 = new SimulatorCore();
-            Future<ArrayList<String>> dps3 = pool.submit(t3);
-            Callable<ArrayList<String>> t4 = new SimulatorCore();
-            Future<ArrayList<String>> dps4 = pool.submit(t4);
-            try {
-                damage = dps1.get();
-
-                damage.addAll(dps2.get());
-                damage.addAll(dps3.get());
-                damage.addAll(dps4.get());
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            for (int i = 0; i < iterations; i++) {
-                Simulatorpart Sim = new Simulatorpart(mainStat, time, false, false, warThere, openerType, hutonTime, Opener);
-                damage = Sim.runSim();
-            }
-        }
-
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000000;
-        System.out.println(duration);
-        System.out.println(numberSim.size());
-
-        damage.set(damage.size() - 1, "Damage Per Second: " + damage.get(damage.size() - 1));
-        damage.add("Simulation Time: " + String.valueOf(duration) + " seconds");
-
-        return damage;
-
+        return simThreaded.runSim();
     }
 }

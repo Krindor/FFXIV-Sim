@@ -103,8 +103,6 @@ public class Simulatorpart {
             opener = defaultOpener.getOpener();
         } else {
             opener = Opener;
-
-
         }
 
         openerNum = 0;
@@ -113,7 +111,6 @@ public class Simulatorpart {
         machinistHC = MCH;
         dragoonBL = DRG;
         statmultiplier = (1 + (stats.getWeaponDamage() * 0.0432544)) * (stats.getMainStat() * 0.1027246) * (1 + ((double) this.stats.getDetermination() / 7290)) / 100;
-
         timers = new ArrayList<>(4);
 
         timers.add(nextAA);
@@ -234,6 +231,7 @@ public class Simulatorpart {
 
 
             totalDamage = totalDamage + damage;
+
             currentTime = (Math.floor((currentTime + Collections.min(timers)) * 1000)) / 1000;
             timeChange(Collections.min(timers));
 

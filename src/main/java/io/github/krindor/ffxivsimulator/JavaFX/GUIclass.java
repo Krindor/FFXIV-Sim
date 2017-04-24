@@ -64,7 +64,7 @@ public class GUIclass {
     }
 
     public void closeProgram() {
-        Platform.exit();
+        System.exit(0);
     }
 
     public void minimize(MouseEvent event) {
