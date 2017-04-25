@@ -478,24 +478,24 @@ public class Simulatorpart {
     private void multipliers() {
         if (bFBTime <= 80 && bFBTime >= 60) {
             bFBDamage = 1.1;
-        } else bFBDamage = 1;
+        } else bFBDamage = 1.0;
 
         if (dancingTime > 0) {
             dancingEdgeDamage = 1.1;
-        } else dancingEdgeDamage = 1;
+        } else dancingEdgeDamage = 1.0;
 
         if (potionTime <= 270 && potionTime >= 255) {
-            potionDamage = (154 + stats.getMainStat()) / stats.getMainStat();
-        } else potionDamage = 1;
+            potionDamage = (154.0 + stats.getMainStat()) / stats.getMainStat();
+        } else potionDamage = 1.0;
 
         if (tATime <= 60 && tATime >= 50) {
             tADamage = 1.1;
-        } else tADamage = 1;
+        } else tADamage = 1.0;
 
         if (iRTime <= 60 && iRTime >= 45) {
             iRDamage = 0.1;
 
-        } else iRDamage = 0;
+        } else iRDamage = 0.0;
     }
 
     private double damageMultiplier(String type) {
@@ -510,7 +510,7 @@ public class Simulatorpart {
 
             } else if (iRTime <= 60 && iRTime >= 45) {
 
-                return (1 + ((((stats.getCriticalHitRating() - 354) / (858 * 5) + 0.05 + 0.1)) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
+                return (1 + (((((double)stats.getCriticalHitRating() - 354) / (858 * 5) + 0.05 + 0.1)) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
             } else {
                 return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
             }

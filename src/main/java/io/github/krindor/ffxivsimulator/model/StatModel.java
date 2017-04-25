@@ -1,7 +1,7 @@
 package io.github.krindor.ffxivsimulator.model;
 
 public class StatModel {
-    public StatModel(double weaponDamage, double mainStat, double determination, double criticalHitRating, double skillSpeed, double spellSpeed) {
+    public StatModel(int weaponDamage, int mainStat, int determination, int criticalHitRating, int skillSpeed, int spellSpeed) {
         this.weaponDamage = weaponDamage;
         this.mainStat = mainStat;
         this.determination = determination;
@@ -10,12 +10,12 @@ public class StatModel {
         this.spellSpeed = spellSpeed;
     }
 
-    private final double weaponDamage;
-    private final double mainStat;
-    private final double determination;
-    private final double criticalHitRating;
-    private final double skillSpeed;
-    private final double spellSpeed;
+    private final int weaponDamage;
+    private final int mainStat;
+    private final int determination;
+    private final int criticalHitRating;
+    private final int skillSpeed;
+    private final int spellSpeed;
 
     public double getWeaponDamage() {
         return weaponDamage;
