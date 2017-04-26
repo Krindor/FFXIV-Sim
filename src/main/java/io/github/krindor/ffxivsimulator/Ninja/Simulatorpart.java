@@ -335,6 +335,7 @@ public class Simulatorpart {
             type = ability.getType();
             type2 = "Ability";
             suitonUsed = true;
+            rotation.setSuitonUsed(suitonUsed);
 
 
         } else if (attack.equals("Kassatsu")) {
@@ -379,6 +380,8 @@ public class Simulatorpart {
             type2 = "Ability";
             type = ability.getType();
             suitonUsed = false;
+            rotation.setSuitonUsed(suitonUsed);
+
         } else if (attack.equals("Internal_Release")) {
             monkCrossClass.internalRelease();
             iRTime = monkCrossClass.getCooldown();
@@ -589,6 +592,8 @@ public class Simulatorpart {
         timersForRotation.add(recast);
         timersForRotation.add(nextGCD);
     }
+
+
 
 
 }

@@ -135,7 +135,9 @@
 }
 .tab-pane .tab-header-area .tab{
     -fx-background-color: #3c3e3f;
+
 }
 .tab-pane .tab-header-area .tab .tab-label {
     -fx-text-fill: #c9c9c9;
+    -fx-cursor: hand;
 }

@@ -93,7 +93,7 @@ public class Rotation {
                 return "Raiton";
 
             } else if (tATime <= 8 && !suitonUsed) {
-                suitonUsed = true;
+
                 return "Suiton";
 
             } else return "Fuma_Shuriken";
@@ -131,5 +131,9 @@ public class Rotation {
         recast = timersForRotation.get(14);
         nextGCD = timersForRotation.get(15);
 
+    }
+
+    public void setSuitonUsed(boolean suitonUsed){
+        this.suitonUsed = suitonUsed;
     }
 }

@@ -23,38 +23,31 @@ public class RunSimThreaded implements Callable {
     private String activeClass;
     private static ArrayList<Double> numberSim;
     private io.github.krindor.ffxivsimulator.Ninja.SimulatorCore nincore;
+    private ArrayList<String> damageArray;
 
 
-    public RunSimThreaded() {
-
+    public RunSimThreaded(String job) {
+        activeClass = job;
+        damageArray = new ArrayList<>(1000);
     }
 
 
     @Override
     public ArrayList<String> call() {
-        ArrayList<String> damageArray = new ArrayList<>(1000);
-        CurrentJob job = new CurrentJob();
-        activeClass = job.getJob();
+
+
+
         if (activeClass.equals("Ninja")) {
             nincore = new SimulatorCore();
             setNinja();
-
-            for (int i = 0; i < nincore.getIterations() / 4; i++) {
-
-
-                Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, opener);
-                damageArray = Sim.runSim();
-                numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
-
-
-            }
+            runNinja();
         }
         return damageArray;
     }
 
     public ArrayList<String> runSim() {
-        CurrentJob job = new CurrentJob();
-        if(job.getJob().equals("Ninja")) {
+
+        if(activeClass.equals("Ninja")) {
             nincore = new SimulatorCore();
             iterations = nincore.getIterations();
             setNinja();
@@ -67,13 +60,13 @@ public class RunSimThreaded implements Callable {
             ExecutorService pool = Executors.newFixedThreadPool(4);
 
 
-            Callable<ArrayList<String>> t1 = new RunSimThreaded();
+            Callable<ArrayList<String>> t1 = new RunSimThreaded(activeClass);
             Future<ArrayList<String>> dps1 = pool.submit(t1);
-            Callable<ArrayList<String>> t2 = new RunSimThreaded();
+            Callable<ArrayList<String>> t2 = new RunSimThreaded(activeClass);
             Future<ArrayList<String>> dps2 = pool.submit(t2);
-            Callable<ArrayList<String>> t3 = new RunSimThreaded();
+            Callable<ArrayList<String>> t3 = new RunSimThreaded(activeClass);
             Future<ArrayList<String>> dps3 = pool.submit(t3);
-            Callable<ArrayList<String>> t4 = new RunSimThreaded();
+            Callable<ArrayList<String>> t4 = new RunSimThreaded(activeClass);
             Future<ArrayList<String>> dps4 = pool.submit(t4);
             try {
                 damage = dps1.get();
@@ -115,5 +108,17 @@ public class RunSimThreaded implements Callable {
         openerType = nincore.getOpenerType();
         opener = nincore.getOpener();
         hutonTime = nincore.getHutonTime();
+    }
+
+    private void runNinja(){
+        for (int i = 0; i < nincore.getIterations() / 4; i++) {
+
+
+            Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, opener);
+            damageArray = Sim.runSim();
+            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
+
+
+        }
     }
 }

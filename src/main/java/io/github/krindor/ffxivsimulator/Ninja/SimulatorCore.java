@@ -1,12 +1,10 @@
 package io.github.krindor.ffxivsimulator.Ninja;
 
-import io.github.krindor.ffxivsimulator.CurrentJob;
 import io.github.krindor.ffxivsimulator.RunSimThreaded;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
-import java.util.concurrent.*;
 
 /**
  * FFXIV Simulator
@@ -81,9 +79,7 @@ public class SimulatorCore{
         }
     }
 
-    public String getJob(){
-        return "Ninja";
-    }
+
 
     public StatModel getStats(){
         return stats;
@@ -123,8 +119,8 @@ public class SimulatorCore{
 
     public ArrayList<String> runSim() {
         iterations = 10002;
-        CurrentJob job = new CurrentJob("Ninja");
-        RunSimThreaded simThreaded = new RunSimThreaded();
+
+        RunSimThreaded simThreaded = new RunSimThreaded("Ninja");
 
 
         return simThreaded.runSim();
