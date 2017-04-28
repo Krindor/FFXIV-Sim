@@ -34,6 +34,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.CheckBox;
 
 import javafx.scene.control.MenuItem;
+import javafx.stage.StageStyle;
 
 /**
  FFXIV Simulator
@@ -106,6 +107,21 @@ public class NinjaSimController {
         opener = simulationType.getText();
         System.out.println(opener);
 
+    }
+
+    public void customizeOpener() throws Exception {
+        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("NinjaCustomOpenerFX.fxml"));
+
+
+        Scene customizeScene = new Scene(customizeSceneParent);
+        Stage customize = new Stage();
+        customize.setScene(customizeScene);
+        customize.initStyle(StageStyle.UNDECORATED);
+        NinjaCustomOpenerController ninjaCustomOpenerController = new NinjaCustomOpenerController();
+        ninjaCustomOpenerController.initializeController();
+
+        customize.show();
+        customize.setResizable(false);
     }
 
    public void startSim() {
