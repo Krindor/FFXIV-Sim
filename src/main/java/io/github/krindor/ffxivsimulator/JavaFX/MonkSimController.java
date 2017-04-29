@@ -198,8 +198,8 @@ public class MonkSimController {
         guIclass.draggedMove(mouseEvent, barForGrab);
     }
 
-    public void writeStringToFile(){
-        guIclass.writeStringToFile(log);
+    public void writeStringToFile(ActionEvent event){
+        guIclass.writeStringToFile(log, event);
     }
 
 

@@ -9,7 +9,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -36,6 +41,48 @@ public class NinjaCustomOpenerController {
     private Pane barForGrab;
     @FXML
     private GridPane gridOpener;
+
+
+    @FXML
+    private ImageView Spinning_Edge;
+    @FXML
+    private ImageView Gust_Slash;
+    @FXML
+    private ImageView Aeolian_Edge;
+    @FXML
+    private ImageView Dancing_Edge;
+    @FXML
+    private ImageView Armor_Crush;
+    @FXML
+    private ImageView Mutilate;
+    @FXML
+    private ImageView Shadow_Fang;
+    @FXML
+    private ImageView Fuma_Shuriken;
+    @FXML
+    private ImageView Raiton;
+    @FXML
+    private ImageView Suiton;
+    @FXML
+    private ImageView Trick_Attack;
+    @FXML
+    private ImageView Dream_Within_a_Dream;
+    @FXML
+    private ImageView Duality;
+    @FXML
+    private ImageView Kassatsu;
+    @FXML
+    private ImageView Mug;
+    @FXML
+    private ImageView Jugulate;
+    @FXML
+    private ImageView Blood_for_Blood;
+    @FXML
+    private ImageView Internal_Release;
+    @FXML
+    private ImageView Potion;
+
+
     private int columnIndex;
     private int rowIndex;
     private static ArrayList<String> opener;
@@ -68,6 +115,138 @@ public class NinjaCustomOpenerController {
     public void draggedMove(MouseEvent mouseEvent) {
         guIclass.draggedMove(mouseEvent, barForGrab);
     }
+
+    public void saveOpener(ActionEvent event) {
+        guIclass.writeStringToFile(opener, event);
+        setOpener();
+    }
+
+    public void loadOpener(ActionEvent event) {
+        ArrayList<ImageView> loadList = new ArrayList<>(30);
+        ArrayList<String> stringArrayList = new ArrayList<>(30);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Opener");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File file = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        FileReader fileReader;
+        BufferedReader reader;
+        try {
+            fileReader = new FileReader(file);
+            reader = new BufferedReader(fileReader);
+
+            String currentLine;
+
+            while ((currentLine = reader.readLine()) != null) {
+                stringArrayList.add(currentLine);
+            }
+
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+
+                if (fileReader != null) {
+                    fileReader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (String string : stringArrayList) {
+            if (string.equals(Spinning_Edge.getId())) {
+                loadList.add(setImage(Spinning_Edge));
+
+            } else if (string.equals(Gust_Slash.getId())) {
+                loadList.add(setImage(Gust_Slash));
+
+            } else if (string.equals(Aeolian_Edge.getId())) {
+                loadList.add(setImage(Aeolian_Edge));
+
+            } else if (string.equals(Dancing_Edge.getId())) {
+                loadList.add(setImage(Dancing_Edge));
+
+            } else if (string.equals(Armor_Crush.getId())) {
+                loadList.add(setImage(Armor_Crush));
+
+            } else if (string.equals(Mutilate.getId())) {
+                loadList.add(setImage(Mutilate));
+
+            } else if (string.equals(Shadow_Fang.getId())) {
+                loadList.add(setImage(Shadow_Fang));
+
+            } else if (string.equals(Fuma_Shuriken.getId())) {
+                loadList.add(setImage(Fuma_Shuriken));
+
+            } else if (string.equals(Raiton.getId())) {
+                loadList.add(setImage(Raiton));
+
+            } else if (string.equals(Suiton.getId())) {
+                loadList.add(setImage(Suiton));
+
+            } else if (string.equals(Trick_Attack.getId())) {
+                loadList.add(setImage(Trick_Attack));
+
+            } else if (string.equals(Dream_Within_a_Dream.getId())) {
+                loadList.add(setImage(Dream_Within_a_Dream));
+
+            } else if (string.equals(Duality.getId())) {
+                loadList.add(setImage(Duality));
+
+            } else if (string.equals(Kassatsu.getId())) {
+                loadList.add(setImage(Kassatsu));
+
+            } else if (string.equals(Mug.getId())) {
+                loadList.add(setImage(Mug));
+
+            } else if (string.equals(Jugulate.getId())) {
+                loadList.add(setImage(Jugulate));
+
+            } else if (string.equals(Blood_for_Blood.getId())) {
+                loadList.add(setImage(Blood_for_Blood));
+
+            } else if (string.equals(Internal_Release.getId())) {
+                loadList.add(setImage(Internal_Release));
+
+            } else if (string.equals(Potion.getId())) {
+                loadList.add(setImage(Potion));
+
+            }
+        }
+
+        gridOpener.getChildren().clear();
+        columnIndex = 0;
+        rowIndex = 0;
+
+
+        for (ImageView imageView : loadList) {
+            opener.add((imageView.getId()));
+            gridOpener.add(imageView, columnIndex, rowIndex);
+            if (columnIndex < 10) {
+                columnIndex++;
+            } else if (columnIndex == 10) {
+                rowIndex++;
+                columnIndex = 0;
+            }
+        }
+        System.out.println(opener);
+
+
+    }
+
+    private ImageView setImage(ImageView view) {
+        ImageView newImage = new ImageView(view.getImage());
+        newImage.setOnMousePressed(event1 -> removeSkill(newImage));
+        newImage.setId(view.getId());
+        saveCurrent.add(newImage);
+
+
+        return newImage;
+    }
+
 
     public void removeSkill(ImageView imageView) {
         int forLoop = gridOpener.getChildren().indexOf(imageView);

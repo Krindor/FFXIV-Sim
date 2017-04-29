@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -91,12 +92,12 @@ public class GUIclass {
         }
     }
 
-    public void writeStringToFile(ArrayList<String> log){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd HH_mm_ss");
-        Date date = new Date();
-        File directory = new File(System.getProperty("user.home")+"/Documents/FFXIVSIM_Log/") ;
-        directory.mkdirs();
-        File file = new File(System.getProperty("user.home")+"/Documents/FFXIVSIM_Log/" + dateFormat.format(date) + ".txt");
+    public void writeStringToFile(ArrayList<String> log, ActionEvent event){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Opener");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File file = fileChooser.showSaveDialog(((Node) event.getSource()).getScene().getWindow());
+
         try(PrintWriter out = new PrintWriter(file)){
 
             for(String x: log){

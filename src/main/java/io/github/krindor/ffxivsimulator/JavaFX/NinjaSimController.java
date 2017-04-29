@@ -54,7 +54,7 @@ import javafx.stage.StageStyle;
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class NinjaSimController {
+public class NinjaSimController implements GUIinterface{
     @FXML
     private TextField weaponText;
     @FXML
@@ -248,8 +248,8 @@ public class NinjaSimController {
         guIclass.draggedMove(mouseEvent, barForGrab);
     }
 
-    public void writeStringToFile(){
-        guIclass.writeStringToFile(log);
+    public void writeStringToFile(ActionEvent event){
+        guIclass.writeStringToFile(log, event);
     }
 
 

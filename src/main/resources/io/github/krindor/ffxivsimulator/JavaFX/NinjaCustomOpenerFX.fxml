@@ -214,12 +214,12 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Button layoutX="33.0" layoutY="625.0" mnemonicParsing="false" onAction="#setOpener" prefHeight="50.0" prefWidth="140.0" text="Save">
+            <Button layoutX="514.0" layoutY="369.0" mnemonicParsing="false" onAction="#setOpener" prefHeight="50.0" prefWidth="140.0" text="Set">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="229.0" layoutY="625.0" mnemonicParsing="false" onAction="#newOpener" prefHeight="50.0" prefWidth="140.0" text="New">
+            <Button layoutX="514.0" layoutY="456.0" mnemonicParsing="false" onAction="#newOpener" prefHeight="50.0" prefWidth="140.0" text="Clear">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -234,7 +234,12 @@
                   <Label layoutX="720.0" layoutY="8.0" onMousePressed="#closeStage" text="X" />
                </children>
             </Pane>
-            <Button layoutX="425.0" layoutY="625.0" mnemonicParsing="false" onAction="#loadCurrent" prefHeight="50.0" prefWidth="140.0" text="Load">
+            <Button layoutX="229.0" layoutY="611.0" mnemonicParsing="false" onAction="#loadOpener" prefHeight="50.0" prefWidth="140.0" text="Load">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="33.0" layoutY="611.0" mnemonicParsing="false" onAction="#saveOpener" prefHeight="50.0" prefWidth="140.0" text="Save">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
