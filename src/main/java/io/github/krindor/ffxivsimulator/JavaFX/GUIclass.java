@@ -6,15 +6,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,5 +109,45 @@ public class GUIclass {
             System.out.println("Exception");
         }
     }
+
+    public ArrayList<String> loadOpener(ActionEvent event) {
+
+        ArrayList<String> stringArrayList = new ArrayList<>(30);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Opener");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        File file = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        FileReader fileReader;
+        BufferedReader reader;
+        try {
+            fileReader = new FileReader(file);
+            reader = new BufferedReader(fileReader);
+
+            String currentLine;
+
+            while ((currentLine = reader.readLine()) != null) {
+                stringArrayList.add(currentLine);
+            }
+
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+
+                if (fileReader != null) {
+                    fileReader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringArrayList;
+    }
+
+
+
 
 }

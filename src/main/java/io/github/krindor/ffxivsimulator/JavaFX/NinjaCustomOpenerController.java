@@ -9,12 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.FileChooser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -123,38 +118,7 @@ public class NinjaCustomOpenerController {
 
     public void loadOpener(ActionEvent event) {
         ArrayList<ImageView> loadList = new ArrayList<>(30);
-        ArrayList<String> stringArrayList = new ArrayList<>(30);
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Load Opener");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        File file = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        FileReader fileReader;
-        BufferedReader reader;
-        try {
-            fileReader = new FileReader(file);
-            reader = new BufferedReader(fileReader);
-
-            String currentLine;
-
-            while ((currentLine = reader.readLine()) != null) {
-                stringArrayList.add(currentLine);
-            }
-
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-
-                if (fileReader != null) {
-                    fileReader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ArrayList<String> stringArrayList = guIclass.loadOpener(event);
 
         for (String string : stringArrayList) {
             if (string.equals(Spinning_Edge.getId())) {
@@ -232,7 +196,6 @@ public class NinjaCustomOpenerController {
                 columnIndex = 0;
             }
         }
-        System.out.println(opener);
 
 
     }

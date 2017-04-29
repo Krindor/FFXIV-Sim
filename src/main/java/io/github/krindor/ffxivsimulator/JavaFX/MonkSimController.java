@@ -16,6 +16,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -187,6 +188,21 @@ public class MonkSimController {
         }
     }
 
+
+    public void customizeOpener() throws Exception {
+        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("MonkCustomOpenerFX.fxml"));
+
+
+        Scene customizeScene = new Scene(customizeSceneParent);
+        Stage customize = new Stage();
+        customize.setScene(customizeScene);
+        customize.initStyle(StageStyle.UNDECORATED);
+        MonkCustomOpenerController monkCustomOpenerController = new MonkCustomOpenerController();
+        monkCustomOpenerController.initializeController();
+
+        customize.show();
+        customize.setResizable(false);
+    }
 
 
     public void pressedMove(MouseEvent me) {

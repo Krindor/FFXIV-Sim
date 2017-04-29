@@ -12,20 +12,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.krindor.ffxivsimulator.JavaFX.MonkCustomOpenerController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.krindor.ffxivsimulator.JavaFX.MonkCustomOpenerController">
    <children>
-      <AnchorPane fx:id="anchorPaneSim" prefHeight="700.0" prefWidth="1200.0" stylesheets="@ffxiv.css">
+      <AnchorPane fx:id="anchorPaneSim" stylesheets="@ffxiv.css">
          <children>
-            <Button layoutX="136.0" layoutY="636.0" mnemonicParsing="false" onAction="#mainSceneChanger" prefHeight="50.0" prefWidth="140.0" text="Main Menu">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button layoutX="302.0" layoutY="636.0" mnemonicParsing="false" onAction="#CharSceneChanger" prefHeight="50.0" prefWidth="140.0" text="Character Select">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
             <GridPane layoutX="33.0" layoutY="369.0" prefHeight="173.0" prefWidth="392.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -208,27 +198,32 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Button layoutX="521.0" layoutY="636.0" mnemonicParsing="false" onAction="#setOpener" prefHeight="50.0" prefWidth="140.0" text="Save">
+            <Button layoutX="514.0" layoutY="369.0" mnemonicParsing="false" onAction="#setOpener" prefHeight="50.0" prefWidth="140.0" text="Set">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="695.0" layoutY="636.0" mnemonicParsing="false" onAction="#newOpener" prefHeight="50.0" prefWidth="140.0" text="New">
+            <Button layoutX="514.0" layoutY="456.0" mnemonicParsing="false" onAction="#newOpener" prefHeight="50.0" prefWidth="140.0" text="Clear">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Pane fx:id="barForGrab" layoutY="-2.0" onMouseDragged="#draggedMove" onMousePressed="#pressedMove" prefHeight="33.0" prefWidth="1200.0">
+            <Pane fx:id="barForGrab" layoutY="-2.0" onMouseDragged="#draggedMove" onMousePressed="#pressedMove" prefHeight="33.0" prefWidth="738.0">
                <children>
-                  <Label layoutX="1151.0" layoutY="-12.0" onMousePressed="#minimize" prefHeight="41.0" prefWidth="8.0" text="-">
+                  <Label layoutX="697.0" layoutY="-12.0" onMousePressed="#minimize" prefHeight="41.0" prefWidth="8.0" text="-">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label layoutX="1182.0" layoutY="8.0" onMousePressed="#closeProgram" text="X" />
+                  <Label layoutX="720.0" layoutY="8.0" onMousePressed="#closeStage" text="X" />
                </children>
             </Pane>
-            <Button layoutX="857.0" layoutY="636.0" mnemonicParsing="false" onAction="#loadCurrent" prefHeight="50.0" prefWidth="140.0" text="Load">
+            <Button layoutX="229.0" layoutY="611.0" mnemonicParsing="false" onAction="#loadOpener" prefHeight="50.0" prefWidth="140.0" text="Load">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="33.0" layoutY="611.0" mnemonicParsing="false" onAction="#saveOpener" prefHeight="50.0" prefWidth="140.0" text="Save">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

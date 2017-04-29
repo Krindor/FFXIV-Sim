@@ -41,7 +41,7 @@ public class CharController implements GUIinterface {
     }
 
     public void ninjaSimChanger(ActionEvent event) throws Exception {
-        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("Ninsimexample.fxml"));
+        Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("NinjaSimFX.fxml"));
         Scene customizeScene = new Scene(customizeSceneParent);
         Stage customize = (Stage) ((Node) event.getSource()).getScene().getWindow();
         customize.setScene(customizeScene);
