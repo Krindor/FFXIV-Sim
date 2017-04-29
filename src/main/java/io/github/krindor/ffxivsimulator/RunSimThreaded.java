@@ -23,6 +23,7 @@ public class RunSimThreaded implements Callable {
     private String activeClass;
     private static ArrayList<Double> numberSim;
     private io.github.krindor.ffxivsimulator.Ninja.SimulatorCore nincore;
+    private io.github.krindor.ffxivsimulator.Monk.SimulatorCore mnkcore;
     private ArrayList<String> damageArray;
 
 
@@ -42,6 +43,12 @@ public class RunSimThreaded implements Callable {
             setNinja();
             runNinja();
         }
+        if(activeClass.equals("Monk")){
+            mnkcore = new io.github.krindor.ffxivsimulator.Monk.SimulatorCore();
+            setMonk();
+            runMonk();
+        }
+
         return damageArray;
     }
 
@@ -52,6 +59,13 @@ public class RunSimThreaded implements Callable {
             iterations = nincore.getIterations();
             setNinja();
         }
+
+        if (activeClass.equals("Monk")){
+            mnkcore = new io.github.krindor.ffxivsimulator.Monk.SimulatorCore();
+            iterations = mnkcore.getIterations();
+            setMonk();
+        }
+
         ArrayList<String> damage = new ArrayList<>(1000);
         numberSim = new ArrayList<>(iterations);
         long startTime = System.nanoTime();
@@ -78,9 +92,14 @@ public class RunSimThreaded implements Callable {
                 e.printStackTrace();
             }
 
-        } else {
+        } else if (activeClass.equals("Ninja")){
             for (int i = 0; i < iterations; i++) {
                 Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, opener);
+                damage = Sim.runSim();
+            }
+        } else if (activeClass.equals("Monk")){
+            for (int i = 0; i < iterations; i++) {
+                io.github.krindor.ffxivsimulator.Monk.Simulatorpart Sim = new io.github.krindor.ffxivsimulator.Monk.Simulatorpart(stats, time, false, false, openerType, opener);
                 damage = Sim.runSim();
             }
         }
@@ -110,6 +129,17 @@ public class RunSimThreaded implements Callable {
         hutonTime = nincore.getHutonTime();
     }
 
+    private void setMonk(){
+        iterations = mnkcore.getIterations();
+        stats = mnkcore.getStats();
+        time = mnkcore.getTime();
+        openerType = mnkcore.getOpenerType();
+        opener = mnkcore.getOpener();
+        machinist = mnkcore.isMachinist();
+        dragoon = mnkcore.isDragoon();
+
+    }
+
     private void runNinja(){
         for (int i = 0; i < nincore.getIterations() / 4; i++) {
 
@@ -121,4 +151,18 @@ public class RunSimThreaded implements Callable {
 
         }
     }
+
+    private void runMonk(){
+        for (int i = 0; i < mnkcore.getIterations() / 4; i++) {
+
+
+            io.github.krindor.ffxivsimulator.Monk.Simulatorpart Sim = new io.github.krindor.ffxivsimulator.Monk.Simulatorpart(stats, time, false, false, openerType, opener);
+            damageArray = Sim.runSim();
+            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
+
+
+        }
+
+    }
+
 }

@@ -134,7 +134,7 @@ public class Simulatorpart {
         }
         glStacks = 0;
         chakraStacks = 5;
-        System.out.println(opener);
+
         openerNum = 0;
         cooldownReset();
 
@@ -171,7 +171,7 @@ public class Simulatorpart {
                 if (openerNum < opener.size()) {
 
                     if (openerTypeCheck().equals("OGCD") && nextoGCD <= 0) {
-                        System.out.println(attack);
+
                         openerCheck();
                         skillUsed();
                         if (nextGCD < 0.7) {
@@ -283,7 +283,8 @@ public class Simulatorpart {
         }
 
         damagePerSecond = totalDamage / timer;
-        damageLog.add("DPS:" + Math.floor(damagePerSecond));
+        double dps=Math.floor(damagePerSecond);
+        damageLog.add(Double.toString(dps));
         return damageLog;
     }
 

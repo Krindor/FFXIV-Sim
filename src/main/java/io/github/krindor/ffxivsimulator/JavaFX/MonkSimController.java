@@ -5,6 +5,7 @@ package io.github.krindor.ffxivsimulator.JavaFX;
 import io.github.krindor.ffxivsimulator.Monk.SimulatorCore;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  FFXIV Simulator
@@ -167,25 +170,30 @@ public class MonkSimController {
            damageLog.setText("Error: Wrong time input");
        }
 
-        if (runneable) {
+       if (runneable) {
+           SimulatorCore sim = new SimulatorCore();
+           sim.setMainStat(new StatModel(weaponDamage, mainStat, det, crit, skillSpeed, 0));
+           sim.setTime(time);
+
+           sim.setOpenerType(opener);
+
+           ExecutorService pool = Executors.newFixedThreadPool(4);
+           Task task = new Task() {
+               @Override
+               protected Object call() throws Exception {
+                   log = sim.runSim();
+                   String logtext = "Sim start";
+                   for (String x : log) {
+                       logtext = logtext + "\n" + x;
+                   }
+                   damageLog.setText(logtext);
+                   return damageLog;
+               }
+           };
+           pool.submit(task);
 
 
-            SimulatorCore sim = new SimulatorCore();
-            sim.setMainStat(new StatModel(weaponDamage, mainStat, det, crit, skillSpeed, 0));
-            sim.setTime(time);
-
-            sim.setOpenerType(opener);
-
-
-            log = sim.runSim();
-            String logtext = "Sim start";
-            for (String x : log) {
-                logtext = logtext + "\n" + x;
-            }
-            damageLog.setText(logtext);
-
-
-        }
+       }
     }
 
 

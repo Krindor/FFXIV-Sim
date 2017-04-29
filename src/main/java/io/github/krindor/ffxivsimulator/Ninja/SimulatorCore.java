@@ -118,7 +118,7 @@ public class SimulatorCore{
     }
 
     public ArrayList<String> runSim() {
-        iterations = 10002;
+        iterations = 1;
 
         RunSimThreaded simThreaded = new RunSimThreaded("Ninja");
 
