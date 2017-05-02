@@ -7,6 +7,7 @@ import io.github.krindor.ffxivsimulator.Monk.Priority.Rotation;
 import io.github.krindor.ffxivsimulator.Monk.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Monk.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.Warrior;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.Stances;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.util.ArrayList;
@@ -120,6 +121,8 @@ public class Simulatorpart {
     private ArrayList<String> opener;
     private int openerNum;
 
+    private Stances stances;
+
     public Simulatorpart(StatModel stats, int time, boolean MCH, boolean DRG, String openerType, ArrayList<String> Opener) {
         this.stats = stats;
         timer = time;
@@ -129,9 +132,11 @@ public class Simulatorpart {
             opener = defaultOpener.getOpener();
         } else {
             opener = Opener;
-
-
         }
+
+        stances = new Stances();
+
+
         glStacks = 0;
         chakraStacks = 5;
 
@@ -403,39 +408,39 @@ public class Simulatorpart {
             potency = weaponSkills.getPotency();
             type2 = "Weapon Skill";
             bootcrit = true;
-            form = 2;
+            stances.setForm(2);
 
         } else if (attack.equals("True_Strike")) {
             weaponSkills.trueStrike();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             type2 = "Weapon Skill";
-            form = 3;
+            stances.setForm(3);
         } else if (attack.equals("Snap_Punch")) {
             weaponSkills.snapPunch();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             type2 = "Weapon Skill";
             glStacks++;
-            if (glStacks > 3) {
-                glStacks = 3;
+            if (stances.getGlStacks() > 3) {
+                stances.setGlStacks(3);
             }
-            glTime = 14;
-            form = 1;
+            stances.setGlTime(14);
+            stances.setForm(1);
         } else if (attack.equals("Dragon_Kick")) {
             weaponSkills.dragonKick();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             dragonKickTime = 15;
             type2 = "Weapon Skill";
-            form = 2;
+            stances.setForm(2);
         } else if (attack.equals("Twin_Snakes")) {
             weaponSkills.twinSnakes();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             type2 = "Weapon Skill";
             twinSnakesTime = 15;
-            form = 3;
+            stances.setForm(3);
         } else if (attack.equals("Demolish")) {
             weaponSkills.demolish();
             type = weaponSkills.getType();
@@ -448,12 +453,12 @@ public class Simulatorpart {
             demoPot = potionDamage;
             demoTS = twinSnakesDamage;
             type2 = "Weapon Skill";
-            glStacks++;
-            if (glStacks > 3) {
-                glStacks = 3;
+            stances.setGlStacks(stances.getGlStacks() + 1);
+            if (stances.getGlStacks() > 3) {
+                stances.setGlStacks(3);
             }
-            glTime = 14;
-            form = 1;
+            stances.setGlTime(14);
+            stances.setForm(1);
 
         } else if (attack.equals("Touch_of_Death")) {
             weaponSkills.touchOfDeath();
@@ -492,7 +497,7 @@ public class Simulatorpart {
         shoulderTackleTime = 0;
         steelPeakTime = 0;
         howlingFistTime = 0;
-        glTime = 0;
+        stances.setGlTime(0);
         dragonKickTime = 0;
         perfectBalanceTime = 0;
         elixirFieldTime = 0;
