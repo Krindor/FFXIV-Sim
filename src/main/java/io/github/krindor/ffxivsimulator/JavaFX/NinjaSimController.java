@@ -192,7 +192,7 @@ public class NinjaSimController implements GUIinterface {
 
         if (runneable) {
             SimulatorCore sim = new SimulatorCore();
-            sim.setMainStat(new StatModel(weaponDamage, mainStat, det, crit, skillSpeed, 0));
+            sim.setMainStat(new StatModel(weaponDamage, mainStat, det, crit, skillSpeed, 354));
             sim.setTime(time);
             sim.setHutonTime(hutonTime);
             sim.setOpenerType(opener);

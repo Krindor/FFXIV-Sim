@@ -1,6 +1,6 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.BuffDebuffState.DamageBuffs;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.DamageBuffs;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 /**
@@ -14,13 +14,34 @@ public class DamageOverTime extends DamageBuffs{
 
     private Formulas formulas;
 
+    private double time;
+
     public DamageOverTime(int potency, StatModel statModel, int jobmod){
         formulas = new Formulas(statModel, jobmod);
         this.potency = potency;
     }
 
-    public double getDamage(){
-        damage = (formulas.getMultiplier()*(potency/10)*getBloodForBlood()*getHyperCharge());
+    public double getDamage(String job){
+        formulas.setCritMultiplier(getCritBuff());
+        System.out.println(getBloodForBlood());
+
+        if (job.equals("Ninja")) {
+
+            damage = formulas.getMultiplier() * (potency / 100.0) * getBloodForBlood() * getHyperCharge() * getTrickAttack() * 1.2 * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(getPotion());
+
+        }
         return damage;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
+    }
+
+    public void changeTime(double change){
+        time = time - change;
     }
 }

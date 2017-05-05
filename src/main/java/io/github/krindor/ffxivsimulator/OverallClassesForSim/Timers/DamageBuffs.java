@@ -3,44 +3,60 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 /**
  * Created by andre on 2017-05-02.
  */
-public class DamageBuffs {
-    private int bloodForBlood;
+public class DamageBuffs extends Resistance{
+    private double bloodForBlood;
 
-    private int internalRelease;
+    private double internalRelease;
 
-    private int potion;
+    private boolean potion;
 
-    private int twinSnakes;
+    private double twinSnakes;
 
-    public int getTwinSnakes() {
-        return twinSnakes;
+    private double battleLitany;
+
+    public DamageBuffs(){
+        bloodForBlood = 1;
+        internalRelease = 0;
+        potion = false;
+        twinSnakes = 1;
+        battleLitany = 0;
     }
 
-    public void setTwinSnakes(int twinSnakes) {
-        this.twinSnakes = twinSnakes;
+    public void setBattleLitany(double battleLitany) {
+        this.battleLitany = battleLitany;
     }
 
-    public int getBloodForBlood() {
+    public double getBloodForBlood() {
         return bloodForBlood;
     }
 
-    public void setBloodForBlood(int bloodForBlood) {
+    public void setBloodForBlood(double bloodForBlood) {
         this.bloodForBlood = bloodForBlood;
     }
 
-    public int getInternalRelease() {
-        return internalRelease;
-    }
 
-    public void setInternalRelease(int internalRelease) {
+
+    public void setInternalRelease(double internalRelease) {
         this.internalRelease = internalRelease;
     }
 
-    public int getPotion() {
+    public boolean getPotion() {
         return potion;
     }
 
-    public void setPotion(int potion) {
+    public void setPotion(boolean potion) {
         this.potion = potion;
+    }
+
+    public double getTwinSnakes() {
+        return twinSnakes;
+    }
+
+    public void setTwinSnakes(double twinSnakes) {
+        this.twinSnakes = twinSnakes;
+    }
+
+    public double getCritBuff(){
+        return battleLitany + internalRelease;
     }
 }

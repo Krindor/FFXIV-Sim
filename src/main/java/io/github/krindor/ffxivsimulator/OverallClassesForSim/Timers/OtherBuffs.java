@@ -4,33 +4,33 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
  * Created by andre on 2017-05-02.
  */
 public class OtherBuffs {
-    private int kassatsu;
+    private double kassatsu;
 
-    private int duality;
+    private double duality;
 
-    private int perfectBalance;
+    private double perfectBalance;
 
-    public int getKassatsu() {
+    public double getKassatsu() {
         return kassatsu;
     }
 
-    public void setKassatsu(int kassatsu) {
+    public void setKassatsu(double kassatsu) {
         this.kassatsu = kassatsu;
     }
 
-    public int getDuality() {
+    public double getDuality() {
         return duality;
     }
 
-    public void setDuality(int duality) {
+    public void setDuality(double duality) {
         this.duality = duality;
     }
 
-    public int getPerfectBalance() {
+    public double getPerfectBalance() {
         return perfectBalance;
     }
 
-    public void setPerfectBalance(int perfectBalance) {
+    public void setPerfectBalance(double perfectBalance) {
         this.perfectBalance = perfectBalance;
     }
 }

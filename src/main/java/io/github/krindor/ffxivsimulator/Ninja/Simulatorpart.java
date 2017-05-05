@@ -7,6 +7,7 @@ import io.github.krindor.ffxivsimulator.Ninja.Priority.DefaultOpener;
 import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.WeaponSkills;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.util.ArrayList;
@@ -38,8 +39,6 @@ public class Simulatorpart {
     private double potionTime;
     private boolean dualityUsed;
     private boolean kassatsuUsed;
-    private double mutdoTTime;
-    private double sfdoTTime;
     private boolean suitonUsed;
 
 
@@ -60,15 +59,8 @@ public class Simulatorpart {
     private double potionDamage;
     private double iRDamage;
 
-    private double mutBfB;
-    private double mutIR;
-    private double mutTA;
-    private double mutPot;
-
-    private double sfBfB;
-    private double sfIR;
-    private double sfTA;
-    private double sfPot;
+    private DamageOverTime SF;
+    private DamageOverTime Mut;
 
     private double statmultiplier;
 
@@ -81,7 +73,7 @@ public class Simulatorpart {
     private String type2;
     private String mudraType;
     private String prevattack;
-    private double sfdoTpotency;
+
 
     private double mutdoTpotency;
 
@@ -94,6 +86,7 @@ public class Simulatorpart {
     private int openerNum;
 
     public Simulatorpart(StatModel stats, int time, boolean MCH, boolean DRG, boolean WAR, String openerType, int hutonBeforePull, ArrayList<String> Opener) {
+
         this.stats = stats;
         timer = time;
         rotation = new Rotation();
@@ -104,10 +97,13 @@ public class Simulatorpart {
         } else {
             opener = Opener;
         }
+        SF = new DamageOverTime(40, stats, 105);
+        Mut = new DamageOverTime(30, stats, 105);
 
         openerNum = 0;
         cooldownReset();
         suitonUsed = false;
+
         machinistHC = MCH;
         dragoonBL = DRG;
         statmultiplier = (1 + (stats.getWeaponDamage() * 0.0432544)) * (stats.getMainStat() * 0.1027246) * (1 + ((double) this.stats.getDetermination() / 7290)) / 100;
@@ -117,6 +113,8 @@ public class Simulatorpart {
         timers.add(nextDoT);
         timers.add(nextGCD);
         timers.add(nextoGCD);
+
+
 
         if (WAR) {
             dancingTime = time + 1;
@@ -128,11 +126,13 @@ public class Simulatorpart {
         recast = Math.floor(((Math.floor((1 - ((Math.floor((((double) this.stats.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100) * 0.85) * 100) / 100;
         aaRecast = Math.floor((2.56 * 0.85) * 100) / 100;
 
+
     }
 
     public ArrayList<String> runSim() {
         double damagePerSecond;
         double currentTime = 0;
+
         ArrayList<String> damageLog = new ArrayList<>(150);
         while (currentTime <= timer) {
             setTimersForRotation();
@@ -210,13 +210,13 @@ public class Simulatorpart {
             if (nextDoT <= 0) {
                 double sfdamage = 0;
                 double mutdamage = 0;
-                if (sfdoTTime > 0) {
-                    sfdamage = damageMultiplier("SF DoT");
+                if (SF.getTime() > 0) {
+                    sfdamage = SF.getDamage("Ninja");
 
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(sfdamage * 100) / 100 + " Type: " + "SF DoT");
                 }
-                if (mutdoTTime > 0) {
-                    mutdamage = damageMultiplier("Mut DoT");
+                if (Mut.getTime() > 0) {
+                    mutdamage = Mut.getDamage("Ninja");
 
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(mutdamage * 100) / 100 + " Type: " + "Mut DoT");
                 }
@@ -434,24 +434,25 @@ public class Simulatorpart {
             weaponSkills.shadowFang();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
-            sfdoTpotency = weaponSkills.getDoTPotency();
-            sfdoTTime = weaponSkills.getDoTTime();
-            sfBfB = bFBDamage;
-            sfIR = iRDamage;
-            sfTA = tADamage;
-            sfPot = potionDamage;
+
+            SF.setTime(weaponSkills.getDoTTime());
+            SF.setBloodForBlood(bFBDamage);
+            SF.setInternalRelease(iRDamage);
+            SF.setTrickAttack(tADamage);
+            if (potionTime >= 255 && potionTime <= 270){SF.setPotion(true);}
+            else SF.setPotion(false);
             type2 = "Weapon Skill";
 
         } else if (attack.equals("Mutilate")) {
             weaponSkills.mutilate();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
-            mutdoTpotency = weaponSkills.getDoTPotency();
-            mutdoTTime = weaponSkills.getDoTTime();
-            mutBfB = bFBDamage;
-            mutIR = iRDamage;
-            mutTA = tADamage;
-            mutPot = potionDamage;
+            Mut.setTime(weaponSkills.getDoTTime());
+            Mut.setBloodForBlood(bFBDamage);
+            Mut.setInternalRelease(iRDamage);
+            Mut.setTrickAttack(tADamage);
+            if (potionTime >= 255 && potionTime <= 270){Mut.setPotion(true);}
+            else Mut.setPotion(false);
             type2 = "Weapon Skill";
         }
 
@@ -473,8 +474,8 @@ public class Simulatorpart {
         nextDoT = 0;
         nextGCD = 0;
         nextoGCD = 0;
-        sfdoTTime = 0;
-        mutdoTTime = 0;
+        Mut.setTime(0);
+        SF.setTime(0);
 
     }
 
@@ -537,13 +538,8 @@ public class Simulatorpart {
                 return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
 
             }
-        } else if (type.equals("Mut DoT")) {
-            return mutdoTpotency * (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + mutIR) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * mutBfB * mutTA * mutPot * 1.2 * (((double) stats.getSkillSpeed()) / 6800 + 1);
-
-        } else if (type.equals("SF DoT")) {
-
-            return sfdoTpotency * (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + sfIR) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * sfBfB * sfTA * sfPot * 1.2 * (((double) stats.getSkillSpeed()) / 6800 + 1);
         }
+
 
         return multiplier;
     }
@@ -567,8 +563,8 @@ public class Simulatorpart {
         machinistTime = machinistTime - change;
         dragoonTime = dragoonTime - change;
         potionTime = potionTime - change;
-        sfdoTTime = sfdoTTime - change;
-        mutdoTTime = mutdoTTime - change;
+        SF.changeTime(change);
+        Mut.changeTime(change);
 
 
     }
@@ -587,8 +583,8 @@ public class Simulatorpart {
         timersForRotation.add(dancingTime);
         timersForRotation.add(hutonTime);
         timersForRotation.add(potionTime);
-        timersForRotation.add(sfdoTTime);
-        timersForRotation.add(mutdoTTime);
+        timersForRotation.add(SF.getTime());
+        timersForRotation.add(Mut.getTime());
         timersForRotation.add(recast);
         timersForRotation.add(nextGCD);
     }

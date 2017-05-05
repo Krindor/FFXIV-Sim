@@ -4,47 +4,54 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
  * Created by andre on 2017-05-02.
  */
 public class Resistance {
-    private int dragonKick;
+    private double dragonKick;
 
-    public int getDragonKick() {
+
+    private double dancingEdge;
+
+
+    private double hyperCharge;
+
+
+    private double trickAttack;
+
+    public Resistance(){
+        dragonKick = 1;
+        dancingEdge = 1;
+        hyperCharge = 1;
+        trickAttack = 1;
+
+    }
+
+    public double getDragonKick() {
         return dragonKick;
     }
 
-    public void setDragonKick(int dragonKick) {
+    public void setDragonKick(double dragonKick) {
         this.dragonKick = dragonKick;
     }
 
-    private int dancingEdge;
-
-    public int getDancingEdge() {
+    public double getDancingEdge() {
         return dancingEdge;
     }
 
-    public void setDancingEdge(int dancingEdge) {
+    public void setDancingEdge(double dancingEdge) {
         this.dancingEdge = dancingEdge;
     }
 
-
-
-    private int hyperCharge;
-
-    public int getHyperCharge() {
+    public double getHyperCharge() {
         return hyperCharge;
     }
 
-    public void setHyperCharge(int hyperCharge) {
+    public void setHyperCharge(double hyperCharge) {
         this.hyperCharge = hyperCharge;
     }
 
-    private int trickAttack;
-
-    public int getTrickAttack() {
+    public double getTrickAttack() {
         return trickAttack;
     }
 
-    public void setTrickAttack(int trickAttack) {
+    public void setTrickAttack(double trickAttack) {
         this.trickAttack = trickAttack;
     }
-
-
 }

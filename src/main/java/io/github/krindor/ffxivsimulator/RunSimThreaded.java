@@ -94,8 +94,11 @@ public class RunSimThreaded implements Callable {
 
         } else if (activeClass.equals("Ninja")){
             for (int i = 0; i < iterations; i++) {
-                Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, opener);
+
+                io.github.krindor.ffxivsimulator.Ninja.Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, opener);
+
                 damage = Sim.runSim();
+
             }
         } else if (activeClass.equals("Monk")){
             for (int i = 0; i < iterations; i++) {
@@ -145,7 +148,9 @@ public class RunSimThreaded implements Callable {
 
 
             Simulatorpart Sim = new Simulatorpart(stats, time, false, false, warThere, openerType, hutonTime, opener);
+
             damageArray = Sim.runSim();
+
             numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
 
 

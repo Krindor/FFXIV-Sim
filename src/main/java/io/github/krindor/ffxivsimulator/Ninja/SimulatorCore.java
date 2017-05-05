@@ -120,6 +120,7 @@ public class SimulatorCore{
     public ArrayList<String> runSim() {
         iterations = 1;
 
+
         RunSimThreaded simThreaded = new RunSimThreaded("Ninja");
 
 
