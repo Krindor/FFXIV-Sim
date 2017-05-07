@@ -31,10 +31,9 @@ import java.util.ArrayList;
  */
 
 
-public class MonkCustomOpenerController {
+public class MonkCustomOpenerController extends GUIclass{
 
-    @FXML
-    private Pane barForGrab;
+
     @FXML
     private GridPane gridOpener;
     @FXML
@@ -77,44 +76,23 @@ public class MonkCustomOpenerController {
     private int rowIndex;
     private static ArrayList<String> opener;
     private static ArrayList<ImageView> saveCurrent;
-    GUIclass guIclass = new GUIclass();
 
 
-    public void mainSceneChanger(ActionEvent event) throws Exception {
-        guIclass.mainSceneChanger(event);
-    }
-
-    public void CharSceneChanger(ActionEvent event) throws Exception {
-        guIclass.CharSceneChanger(event);
-    }
-
-    public void minimize(MouseEvent event) {
-        guIclass.minimize(event);
-    }
 
 
-    public void pressedMove(MouseEvent me) {
-        guIclass.pressedMove(me);
-    }
-
-
-    public void draggedMove(MouseEvent mouseEvent) {
-        guIclass.draggedMove(mouseEvent, barForGrab);
-    }
-
-    public void closeStage(MouseEvent event) {
+    public void closeProgram(MouseEvent event) {
         ((Node) (event.getSource())).getScene().getWindow().hide();
     }
 
     public void saveOpener(ActionEvent event) {
-        guIclass.writeStringToFile(opener, event);
+        writeStringToFile(opener, event);
         setOpener();
     }
 
 
-    public void loadOpener(ActionEvent event) {
+    public void loadSavedOpener(ActionEvent event) {
         ArrayList<ImageView> loadList = new ArrayList<>(30);
-        ArrayList<String> stringArrayList = guIclass.loadOpener(event);
+        ArrayList<String> stringArrayList = loadOpener(event);
 
         for (String string : stringArrayList) {
             if (string.equals(Bootshine.getId())) {

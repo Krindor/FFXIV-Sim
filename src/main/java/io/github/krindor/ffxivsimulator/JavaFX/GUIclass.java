@@ -2,6 +2,7 @@ package io.github.krindor.ffxivsimulator.JavaFX;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -24,8 +25,9 @@ import java.util.Date;
  * Created by andre on 2017-04-18.
  */
 public class GUIclass {
-    public void GUIclass() {
-    }
+    @FXML
+    private Pane barForGrab;
+
 
     public void mainSceneChanger(ActionEvent event) throws Exception {
         Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("MainFX.fxml"));
@@ -84,12 +86,14 @@ public class GUIclass {
     }
 
 
-    public void draggedMove(MouseEvent mouseEvent, Pane barForGrab) {
+    public void draggedMove(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() != MouseButton.MIDDLE) {
             barForGrab.getScene().getWindow().setX(mouseEvent.getScreenX() - initialX);
             barForGrab.getScene().getWindow().setY(mouseEvent.getScreenY() - initialY);
         }
     }
+
+
 
     public void writeStringToFile(ArrayList<String> log, ActionEvent event){
         FileChooser fileChooser = new FileChooser();

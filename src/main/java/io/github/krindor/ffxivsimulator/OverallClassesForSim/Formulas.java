@@ -11,14 +11,15 @@ public class Formulas{
     private double critMultiplier;
     private double ssModifier;
     private double potionMultiplier;
-
+    private double critDamage;
 
     public Formulas(StatModel statModel, int jobmod){
         this.statModel=statModel;
-        multiplier =(statModel.getWeaponDamage()+((218*jobmod/1000)))*(((statModel.getMainStat()*100)/218)/100)*((1+(((statModel.getDetermination()-218)*1000)/(9.3*858)/1000)));
+        multiplier =(statModel.getWeaponDamage()+((218*jobmod/1000.0)))*(((statModel.getMainStat()*100.0)/218)/100)*((1+(((statModel.getDetermination()-218.0)*1000)/(9.3*858)/1000)));
         System.out.println(multiplier);
         ssModifier = (((statModel.getSkillSpeed() + statModel.getSpellSpeed()-(2 * 354))/6800)+1);
         potionMultiplier = (statModel.getMainStat() + 154.0)/statModel.getMainStat();
+        critDamage = ((statModel.getCriticalHitRating()-354.0)/(5*858)+0.45);
     }
 
     public double getPotionMultiplier(boolean potion){
@@ -37,7 +38,11 @@ public class Formulas{
     }
 
     public void setCritMultiplier(double critBuff) {
-        critMultiplier = 1 + ((statModel.getCriticalHitRating()-354)/(5*858)+0.05 + critBuff) * ((statModel.getCriticalHitRating()-354)/(5*858)+0.45);
+        critMultiplier = 1 + (((statModel.getCriticalHitRating()-354.0)/(5*858)+0.05 + critBuff) * critDamage);
+    }
+
+    public double getCritDamage() {
+        return 1+critDamage;
     }
 
     public double getSSModifier() {

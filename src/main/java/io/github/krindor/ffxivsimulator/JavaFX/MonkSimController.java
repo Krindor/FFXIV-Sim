@@ -47,7 +47,7 @@ import java.util.concurrent.Executors;
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class MonkSimController {
+public class MonkSimController extends GUIclass{
     @FXML
     private TextField weaponText;
     @FXML
@@ -68,30 +68,17 @@ public class MonkSimController {
     @FXML
     private MenuButton simulationType;
 
-    @FXML
-    private Pane barForGrab;
+
 
     private String opener;
 
     private ArrayList<String> log;
 
-    GUIclass guIclass = new GUIclass();
 
-    public void mainSceneChanger(ActionEvent event) throws Exception {
-        guIclass.mainSceneChanger(event);
-    }
 
-    public void CharSceneChanger(ActionEvent event) throws Exception {
-        guIclass.CharSceneChanger(event);
-    }
 
-    public void closeProgram(){
-        guIclass.closeProgram();
-    }
 
-    public void minimize(MouseEvent event){
-        guIclass.minimize(event);
-    }
+
 
     public void setOpener(ActionEvent event){
         simulationType.setText(((MenuItem)event.getSource()).getText());
@@ -212,18 +199,8 @@ public class MonkSimController {
         customize.setResizable(false);
     }
 
-
-    public void pressedMove(MouseEvent me) {
-        guIclass.pressedMove(me);
-    }
-
-
-    public void draggedMove(MouseEvent mouseEvent) {
-        guIclass.draggedMove(mouseEvent, barForGrab);
-    }
-
     public void writeStringToFile(ActionEvent event){
-        guIclass.writeStringToFile(log, event);
+        writeStringToFile(log, event);
     }
 
 

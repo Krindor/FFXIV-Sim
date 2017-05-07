@@ -30,15 +30,11 @@ import javafx.stage.Stage;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class CharController implements GUIinterface {
+public class CharController extends GUIclass{
 
-    @FXML
-    private Pane barForGrab;
-    GUIclass gui = new GUIclass();
 
-    public void mainSceneChanger(ActionEvent event) throws Exception {
-        gui.mainSceneChanger(event);
-    }
+
+
 
     public void ninjaSimChanger(ActionEvent event) throws Exception {
         Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("NinjaSimFX.fxml"));
@@ -58,22 +54,6 @@ public class CharController implements GUIinterface {
         customize.show();
     }
 
-    public void closeProgram() {
-        Platform.exit();
-    }
 
-    public void minimize(MouseEvent event) {
-        gui.minimize(event);
-    }
-
-
-    public void pressedMove(MouseEvent me) {
-        gui.pressedMove(me);
-    }
-
-
-    public void draggedMove(MouseEvent mouseEvent) {
-        gui.draggedMove(mouseEvent, barForGrab);
-    }
 
 }

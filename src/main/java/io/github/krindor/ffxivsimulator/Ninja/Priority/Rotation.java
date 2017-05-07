@@ -45,7 +45,7 @@ public class Rotation {
     private double sfdoTTime;
 
     private double recast;
-    private String prevSkill;
+
 
     public Rotation() {
         dualityUsed = false;

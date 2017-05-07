@@ -30,10 +30,9 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class NinjaCustomOpenerController {
+public class NinjaCustomOpenerController extends GUIclass{
 
-    @FXML
-    private Pane barForGrab;
+
     @FXML
     private GridPane gridOpener;
 
@@ -82,43 +81,23 @@ public class NinjaCustomOpenerController {
     private int rowIndex;
     private static ArrayList<String> opener;
     private static ArrayList<ImageView> saveCurrent;
-    GUIclass guIclass = new GUIclass();
 
 
-    public void mainSceneChanger(ActionEvent event) throws Exception {
-        guIclass.mainSceneChanger(event);
-    }
 
-    public void CharSceneChanger(ActionEvent event) throws Exception {
-        guIclass.CharSceneChanger(event);
-    }
 
-    public void closeStage(MouseEvent event) {
+    public void closeProgram(MouseEvent event) {
         ((Node) (event.getSource())).getScene().getWindow().hide();
     }
 
-    public void minimize(MouseEvent event) {
-        guIclass.minimize(event);
-    }
-
-
-    public void pressedMove(MouseEvent me) {
-        guIclass.pressedMove(me);
-    }
-
-
-    public void draggedMove(MouseEvent mouseEvent) {
-        guIclass.draggedMove(mouseEvent, barForGrab);
-    }
 
     public void saveOpener(ActionEvent event) {
-        guIclass.writeStringToFile(opener, event);
+        writeStringToFile(opener, event);
         setOpener();
     }
 
-    public void loadOpener(ActionEvent event) {
+    public void loadSavedOpener(ActionEvent event) {
         ArrayList<ImageView> loadList = new ArrayList<>(30);
-        ArrayList<String> stringArrayList = guIclass.loadOpener(event);
+        ArrayList<String> stringArrayList = loadOpener(event);
 
         for (String string : stringArrayList) {
             if (string.equals(Spinning_Edge.getId())) {

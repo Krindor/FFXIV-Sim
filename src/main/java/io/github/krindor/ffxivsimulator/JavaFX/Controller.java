@@ -31,41 +31,7 @@ import javafx.stage.Stage;
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class Controller implements GUIinterface{
-
-    @FXML
-    private Pane barForGrab;
-    GUIclass guIclass = new GUIclass();
-
-    @Override
-    public void mainSceneChanger(ActionEvent event) throws Exception {
-        guIclass.mainSceneChanger(event);
-    }
-
-    public void customizeSceneChanger(ActionEvent event) throws Exception{
-        guIclass.customizeSceneChanger(event);
-    }
-
-    public void SimulatorClassChooserSceneChanger(ActionEvent event) throws Exception{
-        guIclass.SimulatorClassChooserSceneChanger(event);
-    }
-
-    public void closeProgram(){
-        guIclass.closeProgram();
-    }
-
-    public void minimize(MouseEvent event){
-        guIclass.minimize(event);
-    }
+public class Controller extends GUIclass{
 
 
-
-    public void pressedMove(MouseEvent me) {
-        guIclass.pressedMove(me);
-    }
-
-
-    public void draggedMove(MouseEvent mouseEvent) {
-        guIclass.draggedMove(mouseEvent, barForGrab);
-    }
 }
