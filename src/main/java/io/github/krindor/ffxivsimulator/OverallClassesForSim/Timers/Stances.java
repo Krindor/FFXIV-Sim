@@ -3,7 +3,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 /**
  * Created by andre on 2017-04-30.
  */
-public class Stances {
+public class Stances extends DamageBuffs{
     private double hutonTime;
     private double glStacks;
     private double chakraStacks;
@@ -12,8 +12,16 @@ public class Stances {
 
 
 
+    public void timeChangeStances(double change){
+        hutonTime = hutonTime - change;
+        glTime = glTime - change;
+    }
 
-    public Stances(){}
+
+    public Stances(){
+        hutonTime = 0;
+        glTime = 0;
+    }
 
     public void setGlTime(double glTime){
         this.glTime = glTime;

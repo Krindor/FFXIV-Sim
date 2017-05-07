@@ -23,11 +23,12 @@ public class DamageOverTime extends DamageBuffs{
 
     public double getDamage(String job){
         formulas.setCritMultiplier(getCritBuff());
-        System.out.println(getBloodForBlood());
+
 
         if (job.equals("Ninja")) {
 
             damage = formulas.getMultiplier() * (potency / 100.0) * getBloodForBlood() * getHyperCharge() * getTrickAttack() * 1.2 * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(getPotion());
+
 
         }
         return damage;
@@ -41,7 +42,7 @@ public class DamageOverTime extends DamageBuffs{
         this.time = time;
     }
 
-    public void changeTime(double change){
+    public void timeChange(double change){
         time = time - change;
     }
 }

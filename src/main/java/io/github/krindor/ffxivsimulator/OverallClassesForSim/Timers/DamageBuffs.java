@@ -10,6 +10,8 @@ public class DamageBuffs extends Resistance{
 
     private boolean potion;
 
+    private double potionTime;
+
     private double twinSnakes;
 
     private double battleLitany;
@@ -20,6 +22,21 @@ public class DamageBuffs extends Resistance{
         potion = false;
         twinSnakes = 1;
         battleLitany = 0;
+    }
+
+    protected void damageTimer(){
+        bloodForBlood = 0;
+
+        twinSnakes = 0;
+
+    }
+
+    public void timeChangeDamage(double change){
+        bloodForBlood = bloodForBlood - change;
+        internalRelease = internalRelease - change;
+        twinSnakes = twinSnakes - change;
+        battleLitany = battleLitany - change;
+        potionTime = potionTime - change;
     }
 
     public void setBattleLitany(double battleLitany) {
@@ -34,7 +51,22 @@ public class DamageBuffs extends Resistance{
         this.bloodForBlood = bloodForBlood;
     }
 
+    public double getInternalRelease() {
+        return internalRelease;
+    }
 
+
+    public double getBattleLitany() {
+        return battleLitany;
+    }
+
+    public double getPotionTime() {
+        return potionTime;
+    }
+
+    public void setPotionTime(double potionTime) {
+        this.potionTime = potionTime;
+    }
 
     public void setInternalRelease(double internalRelease) {
         this.internalRelease = internalRelease;

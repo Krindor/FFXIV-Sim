@@ -8,10 +8,11 @@ import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by andre on 2017-02-08.
@@ -22,42 +23,18 @@ public class Simulatorpart {
     private StatModel stats;
 
 
-    private double timer;
-    private double bFBTime;
-    private double iRTime;
-    private double kassatsuTime;
-    private double dualityTime;
-    private double dWaDTime;
-    private double mudraTime;
-    private double tATime;
-    private double mugTime;
-    private double jugTime;
-    private double dancingTime;
-    private double hutonTime;
-    private double machinistTime;
-    private double dragoonTime;
-    private double potionTime;
-    private boolean dualityUsed;
-    private boolean kassatsuUsed;
-    private boolean suitonUsed;
+    private double time;
 
+    private BuffsDebuffs timers;
+    private BuffsDebuffs state;
 
     private boolean machinistHC;
     private boolean dragoonBL;
     private boolean warrior;
 
-    private double nextAA;
-    private double nextDoT;
-    private double nextGCD;
-    private double nextoGCD;
-
     private double totalDamage;
 
-    private double dancingEdgeDamage;
-    private double tADamage;
-    private double bFBDamage;
-    private double potionDamage;
-    private double iRDamage;
+
 
     private DamageOverTime SF;
     private DamageOverTime Mut;
@@ -74,12 +51,9 @@ public class Simulatorpart {
     private String mudraType;
     private String prevattack;
 
-
-    private double mutdoTpotency;
-
     private double recast;
     private double aaRecast;
-    private ArrayList<Double> timers;
+    private NextAttack nextAttack;
     private ArrayList<Double> timersForRotation;
     private Rotation rotation;
     private ArrayList<String> opener;
@@ -88,7 +62,7 @@ public class Simulatorpart {
     public Simulatorpart(StatModel stats, int time, boolean MCH, boolean DRG, boolean WAR, String openerType, int hutonBeforePull, ArrayList<String> Opener) {
 
         this.stats = stats;
-        timer = time;
+        this.time = time;
         rotation = new Rotation();
         defaultOpener = new DefaultOpener();
 
@@ -102,27 +76,24 @@ public class Simulatorpart {
 
         openerNum = 0;
         cooldownReset();
-        suitonUsed = false;
+
+        timers = new BuffsDebuffs(0);
+        state = new BuffsDebuffs();
 
         machinistHC = MCH;
         dragoonBL = DRG;
         statmultiplier = (1 + (stats.getWeaponDamage() * 0.0432544)) * (stats.getMainStat() * 0.1027246) * (1 + ((double) this.stats.getDetermination() / 7290)) / 100;
-        timers = new ArrayList<>(4);
 
-        timers.add(nextAA);
-        timers.add(nextDoT);
-        timers.add(nextGCD);
-        timers.add(nextoGCD);
+        nextAttack = new NextAttack();
 
 
 
         if (WAR) {
-            dancingTime = time + 1;
-        } else dancingTime = 0;
-        hutonTime = 70 - hutonBeforePull;
-        mudraTime = 20 - hutonBeforePull;
-        dualityUsed = false;
-        kassatsuUsed = false;
+            timers.setDancingEdge(time + 1);
+        } else timers.setDancingEdge(0);
+        timers.setHutonTime(70 - hutonBeforePull);
+        timers.setMudra(20 - hutonBeforePull);
+
         recast = Math.floor(((Math.floor((1 - ((Math.floor((((double) this.stats.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100) * 0.85) * 100) / 100;
         aaRecast = Math.floor((2.56 * 0.85) * 100) / 100;
 
@@ -134,20 +105,20 @@ public class Simulatorpart {
         double currentTime = 0;
 
         ArrayList<String> damageLog = new ArrayList<>(150);
-        while (currentTime <= timer) {
+        while (currentTime <= time) {
             setTimersForRotation();
             damage = 0;
             multipliers();
-            if (nextGCD <= 0 || nextoGCD <= 0) {
+            if (nextAttack.getNextGCD() <= 0 || nextAttack.getNextOGCD() <= 0) {
                 if (openerNum < opener.size()) {
 
-                    if (openerTypeCheck().equals("OGCD") && nextoGCD <= 0) {
+                    if (openerTypeCheck().equals("OGCD") && nextAttack.getNextOGCD() <= 0) {
                         openerCheck();
                         skillUsed();
 
                         if (currentTime == 0 && attack.equals("Suiton")) {
-                            nextoGCD = 0.7;
-                            nextGCD = 0.7;
+                            nextAttack.setNextGCD(0.7);
+                            nextAttack.setNextOGCD(0.7);
                         } else checkMudraStep();
 
                         if (potency > 0) {
@@ -159,7 +130,7 @@ public class Simulatorpart {
                         openerNum++;
 
 
-                    } else if (openerTypeCheck().equals("Weapon_Skill") && nextGCD <= 0) {
+                    } else if (openerTypeCheck().equals("Weapon_Skill") && nextAttack.getNextGCD() <= 0) {
 
                         openerCheck();
                         skillUsed();
@@ -167,27 +138,27 @@ public class Simulatorpart {
                         if (potency > 0) {
                             damage = (potency * damageMultiplier(type));
                         }
-                        nextGCD = recast;
-                        nextoGCD = 0.7;
+                        nextAttack.setNextGCD(recast);
+                        nextAttack.setNextOGCD(0.7);
                         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
                         openerNum++;
-                    } else nextoGCD = 0.5;
-                } else if (nextGCD <= 0) {
+                    } else nextAttack.setNextOGCD(0.5);
+                } else if (nextAttack.getNextGCD() <= 0) {
 
-                    attack = rotation.getNextGCD(timersForRotation, prevattack);
+                    attack = rotation.getNextGCD(timersForRotation, prevattack, timers);
                     skillUsed();
                     prevattack = attack;
                     if (potency > 0) {
                         damage = (potency * damageMultiplier(type));
                     }
-                    nextGCD = recast;
-                    nextoGCD = 0.7;
+                    nextAttack.setNextGCD(recast);
+                    nextAttack.setNextOGCD(0.7);
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
 
-                } else if (nextoGCD <= 0 && nextGCD > 1) {
+                } else if (nextAttack.getNextOGCD() <= 0 && nextAttack.getNextGCD() > 1) {
 
-                    attack = rotation.getNextOGCD(timersForRotation);
-                    if (rotation.getNextOGCD(timersForRotation) != null) {
+                    attack = rotation.getNextOGCD(timersForRotation, timers);
+                    if (rotation.getNextOGCD(timersForRotation, timers) != null) {
                         skillUsed();
                         if (potency > 0) {
                             damage = (potency * damageMultiplier(type));
@@ -196,18 +167,18 @@ public class Simulatorpart {
                         checkMudraStep();
                         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
                     } else checkMudraStep();
-                } else if (nextoGCD <= 0 && nextGCD < 1) {
-                    nextoGCD = nextGCD;
+                } else if (nextAttack.getNextOGCD() <= 0 && nextAttack.getNextGCD() < 1) {
+                    nextAttack.setNextOGCD(nextAttack.getNextGCD());
                 }
             }
 
-            if (nextAA <= 0) {
+            if (nextAttack.getNextAA() <= 0) {
                 damage = damageMultiplier("Auto Attack");
-                nextAA = aaRecast;
+                nextAttack.setNextAA(aaRecast);
                 damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
             }
 
-            if (nextDoT <= 0) {
+            if (nextAttack.getNextDoT() <= 0) {
                 double sfdamage = 0;
                 double mutdamage = 0;
                 if (SF.getTime() > 0) {
@@ -221,24 +192,21 @@ public class Simulatorpart {
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(mutdamage * 100) / 100 + " Type: " + "Mut DoT");
                 }
                 damage = damage + mutdamage + sfdamage;
-                nextDoT = 3;
+                nextAttack.setNextDoT(3);
             }
 
-            timers.set(0, nextGCD);
-            timers.set(1, nextoGCD);
-            timers.set(2, nextAA);
-            timers.set(3, nextDoT);
+            nextAttack.setNextAttack();
 
 
             totalDamage = totalDamage + damage;
 
-            currentTime = (Math.floor((currentTime + Collections.min(timers)) * 1000)) / 1000;
-            timeChange(Collections.min(timers));
+            currentTime = (Math.floor((currentTime + nextAttack.getNextAttack()) * 1000)) / 1000;
+            timeChange(nextAttack.getNextAttack());
 
 
         }
 
-        damagePerSecond = totalDamage / timer;
+        damagePerSecond = totalDamage / time;
         double dps=Math.floor(damagePerSecond);
         damageLog.add(Double.toString(dps));
         return damageLog;
@@ -247,20 +215,20 @@ public class Simulatorpart {
     private void checkMudraStep() {
 
 
-        if (nextGCD < 1.7 && mudraType.equals("2-step")) {
-            nextGCD = 1.7;
-            nextoGCD = 1.7;
-        } else if (nextGCD < 1.2 && mudraType.equals("1-step")) {
-            nextGCD = 1.2;
-            nextoGCD = 1.2;
-        } else if (nextGCD < 2.2 && mudraType.equals("3-step")) {
-            nextGCD = 2.2;
-            nextoGCD = 2.2;
+        if (nextAttack.getNextGCD() < 1.7 && mudraType.equals("2-step")) {
+            nextAttack.setNextGCD(1.7);
+            nextAttack.setNextOGCD(1.7);
+        } else if (nextAttack.getNextGCD() < 1.2 && mudraType.equals("1-step")) {
+            nextAttack.setNextGCD(1.2);
+            nextAttack.setNextOGCD(1.2);
+        } else if (nextAttack.getNextGCD() < 2.2 && mudraType.equals("3-step")) {
+            nextAttack.setNextGCD(2.2);
+            nextAttack.setNextOGCD(2.2);
         } else {
-            if (nextGCD < 0.5) {
-                nextGCD = 0.7;
-                nextoGCD = 0.7;
-            } else nextoGCD = 0.7;
+            if (nextAttack.getNextGCD() < 0.5) {
+                nextAttack.setNextGCD(0.7);
+                nextAttack.setNextOGCD(0.7);
+            } else nextAttack.setNextOGCD(0.7);
 
         }
     }
@@ -314,14 +282,14 @@ public class Simulatorpart {
         if (attack.equals("Fuma_Shuriken")) {
             ability.fuma_Shuriken();
             type2 = "Ability";
-            mudraTime = ability.getCooldown();
+            timers.setMudra(ability.getCooldown());
             potency = ability.getPotency();
             mudraType = ability.getMudraType();
             type = ability.getType();
 
         } else if (attack.equals("Raiton")) {
             ability.raiton();
-            mudraTime = ability.getCooldown();
+            timers.setMudra(ability.getCooldown());
             potency = ability.getPotency();
             mudraType = ability.getMudraType();
             type = ability.getType();
@@ -329,74 +297,75 @@ public class Simulatorpart {
 
         } else if (attack.equals("Suiton")) {
             ability.suiton();
-            mudraTime = ability.getCooldown();
+            timers.setMudra(ability.getCooldown());
             potency = ability.getPotency();
             mudraType = ability.getMudraType();
             type = ability.getType();
             type2 = "Ability";
-            suitonUsed = true;
-            rotation.setSuitonUsed(suitonUsed);
+            state.setSuiton(true);
+            timers.setSuitonTime(10);
+            rotation.setSuitonUsed(state.isSuiton());
 
 
         } else if (attack.equals("Kassatsu")) {
             ability.kassatsu();
-            kassatsuTime = ability.getCooldown();
+            timers.setKassatsuTime(ability.getCooldown());
             potency = ability.getPotency();
-            kassatsuUsed = true;
+            state.setKassatsu(true);
             type = ability.getType();
-            mudraTime = 0;
+            timers.setMudra(0);
             type2 = "Ability";
 
         } else if (attack.equals("Duality")) {
             ability.duality();
-            dualityTime = ability.getCooldown();
+            timers.setDualityTime(ability.getCooldown());
             potency = ability.getPotency();
-            dualityUsed = true;
+            state.setDuality(true);
             type = ability.getType();
             type2 = "Ability";
 
         } else if (attack.equals("Dream_Within_a_Dream")) {
             ability.dreamWithinADream();
-            dWaDTime = ability.getCooldown();
+            timers.setDreamWithinADream( ability.getCooldown());
             potency = ability.getPotency();
             type2 = "Ability";
             type = ability.getType();
         } else if (attack.equals("Mug")) {
             ability.mug();
-            mugTime = ability.getCooldown();
+            timers.setMug(ability.getCooldown());
             potency = ability.getPotency();
             type2 = "Ability";
             type = ability.getType();
         } else if (attack.equals("Jugulate")) {
             ability.jugulate();
-            jugTime = ability.getCooldown();
+            timers.setJugulate(ability.getCooldown());
             potency = ability.getPotency();
             type2 = "Ability";
             type = ability.getType();
         } else if (attack.equals("Trick_Attack")) {
             ability.trickAttack();
-            tATime = ability.getCooldown();
+            timers.setTrickAttack(ability.getCooldown());
             potency = ability.getPotency();
             type2 = "Ability";
             type = ability.getType();
-            suitonUsed = false;
-            rotation.setSuitonUsed(suitonUsed);
+            state.setSuiton(false);
+            rotation.setSuitonUsed(state.isSuiton());
 
         } else if (attack.equals("Internal_Release")) {
             monkCrossClass.internalRelease();
-            iRTime = monkCrossClass.getCooldown();
+            timers.setInternalRelease(monkCrossClass.getCooldown());
             potency = monkCrossClass.getPotency();
             type2 = "Ability";
             type = monkCrossClass.getType();
         } else if (attack.equals("Blood_for_Blood")) {
             dragoonCrossClass.bloodForBlood();
-            bFBTime = dragoonCrossClass.getCooldown();
+            timers.setBloodForBlood(dragoonCrossClass.getCooldown());
             potency = dragoonCrossClass.getPotency();
             type2 = "Ability";
             type = dragoonCrossClass.getType();
         } else if (attack.equals("Potion")) {
             potion.potion();
-            potionTime = potion.getCooldown();
+            timers.setPotionTime(potion.getCooldown());
             potency = potion.getPotency();
             type2 = "Ability";
             type = potion.getType();
@@ -419,15 +388,15 @@ public class Simulatorpart {
             weaponSkills.dancingEdge();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
-            dancingTime = 20;
+            timers.setDancingEdge(20);
             type2 = "Weapon Skill";
         } else if (attack.equals("Armor_Crush")) {
             weaponSkills.armorCrush();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
-            hutonTime = hutonTime + 30;
-            if (hutonTime > 70) {
-                hutonTime = 70;
+            timers.setHutonTime(timers.getHutonTime() + 30);
+            if (timers.getHutonTime() > 70) {
+                timers.setHutonTime(70);
             }
             type2 = "Weapon Skill";
         } else if (attack.equals("Shadow_Fang")) {
@@ -436,10 +405,10 @@ public class Simulatorpart {
             potency = weaponSkills.getPotency();
 
             SF.setTime(weaponSkills.getDoTTime());
-            SF.setBloodForBlood(bFBDamage);
-            SF.setInternalRelease(iRDamage);
-            SF.setTrickAttack(tADamage);
-            if (potionTime >= 255 && potionTime <= 270){SF.setPotion(true);}
+            SF.setBloodForBlood(state.getBloodForBlood());
+            SF.setInternalRelease(state.getInternalRelease());
+            SF.setTrickAttack(state.getTrickAttack());
+            if (timers.getPotionTime() >= 255 && timers.getPotionTime() <= 270){SF.setPotion(true);}
             else SF.setPotion(false);
             type2 = "Weapon Skill";
 
@@ -448,10 +417,10 @@ public class Simulatorpart {
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             Mut.setTime(weaponSkills.getDoTTime());
-            Mut.setBloodForBlood(bFBDamage);
-            Mut.setInternalRelease(iRDamage);
-            Mut.setTrickAttack(tADamage);
-            if (potionTime >= 255 && potionTime <= 270){Mut.setPotion(true);}
+            Mut.setBloodForBlood(state.getBloodForBlood());
+            Mut.setInternalRelease(state.getInternalRelease());
+            Mut.setTrickAttack(state.getTrickAttack());
+            if (timers.getPotionTime() >= 255 && timers.getPotionTime() <= 270){Mut.setPotion(true);}
             else Mut.setPotion(false);
             type2 = "Weapon Skill";
         }
@@ -461,81 +430,68 @@ public class Simulatorpart {
 
 
     private void cooldownReset() {
-        bFBTime = 0;
-        iRTime = 0;
-        kassatsuTime = 0;
-        dualityTime = 0;
-        dWaDTime = 0;
-        mudraTime = 0;
-        tATime = 0;
-        mugTime = 0;
-        jugTime = 0;
-        nextAA = 0;
-        nextDoT = 0;
-        nextGCD = 0;
-        nextoGCD = 0;
         Mut.setTime(0);
         SF.setTime(0);
 
     }
 
     private void multipliers() {
-        if (bFBTime <= 80 && bFBTime >= 60) {
-            bFBDamage = 1.1;
-        } else bFBDamage = 1.0;
+        if (timers.getBloodForBlood() <= 80 && timers.getBloodForBlood() >= 60) {
+            state.setBloodForBlood(1.1);
+        } else state.setBloodForBlood(1.0);
 
-        if (dancingTime > 0) {
-            dancingEdgeDamage = 1.1;
-        } else dancingEdgeDamage = 1.0;
+        if (timers.getDancingEdge() > 0) {
+            state.setDancingEdge(1.1);
+        } else state.setDancingEdge(1.0);
 
-        if (potionTime <= 270 && potionTime >= 255) {
-            potionDamage = (154.0 + stats.getMainStat()) / stats.getMainStat();
-        } else potionDamage = 1.0;
+        if (timers.getPotionTime() <= 270 && timers.getPotionTime() >= 255) {
+            state.setPotionTime((154.0 + stats.getMainStat()) / stats.getMainStat());
+        } else state.setPotionTime(1.0);
 
-        if (tATime <= 60 && tATime >= 50) {
-            tADamage = 1.1;
-        } else tADamage = 1.0;
+        if (timers.getTrickAttack() <= 60 && timers.getTrickAttack() >= 50) {
+            state.setTrickAttack(1.1);
+        } else state.setTrickAttack(1.0);
 
-        if (iRTime <= 60 && iRTime >= 45) {
-            iRDamage = 0.1;
+        if (timers.getInternalRelease() <= 60 && timers.getInternalRelease() >= 45) {
+            state.setInternalRelease(0.1);
 
-        } else iRDamage = 0.0;
+        } else state.setInternalRelease(0.0);
     }
 
     private double damageMultiplier(String type) {
         int multiplier = 1;
         if (type.equals("Physical")) {
 
-            if (dualityUsed && type2.equals("Weapon Skill")) {
+            if (state.isDuality() && type2.equals("Weapon Skill")) {
 
-                dualityUsed = false;
-                return statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 2 * 1.2;
+                state.setDuality(false);
+                return statmultiplier * state.getBloodForBlood() * state.getPotionTime() * state.getDancingEdge() * state.getTrickAttack() * 2 * 1.2;
 
 
-            } else if (iRTime <= 60 && iRTime >= 45) {
+            } else if (timers.getInternalRelease() <= 60 && timers.getInternalRelease() >= 45) {
 
-                return (1 + (((((double)stats.getCriticalHitRating() - 354) / (858 * 5) + 0.05 + 0.1)) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
+                return (1 + (((((double)stats.getCriticalHitRating() - 354) / (858 * 5) + 0.05 + 0.1)) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * state.getBloodForBlood() * state.getPotionTime() * state.getDancingEdge() * state.getTrickAttack() * 1.2;
             } else {
-                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * dancingEdgeDamage * tADamage * 1.2;
+                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * state.getBloodForBlood() * state.getPotionTime() * state.getDancingEdge() * state.getTrickAttack() * 1.2;
             }
         } else if (type.equals("Magical")) {
-            if (!mudraType.equals("NoN") && kassatsuUsed) {
-                kassatsuUsed = false;
-                return (1 + ((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.45)) * statmultiplier * bFBDamage * potionDamage * tADamage;
+            if (!mudraType.equals("NoN") && state.isKassatsu()) {
+                state.setKassatsu(false);
+                return (1 + ((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.45)) * statmultiplier * state.getBloodForBlood() * state.getPotionTime() * state.getTrickAttack();
 
-            } else if (iRTime <= 60 && iRTime >= 45) {
-                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + 0.1) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * tADamage;
+            } else if (timers.getInternalRelease() <= 60 && timers.getInternalRelease() >= 45) {
+                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + 0.1) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * state.getBloodForBlood() * state.getPotionTime() * state.getTrickAttack();
 
             } else {
-                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * bFBDamage * potionDamage * tADamage;
+                return (1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * statmultiplier * state.getBloodForBlood() * state.getPotionTime() * state.getTrickAttack();
 
             }
         } else if (type.equals("Auto Attack")) {
-            if (iRTime <= 60 && iRTime >= 45) {
-                return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + 0.1) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
+            if (timers.getInternalRelease() <= 60 && timers.getInternalRelease() >= 45) {
+                return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05 + 0.1) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * state.getBloodForBlood() * state.getPotionTime() * state.getDancingEdge() * state.getTrickAttack() * 1.2);
             } else {
 
-                return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * bFBDamage * tADamage * potionDamage * dancingEdgeDamage * 1.2);
+                return ((1 + (((((double) stats.getCriticalHitRating() - 354) / (858 * 5)) + 0.05) * (((double) stats.getCriticalHitRating() - 354) / (858 * 5) + 0.45))) * (stats.getWeaponDamage() / (3 / 2.56) * 0.0593365489928915 + 1) * (stats.getMainStat() * 0.0841892) * ((double) stats.getDetermination() / 6832.8 + 1) * state.getBloodForBlood() * state.getPotionTime() * state.getDancingEdge() * state.getTrickAttack() * 1.2);
 
             }
         }
@@ -545,48 +501,20 @@ public class Simulatorpart {
     }
 
     private void timeChange(double change) {
-        nextAA = nextAA - change;
-        nextoGCD = nextoGCD - change;
-        nextGCD = nextGCD - change;
-        nextDoT = nextDoT - change;
-        bFBTime = bFBTime - change;
-        iRTime = iRTime - change;
-        kassatsuTime = kassatsuTime - change;
-        dualityTime = dualityTime - change;
-        dWaDTime = dWaDTime - change;
-        mudraTime = mudraTime - change;
-        tATime = tATime - change;
-        mugTime = mugTime - change;
-        jugTime = jugTime - change;
-        dancingTime = dancingTime - change;
-        hutonTime = hutonTime - change;
-        machinistTime = machinistTime - change;
-        dragoonTime = dragoonTime - change;
-        potionTime = potionTime - change;
-        SF.changeTime(change);
-        Mut.changeTime(change);
+        nextAttack.timeChange(change);
+        timers.timeChange(change);
+        SF.timeChange(change);
+        Mut.timeChange(change);
 
 
     }
 
     private void setTimersForRotation() {
-        timersForRotation = new ArrayList<>(16);
-        timersForRotation.add(bFBTime);
-        timersForRotation.add(iRTime);
-        timersForRotation.add(kassatsuTime);
-        timersForRotation.add(dualityTime);
-        timersForRotation.add(dWaDTime);
-        timersForRotation.add(mudraTime);
-        timersForRotation.add(tATime);
-        timersForRotation.add(mugTime);
-        timersForRotation.add(jugTime);
-        timersForRotation.add(dancingTime);
-        timersForRotation.add(hutonTime);
-        timersForRotation.add(potionTime);
+        timersForRotation = new ArrayList<>(4);
         timersForRotation.add(SF.getTime());
         timersForRotation.add(Mut.getTime());
         timersForRotation.add(recast);
-        timersForRotation.add(nextGCD);
+        timersForRotation.add(nextAttack.getNextGCD());
     }
 
 

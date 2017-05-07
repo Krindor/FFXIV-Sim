@@ -16,6 +16,7 @@ public class Formulas{
     public Formulas(StatModel statModel, int jobmod){
         this.statModel=statModel;
         multiplier =(statModel.getWeaponDamage()+((218*jobmod/1000)))*(((statModel.getMainStat()*100)/218)/100)*((1+(((statModel.getDetermination()-218)*1000)/(9.3*858)/1000)));
+        System.out.println(multiplier);
         ssModifier = (((statModel.getSkillSpeed() + statModel.getSpellSpeed()-(2 * 354))/6800)+1);
         potionMultiplier = (statModel.getMainStat() + 154.0)/statModel.getMainStat();
     }

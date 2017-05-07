@@ -17,13 +17,13 @@ public class NextAttack {
 
     private ArrayList<Double> timers;
 
-    private NextAttack(){
+    public NextAttack(){
         timers = new ArrayList<>(4);
 
-        timers.add(nextAA);
-        timers.add(nextDoT);
-        timers.add(nextGCD);
-        timers.add(nextoGCD);
+        timers.add(0.0);
+        timers.add(0.0);
+        timers.add(0.0);
+        timers.add(0.0);
     }
 
     public double getNextAA() {
@@ -58,11 +58,21 @@ public class NextAttack {
         this.nextoGCD = nextOGCD;
     }
 
-    public double getNextAttack(){
+    public void setNextAttack() {
         timers.set(0, nextGCD);
         timers.set(1, nextoGCD);
         timers.set(2, nextAA);
         timers.set(3, nextDoT);
+    }
+
+    public void timeChange(double change){
+        nextAA = nextAA - change;
+        nextoGCD = nextoGCD - change;
+        nextGCD = nextGCD - change;
+        nextDoT = nextDoT - change;
+    }
+
+    public double getNextAttack(){
 
         return Collections.min(timers);
     }

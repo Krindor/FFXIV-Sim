@@ -23,6 +23,20 @@ public class Resistance {
 
     }
 
+    protected void resistanceTimer(){
+        dragonKick = 0;
+        dancingEdge = 0;
+        hyperCharge = 0;
+        trickAttack = 0;
+    }
+
+    public void timeChangeResistance(double change){
+        dragonKick = dragonKick - change;
+        dancingEdge = dancingEdge - change;
+        hyperCharge = hyperCharge - change;
+        trickAttack = trickAttack - change;
+    }
+
     public double getDragonKick() {
         return dragonKick;
     }
