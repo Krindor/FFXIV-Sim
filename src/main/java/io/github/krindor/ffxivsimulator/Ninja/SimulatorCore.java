@@ -21,6 +21,7 @@ public class SimulatorCore extends io.github.krindor.ffxivsimulator.OverallClass
 
    public SimulatorCore(){
        setJob("Ninja");
+       setJobmod(110);
    }
     private static boolean warThere;
 

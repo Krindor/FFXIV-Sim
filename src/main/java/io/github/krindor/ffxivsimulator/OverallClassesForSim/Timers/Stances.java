@@ -21,6 +21,7 @@ public class Stances extends DamageBuffs{
     public Stances(){
         hutonTime = 0;
         glTime = 0;
+        glStacks = 0;
     }
 
     public void setGlTime(double glTime){

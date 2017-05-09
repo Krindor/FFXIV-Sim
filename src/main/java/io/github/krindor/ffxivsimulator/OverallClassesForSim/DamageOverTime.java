@@ -16,9 +16,12 @@ public class DamageOverTime extends DamageBuffs{
 
     private double time;
 
-    public DamageOverTime(int potency, StatModel statModel, int jobmod){
+    private String name;
+
+    public DamageOverTime(int potency, StatModel statModel, int jobmod, String name){
         formulas = new Formulas(statModel, jobmod);
         this.potency = potency;
+        this.name = name;
     }
 
     public double getDamage(String job){
@@ -32,6 +35,10 @@ public class DamageOverTime extends DamageBuffs{
 
         }
         return damage;
+    }
+
+    public String getName() {
+        return name + " DoT";
     }
 
     public double getTime() {

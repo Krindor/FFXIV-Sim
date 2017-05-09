@@ -1,9 +1,5 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.Ninja.SimulatorCore;
-import io.github.krindor.ffxivsimulator.Ninja.Simulatorpart;
-import io.github.krindor.ffxivsimulator.model.StatModel;
-
 import java.util.ArrayList;
 import java.util.concurrent.*;
 
@@ -12,58 +8,30 @@ import java.util.concurrent.*;
  */
 public class RunSimThreaded implements Callable {
     private int iterations;
-    private StatModel stats;
-    private int time;
-    private boolean machinist;
-    private boolean dragoon;
-    private boolean warThere;
-    private String openerType;
-    private int hutonTime;
-    private ArrayList<String> opener;
+
     private String activeClass;
     private static ArrayList<Double> numberSim;
-    private io.github.krindor.ffxivsimulator.Ninja.SimulatorCore nincore;
-    private io.github.krindor.ffxivsimulator.Monk.SimulatorCore mnkcore;
+
     private ArrayList<String> damageArray;
+    private SimSelector simSelector;
 
 
     public RunSimThreaded(String job) {
         activeClass = job;
         damageArray = new ArrayList<>(1000);
+        simSelector = new SimSelector(job);
     }
 
 
     @Override
     public ArrayList<String> call() {
-
-
-        if (activeClass.equals("Ninja")) {
-            nincore = new SimulatorCore();
-            setNinja();
-            runNinja();
-        }
-        if (activeClass.equals("Monk")) {
-            mnkcore = new io.github.krindor.ffxivsimulator.Monk.SimulatorCore();
-            setMonk();
-            runMonk();
-        }
-
+        run();
         return damageArray;
     }
 
     public ArrayList<String> runSim() {
+        iterations = simSelector.getIterations();
 
-        if (activeClass.equals("Ninja")) {
-            nincore = new SimulatorCore();
-            iterations = nincore.getIterations();
-            setNinja();
-        }
-
-        if (activeClass.equals("Monk")) {
-            mnkcore = new io.github.krindor.ffxivsimulator.Monk.SimulatorCore();
-            iterations = mnkcore.getIterations();
-            setMonk();
-        }
 
         ArrayList<String> damage = new ArrayList<>(1000);
         numberSim = new ArrayList<>(iterations);
@@ -91,21 +59,7 @@ public class RunSimThreaded implements Callable {
                 e.printStackTrace();
             }
 
-        } else if (activeClass.equals("Ninja")) {
-            for (int i = 0; i < iterations; i++) {
-
-                io.github.krindor.ffxivsimulator.Ninja.Simulatorpart Sim = new Simulatorpart(stats, time, openerType, opener);
-
-
-                damage = Sim.runSim();
-
-            }
-        } else if (activeClass.equals("Monk")) {
-            for (int i = 0; i < iterations; i++) {
-                io.github.krindor.ffxivsimulator.Monk.Simulatorpart Sim = new io.github.krindor.ffxivsimulator.Monk.Simulatorpart(stats, time, false, false, openerType, opener);
-                damage = Sim.runSim();
-            }
-        }
+        } else damage = simSelector.runSim();
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000000;
@@ -117,55 +71,16 @@ public class RunSimThreaded implements Callable {
 
     }
 
-    private void setNinja() {
-
-        iterations = nincore.getIterations();
-        stats = nincore.getStats();
-        time = nincore.getTime();
-        machinist = nincore.isMachinist();
-        dragoon = nincore.isDragoon();
-        warThere = nincore.isWarThere();
-        openerType = nincore.getOpenerType();
-        opener = nincore.getOpener();
-        hutonTime = nincore.getHutonTime();
-    }
-
-    private void setMonk() {
-        iterations = mnkcore.getIterations();
-        stats = mnkcore.getStats();
-        time = mnkcore.getTime();
-        openerType = mnkcore.getOpenerType();
-        opener = mnkcore.getOpener();
-        machinist = mnkcore.isMachinist();
-        dragoon = mnkcore.isDragoon();
-
-    }
-
-    private void runNinja() {
-        for (int i = 0; i < nincore.getIterations() / 4; i++) {
-
-
-            Simulatorpart Sim = new Simulatorpart(stats, time, openerType, opener);
-
-            damageArray = Sim.runSim();
-
-            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
-
-
-        }
-    }
-
-    private void runMonk() {
-        for (int i = 0; i < mnkcore.getIterations() / 4; i++) {
-
-
-            io.github.krindor.ffxivsimulator.Monk.Simulatorpart Sim = new io.github.krindor.ffxivsimulator.Monk.Simulatorpart(stats, time, false, false, openerType, opener);
-            damageArray = Sim.runSim();
-            numberSim.add(Double.parseDouble(damageArray.get(damageArray.size() - 1)));
-
+    private void run(){
+        for(int i = 0; i < iterations / 4; i++){
+            damageArray = simSelector.runSim();
 
         }
 
     }
+
+
+
+
 
 }

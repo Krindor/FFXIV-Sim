@@ -14,29 +14,32 @@ public class DamageCalculation {
     private double jobTypeMultiplier;
     private String damageType;
 
-    public DamageCalculation(String job, StatModel statModel) {
+    public DamageCalculation(String job, Formulas formulas) {
 
         this.job = job;
-        formulas = new Formulas(statModel, 100);
+        this.formulas = formulas;
     }
 
     public double getDamage(int potency, String damageType, String resistanceType, BuffsDebuffs buffsDebuffs) {
-
+        double generalMultiplier;
         this.buffsDebuffs = buffsDebuffs;
         this.damageType = damageType;
         double damage = 0;
         classMultiplier();
-        double generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffsDebuffs.getPotion()) * buffsDebuffs.getTrickAttack() * jobTypeMultiplier * classMultiplier;
+        if (damageType.equals("Auto-Attack")) {
+            generalMultiplier = formulas.getAaMultiplier() * jobTypeMultiplier * classMultiplier;
+        }
+        else {generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffsDebuffs.getPotion()) * buffsDebuffs.getTrickAttack() * jobTypeMultiplier * classMultiplier;}
 
         formulas.setCritMultiplier(buffsDebuffs.getCritBuff());
         double critMultiplier = formulas.getCritMultiplier();
 
-        if (damageType.equals("Physical")) {
+        if (damageType.equals("Physical") || damageType.equals("Auto-Attack")) {
             double generalPhysical = generalMultiplier * buffsDebuffs.getHyperCharge();
 
             if (resistanceType.equals("Slashing")) {
                 double slashingMultiplier = generalPhysical * buffsDebuffs.getDancingEdge();
-                if (job.equals("Ninja") && buffsDebuffs.isDuality()) {
+                if (job.equals("Ninja") && buffsDebuffs.isDuality() && !damageType.equals("Auto-Attack")) {
                     damage = slashingMultiplier * 2;
                 } else damage = slashingMultiplier * critMultiplier;
             }
@@ -59,7 +62,7 @@ public class DamageCalculation {
             jobTypeMultiplier = buffsDebuffs.getBloodForBlood();
         }
 
-        if (job.equals("Ninja") && damageType.equals("Physical")) {
+        if (job.equals("Ninja") && (damageType.equals("Physical") || damageType.equals("Auto-Attack"))) {
             classMultiplier = 1.2;
         }
 

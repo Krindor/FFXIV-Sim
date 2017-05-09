@@ -53,8 +53,9 @@ public class Rotation {
 
     }
 
-    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs buffsDebuffs) {
+    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs buffsDebuffs, BuffsDebuffs state) {
         time(timers, buffsDebuffs);
+        dualityUsed = state.isDuality();
         if (prevSkill.equals("Spinning_Edge") && sfdoTTime < recast * 2) {
             return "Shadow_Fang";
         } else if (prevSkill.equals("Spinning_Edge")) {
@@ -66,7 +67,7 @@ public class Rotation {
         } else if (prevSkill.equals("Gust_Slash") && hutonTime < 40 && bFBTime < 60 && iRTime < 45 && potionTime < 255 && tATime < 50 && !dualityUsed) {
             return "Armor_Crush";
         } else if (prevSkill.equals("Gust_Slash")) {
-            dualityUsed = false;
+
             return "Aeolian_Edge";
 
         }
@@ -76,8 +77,10 @@ public class Rotation {
 
     }
 
-    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs buffsDebuffs) {
+    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs buffsDebuffs, BuffsDebuffs state) {
         time(timers, buffsDebuffs);
+        kassatsuUsed = state.isKassatsu();
+        suitonUsed = state.isSuiton();
         if (bFBTime <= 0) {
             return "Blood_for_Blood";
         } else if (iRTime <= 0) {
@@ -91,7 +94,7 @@ public class Rotation {
 
         } else if (mudraTime <= 0) {
             if (kassatsuUsed) {
-                kassatsuUsed = false;
+
                 return "Raiton";
 
             } else if (tATime <= 8 && !suitonUsed) {

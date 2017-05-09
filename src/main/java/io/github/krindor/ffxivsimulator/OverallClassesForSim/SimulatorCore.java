@@ -22,6 +22,7 @@ public class SimulatorCore {
     private static int iterations;
     private static boolean machinist = false;
     private static boolean dragoon = false;
+    private static int jobmod;
 
 
     public void setTime(int times) {
@@ -92,6 +93,14 @@ public class SimulatorCore {
 
     public ArrayList<String> getOpener() {
         return opener;
+    }
+
+    public static int getJobmod() {
+        return jobmod;
+    }
+
+    public static void setJobmod(int jobmod) {
+        SimulatorCore.jobmod = jobmod;
     }
 
     public ArrayList<String> runSim() {
