@@ -15,6 +15,8 @@ public class Resistance {
 
     private double trickAttack;
 
+    private double disembowel;
+
     public Resistance(){
         dragonKick = 1;
         dancingEdge = 1;
@@ -35,6 +37,14 @@ public class Resistance {
         dancingEdge = dancingEdge - change;
         hyperCharge = hyperCharge - change;
         trickAttack = trickAttack - change;
+    }
+
+    public double getDisembowel() {
+        return disembowel;
+    }
+
+    public void setDisembowel(double disembowel) {
+        this.disembowel = disembowel;
     }
 
     public double getDragonKick() {

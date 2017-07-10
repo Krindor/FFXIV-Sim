@@ -1,6 +1,5 @@
-package io.github.krindor.ffxivsimulator.Monk.Priority;
+package io.github.krindor.ffxivsimulator.Dragoon.DragoonSim.Priority;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Resources;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class Rotation {
     public Rotation() {
     }
 
-    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs timer, BuffsDebuffs state, Resources resources) {
+    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs timer, BuffsDebuffs state) {
         time(timers, timer, state);
         if(toddoTTime < recast){
             return "Touch_of_Death";
@@ -53,7 +52,7 @@ public class Rotation {
 
     }
 
-    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs timer, BuffsDebuffs state, Resources resources) {
+    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs timer, BuffsDebuffs state) {
         time(timers, timer, state);
         if(timer.getBloodForBlood() <= 0){
             return "Blood_for_Blood";

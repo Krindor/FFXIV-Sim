@@ -1,11 +1,11 @@
-package io.github.krindor.ffxivsimulator.Ninja.NinjaSim;
+package io.github.krindor.ffxivsimulator.Monk.MonkSim;
 
 import io.github.krindor.ffxivsimulator.CrossClassSkills.Dragoon;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.General;
 import io.github.krindor.ffxivsimulator.CrossClassSkills.Monk;
-import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
-import io.github.krindor.ffxivsimulator.Ninja.Skills.Ability;
-import io.github.krindor.ffxivsimulator.Ninja.Skills.WeaponSkills;
+import io.github.krindor.ffxivsimulator.CrossClassSkills.Warrior;
+import io.github.krindor.ffxivsimulator.Monk.Skills.Ability;
+import io.github.krindor.ffxivsimulator.Monk.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Resources;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by andre on 2017-05-09.
  */
-public class NinjaSkillUsed {
+public class MonkSkillUsed {
     private String type;
     private String specialType;
     private int potency;
@@ -43,90 +43,65 @@ public class NinjaSkillUsed {
     }
     private void useSkill(){
         Ability ability = new Ability();
-        Monk monkCrossClass = new Monk();
+        Warrior warriorCrossClass = new Warrior();
         WeaponSkills weaponSkills = new WeaponSkills();
         Dragoon dragoonCrossClass = new Dragoon();
         General potion = new General();
 
 
 
-        if (attack.equals("Fuma_Shuriken")) {
-            ability.fuma_Shuriken();
+        if (attack.equals("Shoulder_Tackle")) {
+            ability.shoulderTackle();
             type2 = "Ability";
-            timers.setMudra(ability.getCooldown());
+            timers.setShoulderTackle(ability.getCooldown());
             potency = ability.getPotency();
-            specialType = ability.getMudraType();
+
             type = ability.getType();
 
-        } else if (attack.equals("Raiton")) {
-            ability.raiton();
-            timers.setMudra(ability.getCooldown());
+        } else if (attack.equals("Elixir_Field")) {
+            ability.elixirField();
+            timers.setElixirField(ability.getCooldown());
             potency = ability.getPotency();
-            specialType = ability.getMudraType();
-            type = ability.getType();
-            type2 = "Ability";
 
-        } else if (attack.equals("Suiton")) {
-            ability.suiton();
-            timers.setMudra(ability.getCooldown());
-            potency = ability.getPotency();
-            specialType = ability.getMudraType();
-            type = ability.getType();
-            type2 = "Ability";
-            state.setSuiton(true);
-            timers.setSuitonTime(10);
-
-
-        } else if (attack.equals("Kassatsu")) {
-            ability.kassatsu();
-            timers.setKassatsuTime(ability.getCooldown());
-            potency = ability.getPotency();
-            state.setKassatsu(true);
-            type = ability.getType();
-            timers.setMudra(0);
-            type2 = "Ability";
-
-        } else if (attack.equals("Duality")) {
-            ability.duality();
-            timers.setDualityTime(ability.getCooldown());
-            potency = ability.getPotency();
-            state.setDuality(true);
             type = ability.getType();
             type2 = "Ability";
 
-        } else if (attack.equals("Dream_Within_a_Dream")) {
-            ability.dreamWithinADream();
-            timers.setDreamWithinADream(ability.getCooldown());
+        } else if (attack.equals("Forbidden_Chakra")) {
+            ability.forbiddenChakra();
+            state.setChakraStacks(0);
             potency = ability.getPotency();
-            type2 = "Ability";
+
             type = ability.getType();
-        } else if (attack.equals("Mug")) {
-            ability.mug();
-            timers.setMug(ability.getCooldown());
-            potency = ability.getPotency();
             type2 = "Ability";
-            type = ability.getType();
-        } else if (attack.equals("Jugulate")) {
-            ability.jugulate();
-            timers.setJugulate(ability.getCooldown());
-            potency = ability.getPotency();
-            type2 = "Ability";
-            type = ability.getType();
-        } else if (attack.equals("Trick_Attack")) {
-            ability.trickAttack();
-            timers.setTrickAttack(ability.getCooldown());
-            potency = ability.getPotency();
-            type2 = "Ability";
-            type = ability.getType();
-            state.setSuiton(false);
 
 
+        } else if (attack.equals("Steel_Peak")) {
+            ability.steelPeak();
+            timers.setSteelPeak(ability.getCooldown());
+            potency = ability.getPotency();
+
+            type = ability.getType();
+
+            type2 = "Ability";
+
+        } else if (attack.equals("Howling_Fist")) {
+            ability.howlingFist();
+            timers.setHowlingFist(ability.getCooldown());
+            potency = ability.getPotency();
+            type2 = "Ability";
+            type = ability.getType();
+        } else if (attack.equals("Perfect Balance")) {
+            ability.perfectBalance();
+            timers.setPerfectBalance(ability.getCooldown());
+            potency = ability.getPotency();
+            type2 = "Ability";
+            type = ability.getType();
         } else if (attack.equals("Internal_Release")) {
-            monkCrossClass.internalRelease();
-            timers.setInternalRelease(monkCrossClass.getCooldown());
-            potency = monkCrossClass.getPotency();
+            ability.internalRelease();
+            timers.setInternalRelease(ability.getCooldown());
+            potency = ability.getPotency();
             type2 = "Ability";
-            type = monkCrossClass.getType();
+            type = ability.getType();
         } else if (attack.equals("Blood_for_Blood")) {
             dragoonCrossClass.bloodForBlood();
             timers.setBloodForBlood(dragoonCrossClass.getCooldown());
@@ -139,50 +114,64 @@ public class NinjaSkillUsed {
             potency = potion.getPotency();
             type2 = "Ability";
             type = potion.getType();
-        } else if (attack.equals("Spinning_Edge")) {
-            weaponSkills.spinningEdge();
+        } else if (attack.equals("Bootshine")) {
+            weaponSkills.bootshine();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             type2 = "Weapon Skill";
-        } else if (attack.equals("Gust_Slash")) {
-            weaponSkills.gustSlash();
-            type = weaponSkills.getType();
-            potency = weaponSkills.getPotency();
-            type2 = "Weapon Skill";
-        } else if (attack.equals("Aeolian_Edge")) {
-            weaponSkills.aeolianEdge();
-            type = weaponSkills.getType();
-            potency = weaponSkills.getPotency();
-            type2 = "Weapon Skill";
-        } else if (attack.equals("Dancing_Edge")) {
-            weaponSkills.dancingEdge();
-            type = weaponSkills.getType();
-            potency = weaponSkills.getPotency();
-            timers.setDancingEdge(20);
-            type2 = "Weapon Skill";
-        } else if (attack.equals("Armor_Crush")) {
-            weaponSkills.armorCrush();
-            type = weaponSkills.getType();
-            potency = weaponSkills.getPotency();
-            timers.setHutonTime(timers.getHutonTime() + 30);
-            if (timers.getHutonTime() > 70) {
-                timers.setHutonTime(70);
-            }
-            type2 = "Weapon Skill";
-        } else if (attack.equals("Shadow_Fang")) {
-            weaponSkills.shadowFang();
-            type = weaponSkills.getType();
-            potency = weaponSkills.getPotency();
+            state.setBootshine(true);
+            state.setForm(2);
+            specialType = "Bootshine";
 
+        } else if (attack.equals("True_Strike")) {
+            weaponSkills.trueStrike();
+            type = weaponSkills.getType();
+            potency = weaponSkills.getPotency();
+            type2 = "Weapon Skill";
+            state.setForm(3);
+        } else if (attack.equals("Snap_Punch")) {
+            weaponSkills.snapPunch();
+            type = weaponSkills.getType();
+            potency = weaponSkills.getPotency();
+            type2 = "Weapon Skill";
+
+            if (state.getGlStacks() < 3) {
+                state.setGlStacks(state.getGlStacks() + 1);
+            }
+            timers.setGlTime(14);
+            state.setForm(1);
+        } else if (attack.equals("Dragon_Kick")) {
+            weaponSkills.dragonKick();
+            type = weaponSkills.getType();
+            potency = weaponSkills.getPotency();
+            timers.setDragonKick(15);
+            type2 = "Weapon Skill";
+            state.setForm(2);
+        } else if (attack.equals("Twin_Snakes")) {
+            weaponSkills.twinSnakes();
+            type = weaponSkills.getType();
+            potency = weaponSkills.getPotency();
+            type2 = "Weapon Skill";
+            timers.setTwinSnakes(15);
+            state.setForm(3);
+        } else if (attack.equals("Demolish")) {
+            weaponSkills.demolish();
+            type = weaponSkills.getType();
+            potency = weaponSkills.getPotency();
             dotsArray.get(0).setTime(weaponSkills.getDoTTime());
             dotsArray.get(0).setBloodForBlood(state.getBloodForBlood());
             dotsArray.get(0).setInternalRelease(state.getInternalRelease());
             dotsArray.get(0).setTrickAttack(state.getTrickAttack());
             dotsArray.get(0).setPotion(state.getPotion());
             type2 = "Weapon Skill";
+            if (state.getGlStacks() < 3) {
+                state.setGlStacks(state.getGlStacks() + 1);
+            }
+            timers.setGlTime(14);
+            state.setForm(1);
 
-        } else if (attack.equals("Mutilate")) {
-            weaponSkills.mutilate();
+        } else if (attack.equals("Touch_of_Death")) {
+            weaponSkills.touchOfDeath();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             dotsArray.get(1).setTime(weaponSkills.getDoTTime());
@@ -191,7 +180,19 @@ public class NinjaSkillUsed {
             dotsArray.get(1).setTrickAttack(state.getTrickAttack());
             dotsArray.get(1).setPotion(state.getPotion());
             type2 = "Weapon Skill";
+        } else if(attack.equals("Fracture")){
+            warriorCrossClass.fracture();
+            type = warriorCrossClass.getType();
+            potency = warriorCrossClass.getPotency();
+            dotsArray.get(2).setTime(weaponSkills.getDoTTime());
+            dotsArray.get(2).setBloodForBlood(state.getBloodForBlood());
+            dotsArray.get(2).setInternalRelease(state.getInternalRelease());
+            dotsArray.get(2).setTrickAttack(state.getTrickAttack());
+            dotsArray.get(2).setPotion(state.getPotion());
+            type2 = "Weapon Skill";
         }
+
+
     }
 
     public String getType() {
@@ -226,5 +227,7 @@ public class NinjaSkillUsed {
         return dotsArray;
     }
 
-    public Resources getResources(){return resources;}
+    public Resources getResources() {
+        return resources;
+    }
 }

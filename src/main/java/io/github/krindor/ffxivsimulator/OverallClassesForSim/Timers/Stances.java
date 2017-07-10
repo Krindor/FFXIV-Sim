@@ -9,12 +9,16 @@ public class Stances extends DamageBuffs{
     private double chakraStacks;
     private double form;
     private double glTime;
+    private double bloodOfTheDragoon;
+
+
 
 
 
     public void timeChangeStances(double change){
         hutonTime = hutonTime - change;
         glTime = glTime - change;
+        bloodOfTheDragoon = bloodOfTheDragoon - change;
     }
 
 
@@ -22,6 +26,15 @@ public class Stances extends DamageBuffs{
         hutonTime = 0;
         glTime = 0;
         glStacks = 0;
+        chakraStacks = 5;
+    }
+
+    public double getBloodOfTheDragoon() {
+        return bloodOfTheDragoon;
+    }
+
+    public void setBloodOfTheDragoon(double bloodOfTheDragoon) {
+        this.bloodOfTheDragoon = bloodOfTheDragoon;
     }
 
     public void setGlTime(double glTime){

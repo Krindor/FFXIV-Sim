@@ -1,0 +1,71 @@
+{
+  "jobs": [
+    {
+      "name": "Monk",
+      "buffs": [
+        {
+          "name": "Twin Snakes",
+          "duration": 15,
+          "type": "All",
+          "increase": 1.1,
+          "target": "Player"
+        }
+      ]
+    },
+    {
+      "name": "Ninja",
+      "buffs": [
+        {
+          "name": "Poison",
+          "duration": 0,
+          "type": "Physical",
+          "increase": 1.2,
+          "target": "Player"
+
+        },
+        {
+          "name": "Huton",
+          "duration": 70,
+          "type": "Haste",
+          "increase": 0.15,
+          "target": "Player"
+        },
+        {
+          "name": "Trick Attack",
+          "duration": 10,
+          "type": "All",
+          "increase": 1.1,
+          "target": "Target"
+        },
+        {
+          "name": "Slashing Resistance Down",
+          "duration": 21,
+          "type": "Slashing",
+          "increase": 1.1,
+          "target": "Target"
+        },
+        {
+          "name": "Kassatsu",
+          "duration": 15,
+          "type": "Special",
+          "increase": 0,
+          "target": "Player"
+        },
+        {
+          "name": "Duality",
+          "duration": 10,
+          "type": "Special",
+          "increase": 0,
+          "target": "Player"
+        },
+        {
+          "name": "Ten Chi Jin",
+          "duration": 10,
+          "type": "Special",
+          "increase": 0,
+          "target": "Player"
+        }
+      ]
+    }
+  ]
+}

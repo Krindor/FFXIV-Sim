@@ -1,5 +1,6 @@
 package io.github.krindor.ffxivsimulator.JavaFX;
 
+import io.github.krindor.ffxivsimulator.TextFileLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -116,39 +117,14 @@ public class GUIclass {
 
     public ArrayList<String> loadOpener(ActionEvent event) {
 
-        ArrayList<String> stringArrayList = new ArrayList<>(30);
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load Opener");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
         File file = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
-        FileReader fileReader;
-        BufferedReader reader;
-        try {
-            fileReader = new FileReader(file);
-            reader = new BufferedReader(fileReader);
+        TextFileLoader textFileLoader = new TextFileLoader();
 
-            String currentLine;
-
-            while ((currentLine = reader.readLine()) != null) {
-                stringArrayList.add(currentLine);
-            }
-
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-
-                if (fileReader != null) {
-                    fileReader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return stringArrayList;
+        return textFileLoader.loadText(file);
     }
 
 

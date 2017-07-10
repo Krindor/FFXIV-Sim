@@ -215,7 +215,7 @@
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label layoutX="720.0" layoutY="8.0" onMousePressed="#closeStage" text="X" />
+                  <Label layoutX="720.0" layoutY="8.0" onMousePressed="#closeProgram" text="X" />
                </children>
             </Pane>
             <Button layoutX="229.0" layoutY="611.0" mnemonicParsing="false" onAction="#loadSavedOpener" prefHeight="50.0" prefWidth="140.0" text="Load">

@@ -16,6 +16,8 @@ public class DamageBuffs extends Resistance{
 
     private double battleLitany;
 
+    private double heavyThrust;
+
     public DamageBuffs(){
         bloodForBlood = 1;
         internalRelease = 0;
@@ -37,6 +39,15 @@ public class DamageBuffs extends Resistance{
         twinSnakes = twinSnakes - change;
         battleLitany = battleLitany - change;
         potionTime = potionTime - change;
+        heavyThrust = heavyThrust - change;
+    }
+
+    public double getHeavyThrust() {
+        return heavyThrust;
+    }
+
+    public void setHeavyThrust(double heavyThrust) {
+        this.heavyThrust = heavyThrust;
     }
 
     public void setBattleLitany(double battleLitany) {

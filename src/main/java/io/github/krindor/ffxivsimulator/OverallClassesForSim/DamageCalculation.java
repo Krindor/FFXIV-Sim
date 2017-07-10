@@ -13,6 +13,7 @@ public class DamageCalculation {
     private double classMultiplier;
     private double jobTypeMultiplier;
     private String damageType;
+    private String specialType;
 
     public DamageCalculation(String job, Formulas formulas) {
 
@@ -20,17 +21,17 @@ public class DamageCalculation {
         this.formulas = formulas;
     }
 
-    public double getDamage(int potency, String damageType, String resistanceType, BuffsDebuffs buffsDebuffs) {
+    public double getDamage(int potency, String damageType, String resistanceType, BuffsDebuffs buffsDebuffs, String specialType) {
         double generalMultiplier;
         this.buffsDebuffs = buffsDebuffs;
         this.damageType = damageType;
+        this.specialType = specialType;
         double damage = 0;
         classMultiplier();
         if (damageType.equals("Auto-Attack")) {
             generalMultiplier = formulas.getAaMultiplier() * jobTypeMultiplier * classMultiplier;
         }
         else {generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffsDebuffs.getPotion()) * buffsDebuffs.getTrickAttack() * jobTypeMultiplier * classMultiplier;}
-
         formulas.setCritMultiplier(buffsDebuffs.getCritBuff());
         double critMultiplier = formulas.getCritMultiplier();
 
@@ -42,6 +43,16 @@ public class DamageCalculation {
                 if (job.equals("Ninja") && buffsDebuffs.isDuality() && !damageType.equals("Auto-Attack")) {
                     damage = slashingMultiplier * 2;
                 } else damage = slashingMultiplier * critMultiplier;
+            }else if (resistanceType.equals("Blunt")){
+                double bluntMultiplier = generalPhysical * buffsDebuffs.getDragonKick();
+                if (buffsDebuffs.isBootshine()){
+                    damage = bluntMultiplier * formulas.getCritDamage();
+                }else damage = bluntMultiplier * critMultiplier;
+            }else if (resistanceType.equals("Piercing")){
+                double piercingMultiplier = generalPhysical * buffsDebuffs.getDisembowel();
+                if (buffsDebuffs.isLifeSurge()){
+                    damage = piercingMultiplier * formulas.getCritDamage();
+                }else damage = piercingMultiplier * critMultiplier;
             }
         }
 
@@ -58,12 +69,28 @@ public class DamageCalculation {
 
     private void classMultiplier() {
         jobTypeMultiplier = 1;
-        if (job.equals("Ninja") || job.equals("Monk")) {
+        if (job.equals("Ninja") || job.equals("Monk") || job.equals("Dragoon")) {
             jobTypeMultiplier = buffsDebuffs.getBloodForBlood();
         }
 
         if (job.equals("Ninja") && (damageType.equals("Physical") || damageType.equals("Auto-Attack"))) {
             classMultiplier = 1.2;
+        }
+
+        if (job.equals("Monk")){
+            classMultiplier = 1.05 * (1+(buffsDebuffs.getGlStacks()*0.1)) * buffsDebuffs.getTwinSnakes();
+        }
+
+        if (job.equals("Dragoon")){
+            classMultiplier = buffsDebuffs.getHeavyThrust();
+            if (specialType.equals("Jump")){
+                if (buffsDebuffs.isPowerSurge()){
+                    classMultiplier = classMultiplier * 1.5;
+                }
+                if (buffsDebuffs.getBloodOfTheDragoon() > 0){
+                    classMultiplier = classMultiplier * 1.3;
+                }
+            }
         }
 
 

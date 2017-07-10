@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.Monk;
+package io.github.krindor.ffxivsimulator.Monk.MonkSim;
 
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 

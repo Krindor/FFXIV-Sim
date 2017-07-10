@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.Monk;
+package io.github.krindor.ffxivsimulator.Dragoon;
 
 
 
@@ -19,14 +19,14 @@ package io.github.krindor.ffxivsimulator.Monk;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SimulatorCore extends io.github.krindor.ffxivsimulator.OverallClassesForSim.SimulatorCore{
+public class DragoonSimulatorCore extends io.github.krindor.ffxivsimulator.OverallClassesForSim.SimulatorCore{
 
 
-    public SimulatorCore(){
-        setJob("Monk");
-        setJobmod(110);
+    public DragoonSimulatorCore(){
+        setJob("Dragoon");
+        setJobmod(105);
     }
-    public int getForm(){return 3;}
+
 
 
 }

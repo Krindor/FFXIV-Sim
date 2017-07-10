@@ -1,5 +1,6 @@
 package io.github.krindor.ffxivsimulator.Ninja.Priority;
 
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Resources;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class Rotation {
 
     }
 
-    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs buffsDebuffs, BuffsDebuffs state) {
+    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs buffsDebuffs, BuffsDebuffs state, Resources resources) {
         time(timers, buffsDebuffs);
         dualityUsed = state.isDuality();
         if (prevSkill.equals("Spinning_Edge") && sfdoTTime < recast * 2) {
@@ -77,7 +78,7 @@ public class Rotation {
 
     }
 
-    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs buffsDebuffs, BuffsDebuffs state) {
+    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs buffsDebuffs, BuffsDebuffs state, Resources resources) {
         time(timers, buffsDebuffs);
         kassatsuUsed = state.isKassatsu();
         suitonUsed = state.isSuiton();
@@ -118,19 +119,19 @@ public class Rotation {
 
     }
 
-    private void time(ArrayList<Double> timersForRotation, BuffsDebuffs buffsDebuffs) {
-        bFBTime = buffsDebuffs.getBloodForBlood();
-        iRTime = buffsDebuffs.getInternalRelease();
-        kassatsuTime = buffsDebuffs.getKassatsuTime();
-        dualityTime = buffsDebuffs.getDualityTime();
-        dWaDTime = buffsDebuffs.getDreamWithinADream();
-        mudraTime = buffsDebuffs.getMudra();
-        tATime = buffsDebuffs.getTrickAttack();
-        mugTime = buffsDebuffs.getMug();
-        jugTime = buffsDebuffs.getJugulate();
-        dancingTime = buffsDebuffs.getDancingEdge();
-        hutonTime = buffsDebuffs.getHutonTime();
-        potionTime = buffsDebuffs.getPotionTime();
+    private void time(ArrayList<Double> timersForRotation, BuffsDebuffs timer) {
+        bFBTime = timer.getBloodForBlood();
+        iRTime = timer.getInternalRelease();
+        kassatsuTime = timer.getKassatsuTime();
+        dualityTime = timer.getDualityTime();
+        dWaDTime = timer.getDreamWithinADream();
+        mudraTime = timer.getMudra();
+        tATime = timer.getTrickAttack();
+        mugTime = timer.getMug();
+        jugTime = timer.getJugulate();
+        dancingTime = timer.getDancingEdge();
+        hutonTime = timer.getHutonTime();
+        potionTime = timer.getPotionTime();
         sfdoTTime = timersForRotation.get(0);
         mutdoTTime = timersForRotation.get(1);
         recast = timersForRotation.get(2);

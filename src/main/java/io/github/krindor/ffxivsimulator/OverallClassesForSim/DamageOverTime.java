@@ -1,12 +1,13 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.Attacks;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.DamageBuffs;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 /**
  * Created by andre on 2017-05-02.
  */
-public class DamageOverTime extends DamageBuffs{
+public class DamageOverTime extends Attacks{
 
     private int potency;
 
@@ -32,6 +33,10 @@ public class DamageOverTime extends DamageBuffs{
 
             damage = formulas.getMultiplier() * (potency / 100.0) * getBloodForBlood() * getHyperCharge() * getTrickAttack() * 1.2 * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(getPotion());
 
+
+        }else if (job.equals("Monk")){
+            damage = formulas.getMultiplier() * (potency / 100.0) * getBloodForBlood() * getHyperCharge() * getTrickAttack() * 1.05 * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(getPotion()) * (1+(getGlStacks() *0.1)) * getTwinSnakes();
+        }else if (job.equals("Dragoon")){
 
         }
         return damage;

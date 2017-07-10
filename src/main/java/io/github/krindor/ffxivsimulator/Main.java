@@ -1,5 +1,8 @@
 package io.github.krindor.ffxivsimulator;
 
+import io.github.krindor.ffxivsimulator.JSON.JSONParse;
+
+import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,7 +38,8 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 1200, 700));
         primaryStage.show();
         primaryStage.setResizable(false);
-
+        JSONParse parse = new JSONParse();
+        JobInfo jobInfo = new JobInfo(parse.getBuffs());
 
     }
 

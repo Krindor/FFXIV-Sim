@@ -20,6 +20,16 @@ public class OtherBuffs extends Stances{
 
     private double mudra;
 
+    private boolean bootshine;
+
+    private boolean lifeSurge;
+
+    private double lifeSurgeTime;
+
+    private boolean powerSurge;
+
+    private double powerSurgeTime;
+
     public OtherBuffs(){
         kassatsuTime = 0;
         dualityTime = 0;
@@ -33,6 +43,39 @@ public class OtherBuffs extends Stances{
         perfectBalance = perfectBalance - change;
         suitonTime = suitonTime - change;
         mudra = mudra - change;
+    }
+
+
+    public boolean isPowerSurge() {
+        return powerSurge;
+    }
+
+    public void setPowerSurge(boolean powerSurge) {
+        this.powerSurge = powerSurge;
+    }
+
+    public double getPowerSurgeTime() {
+        return powerSurgeTime;
+    }
+
+    public void setPowerSurgeTime(double powerSurgeTime) {
+        this.powerSurgeTime = powerSurgeTime;
+    }
+
+    public boolean isLifeSurge() {
+        return lifeSurge;
+    }
+
+    public void setLifeSurge(boolean lifeSurge) {
+        this.lifeSurge = lifeSurge;
+    }
+
+    public double getLifeSurgeTime() {
+        return lifeSurgeTime;
+    }
+
+    public void setLifeSurgeTime(double lifeSurgeTime) {
+        this.lifeSurgeTime = lifeSurgeTime;
     }
 
     public double getMudra() {
@@ -97,5 +140,13 @@ public class OtherBuffs extends Stances{
 
     public void setSuitonTime(double suitonTime) {
         this.suitonTime = suitonTime;
+    }
+
+    public boolean isBootshine() {
+        return bootshine;
+    }
+
+    public void setBootshine(boolean bootshine) {
+        this.bootshine = bootshine;
     }
 }

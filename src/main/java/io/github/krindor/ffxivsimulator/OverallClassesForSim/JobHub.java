@@ -1,6 +1,8 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
+import io.github.krindor.ffxivsimulator.Monk.MonkSim.*;
 import io.github.krindor.ffxivsimulator.Ninja.NinjaSim.*;
+import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 
@@ -19,6 +21,8 @@ public class JobHub {
                 NinjaOpenerCheck ninjaOpenerCheck = new NinjaOpenerCheck();
                 return ninjaOpenerCheck.openerTypeCheck(opener, openerNum);
             case "Monk":
+                MonkOpenerCheck monkOpenerCheck = new MonkOpenerCheck();
+                return monkOpenerCheck.openerTypeCheck(opener, openerNum);
 
         }
         return "NoN";
@@ -29,6 +33,9 @@ public class JobHub {
             case "Ninja":
                 NinjaMultipliers ninjaMultipliers = new NinjaMultipliers();
                 return ninjaMultipliers.multiplier(timers, state);
+            case "Monk":
+                MonkMultipliers monkMultipliers = new MonkMultipliers();
+                return monkMultipliers.multiplier(timers, state);
         }
         return state;
     }
@@ -38,6 +45,9 @@ public class JobHub {
             case "Ninja":
                 NinjaCheckDelay ninjaCheckDelay = new NinjaCheckDelay();
                 return ninjaCheckDelay.nextAttack(currentTime, nextAttack, specialType, attack);
+            case "Monk":
+                MonkCheckDelay monkCheckDelay = new MonkCheckDelay();
+                return monkCheckDelay.nextAttack(currentTime, nextAttack, specialType, attack);
         }return nextAttack;
     }
 
@@ -46,7 +56,32 @@ public class JobHub {
             case "Ninja":
                 NinjaCheckState ninjaCheckState = new NinjaCheckState();
                 return ninjaCheckState.checkState(state, specialType, type2);
+            case "Monk":
+                MonkCheckState monkCheckState = new MonkCheckState();
+                return monkCheckState.checkState(state, specialType, type2);
         }return state;
+    }
+
+    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs timer, BuffsDebuffs state, Resources resources){
+        switch (job){
+            case "Ninja":
+                Rotation ninjaRotation = new Rotation();
+                return ninjaRotation.getNextGCD(timers, prevSkill, timer, state, resources);
+            case "Monk":
+                io.github.krindor.ffxivsimulator.Monk.Priority.Rotation monkRotation = new io.github.krindor.ffxivsimulator.Monk.Priority.Rotation();
+                return monkRotation.getNextGCD(timers, prevSkill, timer, state, resources);
+        }return "NoN";
+    }
+
+    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs timer, BuffsDebuffs state, Resources resources){
+        switch (job){
+            case "Ninja":
+                Rotation ninjaRotation = new Rotation();
+                return ninjaRotation.getNextOGCD(timers, timer, state, resources);
+            case "Monk":
+                io.github.krindor.ffxivsimulator.Monk.Priority.Rotation monkRotation = new io.github.krindor.ffxivsimulator.Monk.Priority.Rotation();
+                return monkRotation.getNextOGCD(timers, timer, state, resources);
+        }return "NoN";
     }
 
     private String type;
@@ -57,12 +92,13 @@ public class JobHub {
     private BuffsDebuffs timers;
     private BuffsDebuffs state;
     private ArrayList<DamageOverTime> dotsArray;
+    private Resources resources;
 
-    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray){
+    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray, Resources resources){
         switch (job){
             case "Ninja":
                 NinjaSkillUsed ninjaSkillUsed = new NinjaSkillUsed();
-                ninjaSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray);
+                ninjaSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray, resources);
                 this.type = ninjaSkillUsed.getType();
                 this.specialType = ninjaSkillUsed.getSpecialType();
                 this.potency = ninjaSkillUsed.getPotency();
@@ -71,7 +107,21 @@ public class JobHub {
                 this.timers = ninjaSkillUsed.getTimers();
                 this.state = ninjaSkillUsed.getState();
                 this.dotsArray = ninjaSkillUsed.getDotsArray();
+                this.resources = ninjaSkillUsed.getResources();
+                break;
+            case "Monk":
 
+                MonkSkillUsed monkSkillUsed = new MonkSkillUsed();
+                monkSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray, resources);
+                this.type = monkSkillUsed.getType();
+                this.specialType = monkSkillUsed.getSpecialType();
+                this.potency = monkSkillUsed.getPotency();
+                this.attack = monkSkillUsed.getAttack();
+                this.type2 = monkSkillUsed.getType2();
+                this.timers = monkSkillUsed.getTimers();
+                this.state = monkSkillUsed.getState();
+                this.dotsArray = monkSkillUsed.getDotsArray();
+                this.resources = monkSkillUsed.getResources();
 
         }
     }
@@ -107,4 +157,6 @@ public class JobHub {
     public ArrayList<DamageOverTime> getDotsArray() {
         return dotsArray;
     }
+
+    public Resources getResources(){return resources;}
 }
