@@ -9,6 +9,8 @@ public class Buffs {
     String type;
     double increase;
     String target;
+    String type2;
+    int maxStacks;
 
     public String getName() {
         return name;
@@ -30,6 +32,10 @@ public class Buffs {
         return target;
     }
 
+    public String getType2() {
+        return type2;
+    }
+
     public void timeChange(double change){
         duration = duration - change;
     }
@@ -37,4 +43,9 @@ public class Buffs {
     public void setDuration(double duration) {
         this.duration = duration;
     }
+
+    public int getMaxStacks() {
+        return maxStacks;
+    }
+
 }

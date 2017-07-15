@@ -7,11 +7,181 @@
           "name": "Twin Snakes",
           "duration": 15,
           "type": "All",
+          "type2": "All",
           "increase": 1.1,
           "target": "Player"
+        },
+        {
+          "name": "Internal Release",
+          "duration":15,
+          "increase":0.3,
+          "type":"All",
+          "type2": "Crit",
+          "target":"Player"
+        },
+        {
+          "name": "Greased Lightning",
+          "duration":16,
+          "increase":1.1,
+          "type":"All",
+          "type2":"All",
+          "target":"Player",
+          "maxStacks":3
+        },
+        {
+            "name":"Dragon Kick",
+            "duration":15,
+            "type": "Physical",
+            "type2": "Blunt",
+            "target":"Player"
+        },
+        {
+            "name": "Perfect Balance",
+            "duration": 10,
+            "type":"All",
+            "type2":"Special",
+            "target":"Player"
+        },
+        {
+            "name":"Riddle of Earth",
+            "duration": 30,
+            "type":"All",
+            "type2":"Special",
+            "target":"Player"
+        },
+        {
+            "name": "Riddle of Fire",
+            "duration":20,
+            "increase":1.3,
+            "type":"All",
+            "type2":"All",
+            "target":"Player"
+        },
+        {
+            "name": "Brotherhood",
+            "duration":15,
+            "type":"All",
+            "type2":"Special",
+            "target":"Player"
+        },
+        {
+            "name":"Fists of Fire",
+            "duration": 0,
+            "increase":1.05,
+            "type":"All",
+            "type2":"All"
+        },
+        {
+            "name": "Meditation",
+            "type":"All",
+            "type2":"Special",
+            "target":"Player",
+            "maxStacks": 5
+
         }
-      ]
+      ],
+      "skills": [
+        {
+        "name": "Bootshine",
+        "potency": 140,
+        "type": "Physical",
+        "type2": "Blunt",
+        "special": "Crit"
+        },
+        {
+          "name": "True Strike",
+          "potency": 180,
+          "type":"Physical",
+          "type2":"Blunt"
+        },
+        {
+            "name": "Snap Punch",
+            "potency":170,
+            "type":"Physical",
+            "type2":"Blunt",
+            "buff": "Greased Lightning",
+            "buffTime": 16
+        },
+        {
+            "name": "Twin Snakes",
+            "potency": 130,
+            "type":"Physical",
+            "type2":"Blunt",
+            "buff": "Twin Snakes",
+            "buffTime": 15
+        },
+        {
+            "name": "Demolish",
+            "potency": 70,
+            "buff": "Greased Lightning",
+            "buffTime": 16,
+            "dotPotency": 50,
+            "dotTime": 18
+        },
+        {
+            "name": "Dragon Kick",
+            "potency":140,
+            "type":"Physical",
+            "type2":"Blunt",
+            "buff":"Dragon Kick",
+            "buffTime":15
+        }
+        ],
+        "abilities":[
+            {
+                "name":"Internal Release",
+                "cooldown": 60,
+                "buff":"Internal Release"
+            },
+            {
+                "name":"Shoulder Tackle",
+                "cooldown":30,
+                "potency": 100,
+            "type": "Physical",
+            "type2": "Blunt"
+            },
+            {
+                "name":"Howling Fist",
+                "cooldown":60,
+                "potency":210,
+            "type": "Physical",
+            "type2": "Blunt"
+            },
+            {
+                "name":"Perfect Balance",
+                "cooldown":180,
+                "buff":"Perfect Balance"
+            },
+            {
+                "name": "The Forbidden Chakra",
+                "cooldown": 5,
+                "potency":250,
+            "type": "Physical",
+            "type2": "Blunt",
+            "specialValue":5
+            },
+            {
+                "name":"Elixir Field",
+                "cooldown":30,
+                "potency":220,
+            "type": "Physical",
+            "type2": "Blunt"
+            },
+            {
+                "name": "Riddle of Fire",
+                "cooldown": 90,
+                "buff":"Riddle of Fire"
+                
+            },
+            {
+                "name":"Brotherhood",
+                "cooldown":90,
+                "buff":"Brotherhood"
+            }
+        ]
+        
     },
+    
     {
       "name": "Ninja",
       "buffs": [
@@ -19,6 +189,7 @@
           "name": "Poison",
           "duration": 0,
           "type": "Physical",
+          "type2": "All",
           "increase": 1.2,
           "target": "Player"
 
@@ -27,6 +198,7 @@
           "name": "Huton",
           "duration": 70,
           "type": "Haste",
+          "type2": "All",
           "increase": 0.15,
           "target": "Player"
         },
@@ -34,13 +206,15 @@
           "name": "Trick Attack",
           "duration": 10,
           "type": "All",
+          "type2": "All",
           "increase": 1.1,
           "target": "Target"
         },
         {
           "name": "Slashing Resistance Down",
           "duration": 21,
-          "type": "Slashing",
+          "type": "Physical",
+          "type2": "Slashing",
           "increase": 1.1,
           "target": "Target"
         },
@@ -48,6 +222,7 @@
           "name": "Kassatsu",
           "duration": 15,
           "type": "Special",
+          "type2": "All",
           "increase": 0,
           "target": "Player"
         },
@@ -55,6 +230,7 @@
           "name": "Duality",
           "duration": 10,
           "type": "Special",
+          "type2": "All",
           "increase": 0,
           "target": "Player"
         },
@@ -62,10 +238,379 @@
           "name": "Ten Chi Jin",
           "duration": 10,
           "type": "Special",
+          "type2": "All",
           "increase": 0,
           "target": "Player"
+        },
+        {
+            "name":"Suiton",
+            "duration":10,
+            "type":"Special",
+            "type2":"All",
+            "target":"Player"
         }
-      ]
-    }
-  ]
-}
+      ],
+        "skills": [{
+            "name": "Spinning Edge",
+            "potency": 150,
+            "type": "Physical",
+            "type2": "Slashing"
+
+        },
+        {
+            "name": "Gust Slash",
+            "potency": 220,
+            "type": "Physical",
+            "type2": "Slashing"
+        },
+        {
+            "name": "Aeolian Edge",
+            "potency": 340,
+            "type": "Physical",
+            "type2": "Slashing"
+        },
+        {
+            "name": "Shadow Fang",
+            "potency": 200,
+            "dotPotency": 40,
+            "dotTime": 21,
+            "buff": "Slashing Debuff",
+            "buffTime": 21
+        },
+        {
+            "name": "Armor Crush",
+            "potency": 300,
+            "buff": "Huton",
+            "buffTime": 30
+        }
+        ],
+        "abilities":[
+            {
+                "name":"Assassinate",
+                "cooldown": 40,
+                "potency": 200,
+            "type": "Physical",
+            "type2": "Slashing"
+            },
+            {
+                "name": "Mug",
+                "cooldown":90,
+                "potency":140,
+            "type": "Physical",
+            "type2": "Slashing"
+            },
+            {
+                "name":"Trick Attack",
+                "cooldown": 60,
+                "potency":400,
+            "type": "Physical",
+            "type2": "Slashing",
+            "buff":"Trick Attack"
+            },
+            {
+                "name": "Jugulate",
+                "cooldown":30,
+                "potency":80,
+            "type": "Physical",
+            "type2": "Slashing"
+            },
+            {
+                "name":"Ten"
+                
+            },
+            {
+                "name":"Chi"
+                
+            },
+            {
+                "name":"Jin"
+                
+            },
+            {
+                "name": "Ninjutsu",
+                "cooldown":20
+            },
+            {
+                "name":"Kassatsu",
+                "cooldown":120,
+                "buff":"Kassatsu"
+            },
+            {
+                "name":"Duality",
+                "cooldown":90,
+                "buff":"Duality"
+            },
+            {
+                "name":"Dream Within a Dream",
+                "cooldown":60,
+                "potency":150,
+            "type": "Physical",
+            "type2": "Slashing"
+            },
+            {
+                "name":"Hellfrog Medium",
+                "cooldown":1,
+                "potency":400,
+            "type": "Magical",
+            "type2": "All",
+            "specialValue":80
+            },
+            {
+                "name":"Bhavacakra",
+                "cooldown":50,
+                "potency":600,
+            "type": "Magical",
+            "type2": "All",
+            "specialValue":80
+            },
+            {
+                "name":"Ten Chi Jin",
+                "cooldown":100,
+                "specialValue":80,
+                "buff":"Ten Chi Jin"
+            },
+            {
+                "name":"Fuma Shuriken",
+                "potency":240,
+                "type": "Physical",
+                "type2": "Slashing"
+            },
+            {
+                "name":"Katon",
+                "potency":250,
+                "type": "Magical",
+            "type2": "All"
+            },
+            {
+                "name":"Raiton",
+                "potency":360,
+                "type": "Magical",
+            "type2": "All"
+            },
+            {
+                "name":"Doton"
+            },
+            {
+                "name":"Suiton",
+                "potency":180,
+                "type": "Magical",
+            "type2": "All",
+            "buff": "Suiton"
+            }
+        ]
+    },{
+        "name": "Dragoon",
+        "buffs":[
+            {
+                "name":"Heavy Thrust",
+                "duration":30,
+                "increase":1.15,
+                "type":"All",
+                "type2":"All",
+                "target":"Player"
+            },
+            {
+                "name":"Life Surge",
+                "duration":10,
+                "increase":1,
+                "type":"All",
+                "type2":"Crit",
+                "target":"Player"
+            },
+            {
+                "name":"Blood for Blood",
+                "duration":20,
+                "increase":1.2,
+                "type":"All",
+                "type2":"All",
+                "target":"Player"
+            },
+            {
+                "name":"Disembowel",
+                "duration":30,
+                "increase":1.05,
+                "type":"Physical",
+                "type2":"Piercing",
+                "target":"Target"
+            },
+            {
+                "name":"Battle Litany",
+                "duration":20,
+                "increase":0.15,
+                "type":"All",
+                "type2":"Crit",
+                "target":"Player"
+            },
+            {
+                "name": "Blood of the Dragon",
+                "duration": 15,
+                "type":"All",
+                "type2":"Special",
+                "target":"Player",
+                "maxStacks":4
+               
+
+            },
+            {
+                "name":"Dragon Sight",
+                "duration":20,
+                "increase":1.1,
+                "type":"All",
+                "type2":"All",
+                "target":"Player"
+            },
+            {
+                "name": "Life of the Dragon",
+                "duration":30,
+                "type":"All",
+                "type2": "Special",
+                "target":"Player"
+            },
+            {
+                "name":"Dive Ready",
+                "duration":100,
+                "type":"All",
+                "type2":"Special",
+                "target":"Player"
+            }
+            
+        ],
+        "skills":[
+            {
+                "name": "True Thrust",
+                "potency":150,
+                "type":"Physical",
+                "type2":"Piercing"
+            },
+            {
+                "name": "Vorpal Thrust",
+                "potency":240,
+                "type":"Physical",
+                "type2":"Piercing"
+            },
+            {
+                "name": "Impulse Drive",
+                "potency": 190,
+                "type":"Physical",
+                "type2":"Piercing"
+            },
+            {
+                "name": "Heavy Thrust",
+                "potency": 180,
+                "type":"Physical",
+                "type2":"Piercing",
+                "buff": "Heavy Thrust",
+                "buffTime": 30
+            },
+            {
+                "name": "Full Thrust",
+                "potency": 440,
+                "type":"Physical",
+                "type2":"Piercing"
+            },
+            {
+                "name":"Disembowel",
+                "potency": 230,
+                "type":"Physical",
+                "type2":"Piercing",
+                "buff": "Piercing Debuff",
+                "buffTime": 30
+            },
+            {
+                "name": "Chaos Thrust",
+                "potency": 270,
+                "type":"Physical",
+                "type2":"Piercing",
+                "dotPotency": 35,
+                "dotTime": 30
+            },
+            {
+                "name": "Fang and Claw",
+                "potency": 290,
+                "type":"Physical",
+                "type2":"Piercing",
+                "buff":"Blood of the Dragon",
+                "buffTime": 10
+            },
+            {
+                "name": "Wheeling Thrust",
+                "potency": 290,
+                "type":"Physical",
+                "type2":"Piercing",
+                "buff":"Blood of the Dragon",
+                "buffTime": 10
+            }
+        ],
+        "abilities":[
+            {
+                "name":"Life Surge",
+                "cooldown":50,
+                "buff":"Life Surge"
+            },
+            {
+                "name":"Blood for Blood",
+                "cooldown":80,
+                "buff":"Blood for Blood"
+            },
+            {
+                "name":"Jump",
+                "cooldown":30,
+                "potency":250,
+                "type": "Physical",
+                "type2": "Piercing",
+                "buff":"Dive Ready"
+            },
+            {
+                "name":"Spineshatter Dive",
+                "cooldown":60,
+                "potency":200,
+                "type": "Physical",
+                "type2": "Piercing",
+                "buff":"Dive Ready"
+            },
+            {
+                "name":"Dragonfire Dive",
+                "cooldown":120,
+                "potency":300,
+                "type": "Physical",
+                "type2": "Piercing"
+            },
+            {
+                "name":"Battle Litany",
+                "cooldown":180,
+                "buff":"Battle Litany"
+            },
+            {
+                "name":"Blood of the Dragon",
+                "cooldown":30,
+                "buff":"Blood of the Dragon"
+            },
+            {
+                "name":"Geirskogul",
+                "cooldown":35,
+                "potency":220,
+                "type": "Physical",
+                "type2": "Piercing"
+            },
+            {
+                "name":"Dragon Sight",
+                "cooldown":120,
+                "buff":"Dragon Sight"
+            },
+            {
+                "name":"Mirage Dive",
+                "cooldown":1,
+                "potency":200,
+                "type": "Physical",
+                "type2": "Piercing"
+            },
+            {
+                "name":"Nastrond",
+                "cooldown":10,
+                "potency":320,
+                "type": "Physical",
+                "type2": "Piercing"
+            }
+
+        ]
+    }]}

@@ -35,8 +35,8 @@ public class Formulas{
         aaRecast = Math.floor((2.56) * 100) / 100;
     }
 
-    public double getPotionMultiplier(boolean potion){
-        if (potion){
+    public double getPotionMultiplier(double potion){
+        if (potion == 0){
             return potionMultiplier;
         }
         return 1;

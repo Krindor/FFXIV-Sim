@@ -14,6 +14,10 @@ import java.util.Collections;
 public class BuffBar {
     private ArrayList<Buffs> buffsArrayList;
 
+    public BuffBar (){
+        buffsArrayList = new ArrayList<>(10);
+
+    }
 
     public void timeChange(double change){
         for (Buffs i: buffsArrayList){
@@ -65,11 +69,15 @@ public class BuffBar {
         }
     }
 
-    public double getMultiplier(String type){
+    public double getMultiplier(String type, String type2){
         double multiplier = 1;
         for (Buffs i: buffsArrayList) {
-            if (i.getType().equals(type) || i.getType().equals("All")){
-                multiplier = multiplier * i.getIncrease();
+            if ((i.getType().equals(type) && (i.getType2().equals(type2) || i.getType2().equals("All"))) || i.getType().equals("All")){
+                if (i.getType2().equals("Crit")){
+                    multiplier = multiplier + i.getIncrease();
+                }else {
+                    multiplier = multiplier * i.getIncrease();
+                }
             }
         }return multiplier;
     }

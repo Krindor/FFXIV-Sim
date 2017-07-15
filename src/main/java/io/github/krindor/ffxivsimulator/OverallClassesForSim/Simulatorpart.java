@@ -5,6 +5,7 @@ import io.github.krindor.ffxivsimulator.Dragoon.DragoonSimulatorCore;
 import io.github.krindor.ffxivsimulator.Monk.Priority.MonkDefaultOpener;
 import io.github.krindor.ffxivsimulator.Ninja.Priority.DefaultOpener;
 
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
@@ -62,6 +63,7 @@ public class Simulatorpart{
     private int jobmod;
     private String job;
     private JobHub jobHub;
+    private BuffBar buffBar;
 
     private Resources resources;
 
@@ -157,7 +159,7 @@ public class Simulatorpart{
 
             if (nextAttack.getNextAA() <= 0) {
                 type = "Auto-Attack";
-                damage = damageCalculation.getDamage(0, type, resistance, state, specialType);
+                damage = damageCalculation.getDamage(0, type, resistance, buffBar);
                 nextAttack.setNextAA(formulas.getAaRecast());
                 damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
             }
@@ -197,7 +199,7 @@ public class Simulatorpart{
         prevAttack = attack;
         if (potency > 0) {
 
-            damage = damageCalculation.getDamage(potency, type, resistance, state, specialType);
+            damage = damageCalculation.getDamage(potency, type, resistance, buffBar);
         }
 
         nextAttack.setNextGCD(formulas.getRecast());
@@ -211,7 +213,7 @@ public class Simulatorpart{
 
         if (potency > 0) {
 
-            damage = damageCalculation.getDamage(potency, type, resistance, state, specialType);
+            damage = damageCalculation.getDamage(potency, type, resistance, buffBar);
         }
 
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
@@ -239,7 +241,7 @@ public class Simulatorpart{
 
         specialType = "NoN";
         potency = 0;
-        jobHub.skillUsed(null, specialType, potency, attack, type2, timers, state, dotsArray, resources);
+        jobHub.skillUsed(null, specialType, potency, attack, type2, timers, state, dotsArray, resources, buffBar);
 
         attack =  jobHub.getAttack();
         dotsArray = jobHub.getDotsArray();

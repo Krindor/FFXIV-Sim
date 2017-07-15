@@ -5,6 +5,7 @@ import io.github.krindor.ffxivsimulator.CrossClassSkills.General;
 import io.github.krindor.ffxivsimulator.Dragoon.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Dragoon.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class DragoonSkillUsed {
     private String type2;
     private BuffsDebuffs timers;
     private BuffsDebuffs state;
+    private BuffBar buffBar;
 
     private ArrayList<DamageOverTime> dotsArray;
 

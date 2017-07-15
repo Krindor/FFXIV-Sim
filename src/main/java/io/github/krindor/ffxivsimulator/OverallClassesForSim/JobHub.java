@@ -3,6 +3,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 import io.github.krindor.ffxivsimulator.Monk.MonkSim.*;
 import io.github.krindor.ffxivsimulator.Ninja.NinjaSim.*;
 import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 
@@ -93,12 +94,13 @@ public class JobHub {
     private BuffsDebuffs state;
     private ArrayList<DamageOverTime> dotsArray;
     private Resources resources;
+    private BuffBar buffBar;
 
-    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray, Resources resources){
+    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray, Resources resources, BuffBar buffBar){
         switch (job){
             case "Ninja":
                 NinjaSkillUsed ninjaSkillUsed = new NinjaSkillUsed();
-                ninjaSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray, resources);
+                ninjaSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray, resources, buffBar);
                 this.type = ninjaSkillUsed.getType();
                 this.specialType = ninjaSkillUsed.getSpecialType();
                 this.potency = ninjaSkillUsed.getPotency();
@@ -159,4 +161,8 @@ public class JobHub {
     }
 
     public Resources getResources(){return resources;}
+
+    public BuffBar getBuffBar() {
+        return buffBar;
+    }
 }

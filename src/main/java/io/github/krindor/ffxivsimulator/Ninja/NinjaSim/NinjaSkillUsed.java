@@ -8,6 +8,7 @@ import io.github.krindor.ffxivsimulator.Ninja.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Ninja.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Resources;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 
 import java.util.ArrayList;
@@ -24,10 +25,11 @@ public class NinjaSkillUsed {
     private BuffsDebuffs timers;
     private BuffsDebuffs state;
     private Resources resources;
+    private BuffBar buffBar;
 
     private ArrayList<DamageOverTime> dotsArray;
 
-    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray, Resources resources)
+    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray, Resources resources, BuffBar buffBar)
 
     {
         this.attack = attack;
@@ -39,6 +41,7 @@ public class NinjaSkillUsed {
         this.timers = timers;
         this.type = type;
         this.type2 = type2;
+        this.buffBar = buffBar;
         useSkill();
     }
     private void useSkill(){
@@ -175,10 +178,7 @@ public class NinjaSkillUsed {
             potency = weaponSkills.getPotency();
 
             dotsArray.get(0).setTime(weaponSkills.getDoTTime());
-            dotsArray.get(0).setBloodForBlood(state.getBloodForBlood());
-            dotsArray.get(0).setInternalRelease(state.getInternalRelease());
-            dotsArray.get(0).setTrickAttack(state.getTrickAttack());
-            dotsArray.get(0).setPotion(state.getPotion());
+            dotsArray.get(0).setBuffBar(buffBar);
             type2 = "Weapon Skill";
 
         } else if (attack.equals("Mutilate")) {
@@ -186,10 +186,7 @@ public class NinjaSkillUsed {
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             dotsArray.get(1).setTime(weaponSkills.getDoTTime());
-            dotsArray.get(1).setBloodForBlood(state.getBloodForBlood());
-            dotsArray.get(1).setInternalRelease(state.getInternalRelease());
-            dotsArray.get(1).setTrickAttack(state.getTrickAttack());
-            dotsArray.get(1).setPotion(state.getPotion());
+            dotsArray.get(1).setBuffBar(buffBar);
             type2 = "Weapon Skill";
         }
     }
