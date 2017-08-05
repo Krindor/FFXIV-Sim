@@ -1,14 +1,18 @@
 package io.github.krindor.ffxivsimulator;
 
+import com.jsoniter.JsonIterator;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.ConfigObject;
 import io.github.krindor.ffxivsimulator.JSON.JSONParse;
 
-import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
+import io.github.krindor.ffxivsimulator.JobClasses.JobJSON;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 /**
  FFXIV Simulator
@@ -38,8 +42,19 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 1200, 700));
         primaryStage.show();
         primaryStage.setResizable(false);
-        JSONParse parse = new JSONParse();
-        JobInfo jobInfo = new JobInfo(parse.getBuffs());
+        JobJSON jobJSON = new JobJSON();
+        JSONParse jsonParse = new JSONParse();
+        JsonIterator iterator = jsonParse.parseJSON("./JSON/Buffs.json");
+        ConfigObject configObject;
+        try {
+            configObject = iterator.read(ConfigObject.class);
+            jobJSON.setJobs(configObject.getJob());
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

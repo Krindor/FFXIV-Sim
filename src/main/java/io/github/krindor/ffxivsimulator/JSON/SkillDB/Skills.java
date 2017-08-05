@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.JSON;
+package io.github.krindor.ffxivsimulator.JSON.SkillDB;
 
 /**
  * Created by andre on 2017-07-13.

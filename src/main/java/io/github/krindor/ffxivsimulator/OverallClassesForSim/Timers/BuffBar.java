@@ -2,7 +2,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 
 
 
-import io.github.krindor.ffxivsimulator.JSON.Buffs;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 
 import java.util.ArrayList;
 import java.util.Collections;
