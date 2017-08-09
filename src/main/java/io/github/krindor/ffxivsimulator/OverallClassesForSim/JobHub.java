@@ -16,30 +16,9 @@ public class JobHub {
     private String job;
     public JobHub(String job){this.job = job;}
 
-    public String openerTypeCheck(ArrayList<String> opener, int openerNum){
-        switch (job){
-            case "Ninja":
-                NinjaOpenerCheck ninjaOpenerCheck = new NinjaOpenerCheck();
-                return ninjaOpenerCheck.openerTypeCheck(opener, openerNum);
-            case "Monk":
-                MonkOpenerCheck monkOpenerCheck = new MonkOpenerCheck();
-                return monkOpenerCheck.openerTypeCheck(opener, openerNum);
 
-        }
-        return "NoN";
-    }
 
-    public BuffsDebuffs multiplier(BuffsDebuffs timers, BuffsDebuffs state){
-        switch (job){
-            case "Ninja":
-                NinjaMultipliers ninjaMultipliers = new NinjaMultipliers();
-                return ninjaMultipliers.multiplier(timers, state);
-            case "Monk":
-                MonkMultipliers monkMultipliers = new MonkMultipliers();
-                return monkMultipliers.multiplier(timers, state);
-        }
-        return state;
-    }
+
 
     public NextAttack nextAttack(double currentTime, NextAttack nextAttack, String specialType, String attack){
         switch (job){
@@ -52,16 +31,7 @@ public class JobHub {
         }return nextAttack;
     }
 
-    public BuffsDebuffs checkState(BuffsDebuffs state, String specialType, String type2){
-        switch (job) {
-            case "Ninja":
-                NinjaCheckState ninjaCheckState = new NinjaCheckState();
-                return ninjaCheckState.checkState(state, specialType, type2);
-            case "Monk":
-                MonkCheckState monkCheckState = new MonkCheckState();
-                return monkCheckState.checkState(state, specialType, type2);
-        }return state;
-    }
+
 
     public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs timer, BuffsDebuffs state, Resources resources){
         switch (job){

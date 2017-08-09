@@ -1,25 +1,29 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
 
-import io.github.krindor.ffxivsimulator.Dragoon.DragoonSimulatorCore;
-import io.github.krindor.ffxivsimulator.Monk.Priority.MonkDefaultOpener;
-import io.github.krindor.ffxivsimulator.Ninja.Priority.DefaultOpener;
-
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AttackType;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
+import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
+import io.github.krindor.ffxivsimulator.RotationOpenerClasses.SkillAction;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
 import io.github.krindor.ffxivsimulator.model.StatModel;
-
+import io.github.krindor.ffxivsimulator.skills.Skill;
 
 import java.io.File;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Created by andre on 2017-02-08.
  */
-public class Simulatorpart{
+public class Simulatorpart {
 
 
     private StatModel stats;
@@ -30,13 +34,8 @@ public class Simulatorpart{
     private BuffsDebuffs timers;
     private BuffsDebuffs state;
 
-    private boolean machinistHC;
-    private boolean dragoonBL;
-
 
     private double totalDamage;
-
-
 
 
     private double damage;
@@ -44,7 +43,7 @@ public class Simulatorpart{
 
     private ArrayList<String> damageLog;
 
-
+    private double damagePerSecond;
     private String attack;
     private int potency;
     private String type;
@@ -56,133 +55,146 @@ public class Simulatorpart{
     private NextAttack nextAttack;
     private ArrayList<Double> timersForRotation;
 
-    private ArrayList<String> opener;
-    private int openerNum;
+
     private Formulas formulas;
     private String resistance;
     private int jobmod;
-    private String job;
+    private String jobName;
     private JobHub jobHub;
     private BuffBar buffBar;
-
+    private ArrayList<Skills> skills;
+    private ArrayList<Buffs> buffs;
+    private ArrayList<Abilities> abilities;
+    private AttackType attackType;
+    private double nextGCD;
     private Resources resources;
 
     private DamageCalculation damageCalculation;
 
-    public Simulatorpart(StatModel stats, int time, String openerType, ArrayList<String> opener, String job) {
-        this.job = job;
-        this.stats = stats;
-        this.time = time;
+    private LinkedList<SkillAction> skillActions;
+
+    public Simulatorpart(JobInfo jobInfo) {
+
+        jobName = jobInfo.getJobName();
+        stats = jobInfo.getStats();
+        time = jobInfo.getTime();
         resources.setTacticalPoints(1000);
         resources.setTotalTactical(1000);
+        Job job = jobInfo.getJob();
+        skills = new ArrayList<>(job.getSkills().length);
+        buffs = new ArrayList<>(job.getAbilities().length);
+        abilities = new ArrayList<>(job.getAbilities().length);
+        Collections.addAll(skills, job.getSkills());
+        Collections.addAll(buffs, job.getBuffs());
+        Collections.addAll(abilities, job.getAbilities());
+        currentTime = 0;
+        skillActions = new LinkedList<>();
+        Collections.addAll(skillActions, jobInfo.getActionObjects().getSkillAction());
 
-
-
-
-        openerNum = 0;
+        jobmod = jobInfo.getJobmod();
         timers = new BuffsDebuffs(0);
         state = new BuffsDebuffs();
-        loadClass(openerType, opener);
-        jobHub = new JobHub(job);
+        loadClass();
+        jobHub = new JobHub(jobName);
         resources = new Resources();
         formulas = new Formulas(stats, jobmod);
-        damageCalculation = new DamageCalculation(job, formulas);
+        damageCalculation = new DamageCalculation(jobName, formulas);
         nextAttack = new NextAttack();
+        resistance = jobInfo.getResistance();
 
-
+        nextGCD = 0;
 
     }
 
-    private void loadClass(String openerType, ArrayList<String> opener) {
-        switch (job){
-            case "Ninja": loadNinja(openerType, opener); break;
-            case "Monk": loadMonk(openerType, opener); break;
-            case "Dragoon": loadDragoon(openerType, opener); break;
+    private void loadClass() {
+        switch (jobName) {
+            case "Ninja":
+                loadNinja();
+                break;
+            case "Monk":
+                loadMonk();
+                break;
+            case "Dragoon":
+                loadDragoon();
+                break;
         }
-
 
 
     }
 
     public ArrayList<String> runSim() {
 
-        double damagePerSecond;
-        currentTime = 0;
 
         damageLog = new ArrayList<>(150);
         while (currentTime <= time) {
 
-            multipliers();
+
             formulas.changeRecast(state);
             setTimersForRotation();
             damage = 0;
 
-
-            if (nextAttack.getNextGCD() <= 0 || nextAttack.getNextOGCD() <= 0) {
-
-                if (openerNum < opener.size()) {
-
-                    if (jobHub.openerTypeCheck(opener, openerNum).equals("OGCD") && nextAttack.getNextOGCD() <= 0) {
-                        openerCheck();
-                        System.out.println(attack);
-
-                        oGCD();
-                        openerNum++;
-                        checkBoolean();
-
-                    } else if (jobHub.openerTypeCheck(opener, openerNum).equals("Weapon_Skill") && nextAttack.getNextGCD() <= 0) {
-
-                        openerCheck();
-                        GCD();
-                        openerNum++;
-                        checkBoolean();
-                    } else nextAttack.setNextOGCD(0.5);
-                } else if (nextAttack.getNextGCD() <= 0) {
-
+            switch (attackType.getType()) {
+                case "Opener": {
+                    SkillAction skillAction = skillActions.getFirst();
+                    attack = skillAction.getName();
+                    double nextTime = 0;
+                    switch (skillAction.getType()) {
+                        case "GCD":
+                            nextTime = nextGCD;
+                            nextGCD = formulas.getRecast();
+                            break;
+                        case "oGCD":
+                            nextTime = 0.7;
+                            if (nextGCD < 0.7 + skillAction.getOffset()) {
+                                nextGCD = 0.7 + skillAction.getOffset();
+                            }
+                            break;
+                    }
+                    nextTime = nextTime + skillAction.getOffset();
+                    nextAttack.addNextAttack("Opener", nextTime);
+                }
+                break;
+                case "GCD": {
                     attack = jobHub.getNextGCD(timersForRotation, prevAttack, timers, state, resources);
                     GCD();
-                    checkBoolean();
 
-                } else if (nextAttack.getNextOGCD() <= 0 && nextAttack.getNextGCD() > 0.9) {
-
+                    nextAttack.addNextAttack("GCD", formulas.getRecast());
+                    nextAttack.addNextAttack("oGCD", 0.7);
+                }
+                break;
+                case "oGCD": {
                     attack = jobHub.getNextOGCD(timersForRotation, timers, state, resources);
                     if (jobHub.getNextOGCD(timersForRotation, timers, state, resources) != null) {
                         oGCD();
-                        checkBoolean();
+
                     } else checkDelay();
-
-
-                } else if (nextAttack.getNextOGCD() <= 0 && nextAttack.getNextGCD() < 1) {
-                    nextAttack.setNextOGCD(nextAttack.getNextGCD());
                 }
-            }
+                break;
+                case "Auto-Attack": {
+                    type = "Auto-Attack";
+                    damage = damageCalculation.getDamage(0, type, resistance, buffBar);
+                    nextAttack.addNextAttack(type, formulas.getAaRecast());
+                    damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
+                }
+                case "DoT": {
+                    for (DamageOverTime dot : dotsArray) {
+                        if (dot.getTime() > 0) {
+                            damage = damage + dot.getDamage(jobName);
 
-            if (nextAttack.getNextAA() <= 0) {
-                type = "Auto-Attack";
-                damage = damageCalculation.getDamage(0, type, resistance, buffBar);
-                nextAttack.setNextAA(formulas.getAaRecast());
-                damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
-            }
-
-            if (nextAttack.getNextDoT() <= 0) {
-
-                for (DamageOverTime dot : dotsArray) {
-                    if (dot.getTime() > 0) {
-                        damage = damage + dot.getDamage(job);
-
-                        damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getDamage(job) * 100) / 100 + " Type: " + dot.getName());
+                            damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getDamage(jobName) * 100) / 100 + " Type: " + dot.getName());
+                        }
                     }
+                    nextAttack.addNextAttack("DoT", 3);
                 }
-                nextAttack.setNextDoT(3);
             }
 
-            nextAttack.setNextAttack();
 
+            attackType = nextAttack.getNextAttack();
 
             totalDamage = totalDamage + damage;
 
-            currentTime = (Math.floor((currentTime + nextAttack.getNextAttack()) * 1000)) / 1000;
-            timeChange(nextAttack.getNextAttack());
+            currentTime = (Math.floor((currentTime + attackType.getTime()) * 1000)) / 1000;
+            timeChange(attackType.getTime());
 
 
         }
@@ -194,26 +206,38 @@ public class Simulatorpart{
     }
 
     private void GCD() {
-
-        skillUsed();
-        prevAttack = attack;
-        if (potency > 0) {
-
-            damage = damageCalculation.getDamage(potency, type, resistance, buffBar);
+        Skills skill = null;
+        for (Skills i : skills){
+            if (i.getName().equals(attack)){
+                skill = i;
+                break;
+            }
         }
 
-        nextAttack.setNextGCD(formulas.getRecast());
-        nextAttack.setNextOGCD(0.7);
+        prevAttack = attack;
+        if (skill.getPotency() > 0) {
+
+            damage = damageCalculation.getDamage(skill.getPotency(), skill.getType(), skill.getType2(), buffBar);
+        }
+
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
     }
 
     private void oGCD() {
-        skillUsed();
+
         checkDelay();
 
-        if (potency > 0) {
+        Abilities abilitie = null;
+        for (Abilities i : abilities){
+            if (i.getName().equals(attack)){
+                abilitie = i;
+                break;
+            }
+        }
 
-            damage = damageCalculation.getDamage(potency, type, resistance, buffBar);
+        if (abilitie.getPotency() > 0) {
+
+            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getType(), abilitie.getType2(), buffBar);
         }
 
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
@@ -224,17 +248,6 @@ public class Simulatorpart{
         nextAttack = jobHub.nextAttack(currentTime, nextAttack, specialType, attack);
     }
 
-    private void checkBoolean(){
-        state = jobHub.checkState(state, specialType, type2);
-    }
-
-    private void openerCheck() {
-
-        attack = opener.get(openerNum);
-
-
-    }
-
 
     private void skillUsed() {
 
@@ -243,7 +256,7 @@ public class Simulatorpart{
         potency = 0;
         jobHub.skillUsed(null, specialType, potency, attack, type2, timers, state, dotsArray, resources, buffBar);
 
-        attack =  jobHub.getAttack();
+        attack = jobHub.getAttack();
         dotsArray = jobHub.getDotsArray();
         potency = jobHub.getPotency();
         specialType = jobHub.getSpecialType();
@@ -253,19 +266,16 @@ public class Simulatorpart{
         type2 = jobHub.getType2();
 
 
-
     }
-
-
-    private void multipliers() {
-        state = jobHub.multiplier(timers, state);
-    }
-
 
 
     private void timeChange(double change) {
         nextAttack.timeChange(change);
         timers.timeChange(change);
+        nextGCD = nextGCD - attackType.getTime();
+        if (nextGCD < 0) {
+            nextGCD = 0;
+        }
         for (DamageOverTime dot : dotsArray) {
             dot.timeChange(change);
         }
@@ -279,20 +289,10 @@ public class Simulatorpart{
         }
 
         timersForRotation.add(formulas.getRecast());
-        timersForRotation.add(nextAttack.getNextGCD());
+
     }
 
-    private void loadNinja(String openerType, ArrayList<String> Opener){
-        DefaultOpener defaultOpener = new DefaultOpener();
-        if (openerType.equals("Default")) {
-            opener = defaultOpener.getOpener();
-        } else {
-            opener = Opener;
-        }
-
-        io.github.krindor.ffxivsimulator.Ninja.SimulatorCore simulatorCore = new io.github.krindor.ffxivsimulator.Ninja.SimulatorCore();
-        jobmod = simulatorCore.getJobmod();
-        resistance = "Slashing";
+    private void loadNinja() {
 
         dotsArray = new ArrayList<>(2);
         dotsArray.add(new DamageOverTime(40, stats, jobmod, "Shadow Fang"));
@@ -302,64 +302,30 @@ public class Simulatorpart{
         resources.setClassSpecific(0);
         resources.setTotalClass(100);
 
-        machinistHC = simulatorCore.isMachinist();
-        dragoonBL = simulatorCore.isDragoon();
 
-        if (simulatorCore.isWarThere()) {
-            timers.setDancingEdge(time + 1);
-        }
-        timers.setHutonTime(70 - simulatorCore.getHutonTime());
-
-        timers.setMudra(20 - simulatorCore.getHutonTime());
     }
 
-    private void loadMonk(String openerType, ArrayList<String> Opener){
-        MonkDefaultOpener defaultOpener = new MonkDefaultOpener();
-        if (openerType.equals("Default")) {
-            opener = defaultOpener.getOpener();
-        } else {
-            opener = Opener;
-        }
-        io.github.krindor.ffxivsimulator.Monk.SimulatorCore simulatorCore = new io.github.krindor.ffxivsimulator.Monk.SimulatorCore();
-        jobmod = simulatorCore.getJobmod();
-        resistance = "Blunt";
+    private void loadMonk() {
+
 
         dotsArray = new ArrayList<>(2);
         dotsArray.add(new DamageOverTime(50, stats, jobmod, "Demolish"));
         dotsArray.add(new DamageOverTime(25, stats, jobmod, "Touch of Death"));
         dotsArray.add(new DamageOverTime(20, stats, jobmod, "Fracture"));
 
-
-        machinistHC = simulatorCore.isMachinist();
-        dragoonBL = simulatorCore.isDragoon();
-
-        state.setForm(simulatorCore.getForm());
-
     }
 
-    private void loadDragoon(String openerType, ArrayList<String> Opener){
+    private void loadDragoon() {
 
-        if (openerType.equals("Default")) {
-            opener = loadOpener(job);
-        } else {
-            opener = Opener;
-        }
-        DragoonSimulatorCore dragoonSimulatorCore = new DragoonSimulatorCore();
-        jobmod = dragoonSimulatorCore.getJobmod();
-        resistance = "Piercing";
+
         dotsArray = new ArrayList<>(2);
         dotsArray.add(new DamageOverTime(35, stats, jobmod, "Chaos Thrust"));
         dotsArray.add(new DamageOverTime(30, stats, jobmod, "Phlebotomize"));
 
 
-
-        machinistHC = dragoonSimulatorCore.isMachinist();
-        dragoonBL = dragoonSimulatorCore.isDragoon();
-
-
     }
 
-    private ArrayList<String> loadOpener(String job){
+    private ArrayList<String> loadOpener(String job) {
 
         File file = new File("resources.io.github.krindor.ffxivsimulator.Openers." + job);
         TextFileLoader textFileLoader = new TextFileLoader();

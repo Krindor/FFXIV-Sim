@@ -2,78 +2,50 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 
 /**
  * Created by andre on 2017-05-02.
  */
 public class NextAttack {
-    private double nextAA;
 
-    private double nextDoT;
 
-    private double nextGCD;
-
-    private double nextoGCD;
-
-    private ArrayList<Double> timers;
+    private LinkedList<AttackType> timers;
 
     public NextAttack(){
-        timers = new ArrayList<>(4);
-
-        timers.add(0.0);
-        timers.add(0.0);
-        timers.add(0.0);
-        timers.add(0.0);
+        timers = new LinkedList<>();
     }
 
-    public double getNextAA() {
-        return nextAA;
-    }
 
-    public void setNextAA(double nextAA) {
-        this.nextAA = nextAA;
-    }
 
-    public double getNextDoT() {
-        return nextDoT;
-    }
-
-    public void setNextDoT(double nextDoT) {
-        this.nextDoT = nextDoT;
-    }
-
-    public double getNextGCD() {
-        return nextGCD;
-    }
-
-    public void setNextGCD(double nextGCD) {
-        this.nextGCD = nextGCD;
-    }
-
-    public double getNextOGCD() {
-        return nextoGCD;
-    }
-
-    public void setNextOGCD(double nextOGCD) {
-        this.nextoGCD = nextOGCD;
-    }
-
-    public void setNextAttack() {
-        timers.set(0, nextGCD);
-        timers.set(1, nextoGCD);
-        timers.set(2, nextAA);
-        timers.set(3, nextDoT);
+    public void addNextAttack(String type, double time) {
+        AttackType attackType = new AttackType(type, time);
+        for (AttackType i : timers){
+            if (i.getType().equals(type)){
+                timers.remove(i);
+            }
+        }
+        timers.add(attackType);
     }
 
     public void timeChange(double change){
-        nextAA = nextAA - change;
-        nextoGCD = nextoGCD - change;
-        nextGCD = nextGCD - change;
-        nextDoT = nextDoT - change;
+        for (AttackType attackType : timers){
+            attackType.setTime(attackType.getTime() - change);
+        }
     }
 
-    public double getNextAttack(){
+    public AttackType getNextAttack(){
 
-        return Collections.min(timers);
+        return timers.removeFirst();
+    }
+
+    public double getNextAttack(String type){
+
+        for (AttackType i : timers){
+            if (i.getType().equals(type)){
+                return i.getTime();
+            }
+        }
+        return -1;
     }
 }

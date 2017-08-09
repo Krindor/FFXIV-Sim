@@ -7,6 +7,7 @@ public class SkillAction {
     private String name;
     private double offset;
     private double fixedTime;
+    private String type;
 
     public String getName() {
         return name;
@@ -18,5 +19,9 @@ public class SkillAction {
 
     public double getFixedTime() {
         return fixedTime;
+    }
+
+    public String getType() {
+        return type;
     }
 }

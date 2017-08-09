@@ -10,10 +10,10 @@ public class DragoonCheckDelay {
     public NextAttack nextAttack(double currentTime, NextAttack nextAttack, String specialType, String attack) {
 
 
-        if (nextAttack.getNextGCD() < 0.5) {
-            nextAttack.setNextGCD(0.7);
-            nextAttack.setNextOGCD(0.7);
-        } else nextAttack.setNextOGCD(0.7);
+        if (nextAttack.getNextAttack("GCD") < 0.5) {
+            nextAttack.addNextAttack("GCD" ,0.7);
+            nextAttack.addNextAttack("oGCD",0.7);
+        } else nextAttack.addNextAttack("oGCD",0.7);
 
 
     return nextAttack;

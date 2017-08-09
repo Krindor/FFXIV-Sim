@@ -159,10 +159,7 @@ public class MonkSkillUsed {
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             dotsArray.get(0).setTime(weaponSkills.getDoTTime());
-            dotsArray.get(0).setBloodForBlood(state.getBloodForBlood());
-            dotsArray.get(0).setInternalRelease(state.getInternalRelease());
-            dotsArray.get(0).setTrickAttack(state.getTrickAttack());
-            dotsArray.get(0).setPotion(state.getPotion());
+
             type2 = "Weapon Skill";
             if (state.getGlStacks() < 3) {
                 state.setGlStacks(state.getGlStacks() + 1);
@@ -174,21 +171,14 @@ public class MonkSkillUsed {
             weaponSkills.touchOfDeath();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
-            dotsArray.get(1).setTime(weaponSkills.getDoTTime());
-            dotsArray.get(1).setBloodForBlood(state.getBloodForBlood());
-            dotsArray.get(1).setInternalRelease(state.getInternalRelease());
-            dotsArray.get(1).setTrickAttack(state.getTrickAttack());
-            dotsArray.get(1).setPotion(state.getPotion());
+
             type2 = "Weapon Skill";
         } else if(attack.equals("Fracture")){
             warriorCrossClass.fracture();
             type = warriorCrossClass.getType();
             potency = warriorCrossClass.getPotency();
             dotsArray.get(2).setTime(weaponSkills.getDoTTime());
-            dotsArray.get(2).setBloodForBlood(state.getBloodForBlood());
-            dotsArray.get(2).setInternalRelease(state.getInternalRelease());
-            dotsArray.get(2).setTrickAttack(state.getTrickAttack());
-            dotsArray.get(2).setPotion(state.getPotion());
+
             type2 = "Weapon Skill";
         }
 

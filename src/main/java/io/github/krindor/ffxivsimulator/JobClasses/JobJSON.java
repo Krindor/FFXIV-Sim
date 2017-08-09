@@ -9,8 +9,14 @@ public class JobJSON {
     private static Job[] jobs;
 
 
-    public Job[] getJobs() {
-        return jobs;
+    public Job getJobs(String jobName) {
+
+        for (Job i : jobs){
+            if (i.getName().equals(jobName)){
+                return i;
+            }
+        }
+        return null;
     }
 
     public void setJobs(Job[] jobs) {

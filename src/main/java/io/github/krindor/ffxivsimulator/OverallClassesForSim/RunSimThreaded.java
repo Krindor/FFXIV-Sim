@@ -1,5 +1,7 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
+import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
+
 import java.util.ArrayList;
 import java.util.concurrent.*;
 
@@ -14,12 +16,13 @@ public class RunSimThreaded implements Callable {
 
     private ArrayList<String> damageArray;
     private SimSelector simSelector;
+    private JobInfo jobInfo;
 
-
-    public RunSimThreaded(String job) {
-        activeClass = job;
+    public RunSimThreaded(JobInfo jobInfo) {
+        this.jobInfo = jobInfo;
+        activeClass = jobInfo.getJobName();
         damageArray = new ArrayList<>(1000);
-        simSelector = new SimSelector(job);
+        simSelector = new SimSelector(jobInfo, jobInfo.getIterations());
     }
 
 
@@ -41,13 +44,13 @@ public class RunSimThreaded implements Callable {
             ExecutorService pool = Executors.newFixedThreadPool(4);
 
 
-            Callable<ArrayList<String>> t1 = new RunSimThreaded(activeClass);
+            Callable<ArrayList<String>> t1 = new RunSimThreaded(jobInfo);
             Future<ArrayList<String>> dps1 = pool.submit(t1);
-            Callable<ArrayList<String>> t2 = new RunSimThreaded(activeClass);
+            Callable<ArrayList<String>> t2 = new RunSimThreaded(jobInfo);
             Future<ArrayList<String>> dps2 = pool.submit(t2);
-            Callable<ArrayList<String>> t3 = new RunSimThreaded(activeClass);
+            Callable<ArrayList<String>> t3 = new RunSimThreaded(jobInfo);
             Future<ArrayList<String>> dps3 = pool.submit(t3);
-            Callable<ArrayList<String>> t4 = new RunSimThreaded(activeClass);
+            Callable<ArrayList<String>> t4 = new RunSimThreaded(jobInfo);
             Future<ArrayList<String>> dps4 = pool.submit(t4);
             try {
                 damage = dps1.get();
@@ -71,16 +74,13 @@ public class RunSimThreaded implements Callable {
 
     }
 
-    private void run(){
-        for(int i = 0; i < iterations / 4; i++){
+    private void run() {
+        for (int i = 0; i < iterations / 4; i++) {
             damageArray = simSelector.runSim();
 
         }
 
     }
-
-
-
 
 
 }
