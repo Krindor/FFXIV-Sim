@@ -18,11 +18,11 @@ public class JobSkillUsed {
     private Job job;
     private ArrayList<DamageOverTime> dotsArray;
 
-    public JobSkillUsed(String jobName){
+    public JobSkillUsed(String jobName) {
         this.jobName = jobName;
         jobJSON = new JobJSON();
-        for (int i = 0; i < jobJSON.getJobs().length; i++){
-            if (jobJSON.getJobs()[i].getName().equals(jobName)){
+        for (int i = 0; i < jobJSON.getJobs().length; i++) {
+            if (jobJSON.getJobs()[i].getName().equals(jobName)) {
                 job = jobJSON.getJobs()[i];
             }
         }
@@ -33,7 +33,6 @@ public class JobSkillUsed {
     {
         this.attack = attack;
         this.dotsArray = dotsArray;
-
 
 
     }

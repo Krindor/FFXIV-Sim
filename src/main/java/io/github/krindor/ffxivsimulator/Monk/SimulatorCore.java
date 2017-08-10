@@ -1,7 +1,6 @@
 package io.github.krindor.ffxivsimulator.Monk;
 
 
-
 /**
  * FFXIV Simulator
  * Copyright (C) 2017  Andreas Lund
@@ -19,14 +18,17 @@ package io.github.krindor.ffxivsimulator.Monk;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SimulatorCore extends io.github.krindor.ffxivsimulator.OverallClassesForSim.SimulatorCore{
+public class SimulatorCore extends io.github.krindor.ffxivsimulator.OverallClassesForSim.SimulatorCore {
 
 
-    public SimulatorCore(){
+    public SimulatorCore() {
         setJob("Monk");
         setJobmod(110);
     }
-    public int getForm(){return 3;}
+
+    public int getForm() {
+        return 3;
+    }
 
 
 }

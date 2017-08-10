@@ -9,11 +9,9 @@ import java.util.concurrent.*;
  * Created by andre on 2017-04-21.
  */
 public class RunSimThreaded implements Callable {
-    private int iterations;
-
-    private String activeClass;
     private static ArrayList<Double> numberSim;
-
+    private int iterations;
+    private String activeClass;
     private ArrayList<String> damageArray;
     private SimSelector simSelector;
     private JobInfo jobInfo;

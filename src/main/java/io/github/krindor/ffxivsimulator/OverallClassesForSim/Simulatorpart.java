@@ -5,15 +5,14 @@ import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AttackType;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
 import io.github.krindor.ffxivsimulator.RotationOpenerClasses.SkillAction;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
 import io.github.krindor.ffxivsimulator.model.StatModel;
-import io.github.krindor.ffxivsimulator.skills.Skill;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,9 +29,6 @@ public class Simulatorpart {
 
 
     private double time;
-
-    private BuffsDebuffs timers;
-    private BuffsDebuffs state;
 
 
     private double totalDamage;
@@ -61,14 +57,14 @@ public class Simulatorpart {
     private int jobmod;
     private String jobName;
     private JobHub jobHub;
-    private BuffBar buffBar;
+    private AllBuffs allBuffs;
     private ArrayList<Skills> skills;
     private ArrayList<Buffs> buffs;
     private ArrayList<Abilities> abilities;
     private AttackType attackType;
     private double nextGCD;
     private Resources resources;
-
+    private ArrayList<String> buffTargets;
     private DamageCalculation damageCalculation;
 
     private LinkedList<SkillAction> skillActions;
@@ -92,8 +88,6 @@ public class Simulatorpart {
         Collections.addAll(skillActions, jobInfo.getActionObjects().getSkillAction());
 
         jobmod = jobInfo.getJobmod();
-        timers = new BuffsDebuffs(0);
-        state = new BuffsDebuffs();
         loadClass();
         jobHub = new JobHub(jobName);
         resources = new Resources();
@@ -103,6 +97,10 @@ public class Simulatorpart {
         resistance = jobInfo.getResistance();
 
         nextGCD = 0;
+        buffTargets = new ArrayList<>(3);
+        buffTargets.add("Player");
+        buffTargets.add("Party");
+        buffTargets.add("Target");
 
     }
 
@@ -122,14 +120,14 @@ public class Simulatorpart {
 
     }
 
-    public ArrayList<String> runSim() {
+    public ArrayList<String> runSim(AllBuffs buffs) {
 
 
         damageLog = new ArrayList<>(150);
         while (currentTime <= time) {
 
 
-            formulas.changeRecast(state);
+            formulas.changeRecast(buffs);
             setTimersForRotation();
             damage = 0;
 
@@ -138,24 +136,26 @@ public class Simulatorpart {
                     SkillAction skillAction = skillActions.getFirst();
                     attack = skillAction.getName();
                     double nextTime = 0;
-                    switch (skillAction.getType()) {
-                        case "GCD":
-                            nextTime = nextGCD;
-                            nextGCD = formulas.getRecast();
-                            break;
-                        case "oGCD":
-                            nextTime = 0.7;
-                            if (nextGCD < 0.7 + skillAction.getOffset()) {
-                                nextGCD = 0.7 + skillAction.getOffset();
-                            }
-                            break;
-                    }
+                    if (skillAction.getFixedTime() < 0.7) {
+                        switch (skillAction.getType()) {
+                            case "GCD":
+                                nextTime = nextGCD;
+                                nextGCD = formulas.getRecast();
+                                break;
+                            case "oGCD":
+                                nextTime = 0.7;
+                                if (nextGCD < 0.7 + skillAction.getOffset()) {
+                                    nextGCD = 0.7 + skillAction.getOffset();
+                                }
+                                break;
+                        }
+                    } else nextTime = skillAction.getFixedTime();
                     nextTime = nextTime + skillAction.getOffset();
                     nextAttack.addNextAttack("Opener", nextTime);
                 }
                 break;
                 case "GCD": {
-                    attack = jobHub.getNextGCD(timersForRotation, prevAttack, timers, state, resources);
+                    attack = jobHub.getNextGCD(timersForRotation, prevAttack, allBuffs, resources);
                     GCD();
 
                     nextAttack.addNextAttack("GCD", formulas.getRecast());
@@ -163,8 +163,8 @@ public class Simulatorpart {
                 }
                 break;
                 case "oGCD": {
-                    attack = jobHub.getNextOGCD(timersForRotation, timers, state, resources);
-                    if (jobHub.getNextOGCD(timersForRotation, timers, state, resources) != null) {
+                    attack = jobHub.getNextOGCD(timersForRotation, allBuffs, resources);
+                    if (jobHub.getNextOGCD(timersForRotation, allBuffs, resources) != null) {
                         oGCD();
 
                     } else checkDelay();
@@ -172,7 +172,7 @@ public class Simulatorpart {
                 break;
                 case "Auto-Attack": {
                     type = "Auto-Attack";
-                    damage = damageCalculation.getDamage(0, type, resistance, buffBar);
+                    damage = damageCalculation.getDamage(0, type, resistance, allBuffs);
                     nextAttack.addNextAttack(type, formulas.getAaRecast());
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
                 }
@@ -186,8 +186,16 @@ public class Simulatorpart {
                     }
                     nextAttack.addNextAttack("DoT", 3);
                 }
+                case "Buff": {
+                    for (String i : buffTargets) {
+                        BuffBar bar = allBuffs.getBuffBar(i);
+                        damageLog.add(bar.buffRunOut());
+                        allBuffs.setBuffBar(i, bar);
+                    }
+                }
             }
 
+            nextAttack.addNextAttack("Buff", allBuffs.getNextRunOut());
 
             attackType = nextAttack.getNextAttack();
 
@@ -207,8 +215,8 @@ public class Simulatorpart {
 
     private void GCD() {
         Skills skill = null;
-        for (Skills i : skills){
-            if (i.getName().equals(attack)){
+        for (Skills i : skills) {
+            if (i.getName().equals(attack)) {
                 skill = i;
                 break;
             }
@@ -217,7 +225,7 @@ public class Simulatorpart {
         prevAttack = attack;
         if (skill.getPotency() > 0) {
 
-            damage = damageCalculation.getDamage(skill.getPotency(), skill.getType(), skill.getType2(), buffBar);
+            damage = damageCalculation.getDamage(skill.getPotency(), skill.getType(), skill.getType2(), allBuffs);
         }
 
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
@@ -228,8 +236,8 @@ public class Simulatorpart {
         checkDelay();
 
         Abilities abilitie = null;
-        for (Abilities i : abilities){
-            if (i.getName().equals(attack)){
+        for (Abilities i : abilities) {
+            if (i.getName().equals(attack)) {
                 abilitie = i;
                 break;
             }
@@ -237,7 +245,7 @@ public class Simulatorpart {
 
         if (abilitie.getPotency() > 0) {
 
-            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getType(), abilitie.getType2(), buffBar);
+            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getType(), abilitie.getType2(), allBuffs);
         }
 
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
@@ -246,26 +254,6 @@ public class Simulatorpart {
     private void checkDelay() {
 
         nextAttack = jobHub.nextAttack(currentTime, nextAttack, specialType, attack);
-    }
-
-
-    private void skillUsed() {
-
-
-        specialType = "NoN";
-        potency = 0;
-        jobHub.skillUsed(null, specialType, potency, attack, type2, timers, state, dotsArray, resources, buffBar);
-
-        attack = jobHub.getAttack();
-        dotsArray = jobHub.getDotsArray();
-        potency = jobHub.getPotency();
-        specialType = jobHub.getSpecialType();
-        state = jobHub.getState();
-        timers = jobHub.getTimers();
-        type = jobHub.getType();
-        type2 = jobHub.getType2();
-
-
     }
 
 

@@ -11,11 +11,11 @@ public class DragoonCheckDelay {
 
 
         if (nextAttack.getNextAttack("GCD") < 0.5) {
-            nextAttack.addNextAttack("GCD" ,0.7);
-            nextAttack.addNextAttack("oGCD",0.7);
-        } else nextAttack.addNextAttack("oGCD",0.7);
+            nextAttack.addNextAttack("GCD", 0.7);
+            nextAttack.addNextAttack("oGCD", 0.7);
+        } else nextAttack.addNextAttack("oGCD", 0.7);
 
 
-    return nextAttack;
-}
+        return nextAttack;
+    }
 }

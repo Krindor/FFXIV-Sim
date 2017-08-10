@@ -2,14 +2,10 @@ package io.github.krindor.ffxivsimulator.JavaFX;
 
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -31,9 +27,6 @@ import javafx.stage.Stage;
  */
 
 public class CustomController extends GUIclass {
-
-
-
 
 
     public void ninjaCustomOpenerChanger(ActionEvent event) throws Exception {
@@ -61,9 +54,6 @@ public class CustomController extends GUIclass {
         MonkCustomOpenerController monkCustomOpenerController = new MonkCustomOpenerController();
         monkCustomOpenerController.initializeController();
     }
-
-
-
 
 
 }

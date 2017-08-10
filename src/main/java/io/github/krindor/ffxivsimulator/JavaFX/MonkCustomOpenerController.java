@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 
@@ -31,9 +30,11 @@ import java.util.ArrayList;
  */
 
 
-public class MonkCustomOpenerController extends GUIclass{
+public class MonkCustomOpenerController extends GUIclass {
 
 
+    private static ArrayList<String> opener;
+    private static ArrayList<ImageView> saveCurrent;
     @FXML
     private GridPane gridOpener;
     @FXML
@@ -70,15 +71,8 @@ public class MonkCustomOpenerController extends GUIclass{
     private ImageView Potion;
     @FXML
     private ImageView Fracture;
-
-
     private int columnIndex;
     private int rowIndex;
-    private static ArrayList<String> opener;
-    private static ArrayList<ImageView> saveCurrent;
-
-
-
 
     public void closeProgram(MouseEvent event) {
         ((Node) (event.getSource())).getScene().getWindow().hide();
@@ -161,7 +155,6 @@ public class MonkCustomOpenerController extends GUIclass{
                 columnIndex = 0;
             }
         }
-
 
 
     }

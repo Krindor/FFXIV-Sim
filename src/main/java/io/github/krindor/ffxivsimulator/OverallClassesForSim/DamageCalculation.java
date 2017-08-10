@@ -1,8 +1,6 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
-import io.github.krindor.ffxivsimulator.model.StatModel;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
 
 /**
  * Created by andre on 2017-05-07.
@@ -19,23 +17,22 @@ public class DamageCalculation {
         this.formulas = formulas;
     }
 
-    public double getDamage(int potency, String damageTypes, String resistanceType, BuffBar buffBar) {
+    public double getDamage(int potency, String damageTypes, String resistanceType, AllBuffs buffs) {
         String damageType;
 
         double generalMultiplier;
         damageType = damageTypes;
 
 
-
         if (damageType.equals("Auto-Attack")) {
             generalMultiplier = formulas.getAaMultiplier();
         } else {
-            generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffBar.getMultiplier("All", "Potion"));
+            generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffs.getMultiplier("All", "Potion"));
         }
-        formulas.setCritMultiplier(buffBar.getMultiplier("All", "Crit"));
+        formulas.setCritMultiplier(buffs.getMultiplier("All", "Crit"));
         double critMultiplier = formulas.getCritMultiplier();
 
-        double damage = generalMultiplier * buffBar.getMultiplier(damageType, resistanceType) * critMultiplier;
+        double damage = generalMultiplier * buffs.getMultiplier(damageType, resistanceType) * critMultiplier;
 
         return damage;
     }

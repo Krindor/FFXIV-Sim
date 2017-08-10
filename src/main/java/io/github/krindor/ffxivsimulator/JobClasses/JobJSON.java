@@ -11,8 +11,8 @@ public class JobJSON {
 
     public Job getJobs(String jobName) {
 
-        for (Job i : jobs){
-            if (i.getName().equals(jobName)){
+        for (Job i : jobs) {
+            if (i.getName().equals(jobName)) {
                 return i;
             }
         }

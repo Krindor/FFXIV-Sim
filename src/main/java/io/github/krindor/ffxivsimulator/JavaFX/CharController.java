@@ -1,15 +1,11 @@
 package io.github.krindor.ffxivsimulator.JavaFX;
 
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -30,10 +26,7 @@ import javafx.stage.Stage;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class CharController extends GUIclass{
-
-
-
+public class CharController extends GUIclass {
 
 
     public void ninjaSimChanger(ActionEvent event) throws Exception {
@@ -53,7 +46,6 @@ public class CharController extends GUIclass{
         customize.setTitle("Ninja Simulator");
         customize.show();
     }
-
 
 
 }

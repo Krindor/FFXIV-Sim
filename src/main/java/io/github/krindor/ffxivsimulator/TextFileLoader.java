@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by andre on 2017-05-18.
  */
 public class TextFileLoader {
-    public ArrayList<String> loadText(File file){
+    public ArrayList<String> loadText(File file) {
         ArrayList<String> stringArrayList = new ArrayList<>(10);
         FileReader fileReader;
         BufferedReader reader;

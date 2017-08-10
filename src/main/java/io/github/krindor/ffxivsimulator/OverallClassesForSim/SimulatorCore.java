@@ -24,23 +24,16 @@ public class SimulatorCore {
     private static boolean dragoon = false;
     private static int jobmod;
 
+    public static int getJobmod() {
+        return jobmod;
+    }
 
-    public void setTime(int times) {
-        time = times;
+    public static void setJobmod(int jobmod) {
+        SimulatorCore.jobmod = jobmod;
     }
 
     public void setMainStat(StatModel stats) {
         this.stats = stats;
-    }
-
-    public void setOpenerType(String opener) {
-        openerType = opener;
-    }
-
-    public void setOpener(ArrayList<String> opener) {
-        this.opener = opener;
-
-
     }
 
     public void setCurentOpener(ArrayList<ImageView> imageViews) {
@@ -57,12 +50,12 @@ public class SimulatorCore {
         }
     }
 
-    protected void setJob(String job) {
-        this.job = job;
+    public String getJob() {
+        return job;
     }
 
-    public String getJob(){
-        return job;
+    protected void setJob(String job) {
+        this.job = job;
     }
 
     public StatModel getStats() {
@@ -73,6 +66,9 @@ public class SimulatorCore {
         return time;
     }
 
+    public void setTime(int times) {
+        time = times;
+    }
 
     public int getIterations() {
         return iterations;
@@ -91,16 +87,18 @@ public class SimulatorCore {
         return openerType;
     }
 
+    public void setOpenerType(String opener) {
+        openerType = opener;
+    }
+
     public ArrayList<String> getOpener() {
         return opener;
     }
 
-    public static int getJobmod() {
-        return jobmod;
-    }
+    public void setOpener(ArrayList<String> opener) {
+        this.opener = opener;
 
-    public static void setJobmod(int jobmod) {
-        SimulatorCore.jobmod = jobmod;
+
     }
 
     public ArrayList<String> runSim() {

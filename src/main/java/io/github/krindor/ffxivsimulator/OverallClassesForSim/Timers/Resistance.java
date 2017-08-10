@@ -17,7 +17,7 @@ public class Resistance {
 
     private double disembowel;
 
-    public Resistance(){
+    public Resistance() {
         dragonKick = 1;
         dancingEdge = 1;
         hyperCharge = 1;
@@ -25,14 +25,14 @@ public class Resistance {
 
     }
 
-    protected void resistanceTimer(){
+    protected void resistanceTimer() {
         dragonKick = 0;
         dancingEdge = 0;
         hyperCharge = 0;
         trickAttack = 0;
     }
 
-    public void timeChangeResistance(double change){
+    public void timeChangeResistance(double change) {
         dragonKick = dragonKick - change;
         dancingEdge = dancingEdge - change;
         hyperCharge = hyperCharge - change;

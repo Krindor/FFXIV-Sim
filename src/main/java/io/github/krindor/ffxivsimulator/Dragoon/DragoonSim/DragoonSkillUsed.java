@@ -6,7 +6,6 @@ import io.github.krindor.ffxivsimulator.Dragoon.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Dragoon.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
 
 import java.util.ArrayList;
 
@@ -39,6 +38,7 @@ public class DragoonSkillUsed {
         this.type2 = type2;
         useSkill();
     }
+
     private void useSkill() {
         Ability ability = new Ability();
         WeaponSkills weaponSkills = new WeaponSkills();
@@ -160,13 +160,13 @@ public class DragoonSkillUsed {
             type2 = "Weapon Skill";
 
 
-        }else if (attack.equals("Wheeling_Thrust")){
+        } else if (attack.equals("Wheeling_Thrust")) {
             weaponSkills.wheelingThrust();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();
             type2 = "Weapon Skill";
 
-        }else if (attack.equals("Heavy_Thrust")){
+        } else if (attack.equals("Heavy_Thrust")) {
             weaponSkills.heavyThrust();
             type = weaponSkills.getType();
             potency = weaponSkills.getPotency();

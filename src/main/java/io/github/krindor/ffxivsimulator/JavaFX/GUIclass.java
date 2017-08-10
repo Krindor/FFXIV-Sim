@@ -1,25 +1,22 @@
 package io.github.krindor.ffxivsimulator.JavaFX;
 
 import io.github.krindor.ffxivsimulator.TextFileLoader;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 /**
@@ -28,7 +25,8 @@ import java.util.Date;
 public class GUIclass {
     @FXML
     private Pane barForGrab;
-
+    private double initialX;
+    private double initialY;
 
     public void mainSceneChanger(ActionEvent event) throws Exception {
         Parent customizeSceneParent = FXMLLoader.load(getClass().getResource("MainFX.fxml"));
@@ -75,9 +73,6 @@ public class GUIclass {
         customize.setIconified(true);
     }
 
-    private double initialX;
-    private double initialY;
-
     public void pressedMove(MouseEvent me) {
         if (me.getButton() != MouseButton.MIDDLE) {
             initialX = me.getSceneX();
@@ -95,22 +90,20 @@ public class GUIclass {
     }
 
 
-
-    public void writeStringToFile(ArrayList<String> log, ActionEvent event){
+    public void writeStringToFile(ArrayList<String> log, ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Opener");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
         File file = fileChooser.showSaveDialog(((Node) event.getSource()).getScene().getWindow());
 
-        try(PrintWriter out = new PrintWriter(file)){
+        try (PrintWriter out = new PrintWriter(file)) {
 
-            for(String x: log){
+            for (String x : log) {
                 out.println("\n" + x);
             }
             out.close();
 
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Exception");
         }
     }
@@ -126,8 +119,6 @@ public class GUIclass {
 
         return textFileLoader.loadText(file);
     }
-
-
 
 
 }

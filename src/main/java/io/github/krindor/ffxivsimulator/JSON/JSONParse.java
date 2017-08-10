@@ -3,9 +3,7 @@ package io.github.krindor.ffxivsimulator.JSON;
 import com.jsoniter.JsonIterator;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
 
-
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -14,9 +12,7 @@ import java.util.ArrayList;
 public class JSONParse {
 
 
-
-
-    public JsonIterator parseJSON(String path){
+    public JsonIterator parseJSON(String path) {
 
         ArrayList<String> stringArrayList;
 
@@ -28,7 +24,6 @@ public class JSONParse {
             stringBuilder.append(s);
             stringBuilder.append("\t");
         }
-
 
 
         return JsonIterator.parse(stringBuilder.toString());

@@ -10,8 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -59,7 +57,6 @@ public class NinjaSimController extends GUIclass {
 
     @FXML
     private MenuButton simulationType;
-
 
 
     private String opener;
@@ -197,11 +194,9 @@ public class NinjaSimController extends GUIclass {
         }
 
 
-
-
     }
 
-    public void writeStringToFile(ActionEvent event){
+    public void writeStringToFile(ActionEvent event) {
         writeStringToFile(log, event);
     }
 

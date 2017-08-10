@@ -1,10 +1,9 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.Monk.MonkSim.*;
-import io.github.krindor.ffxivsimulator.Ninja.NinjaSim.*;
+import io.github.krindor.ffxivsimulator.Monk.MonkSim.MonkCheckDelay;
+import io.github.krindor.ffxivsimulator.Ninja.NinjaSim.NinjaCheckDelay;
 import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
 
 import java.util.ArrayList;
@@ -14,125 +13,48 @@ import java.util.ArrayList;
  */
 public class JobHub {
     private String job;
-    public JobHub(String job){this.job = job;}
+
+    public JobHub(String job) {
+        this.job = job;
+    }
 
 
-
-
-
-    public NextAttack nextAttack(double currentTime, NextAttack nextAttack, String specialType, String attack){
-        switch (job){
+    public NextAttack nextAttack(double currentTime, NextAttack nextAttack, String specialType, String attack) {
+        switch (job) {
             case "Ninja":
                 NinjaCheckDelay ninjaCheckDelay = new NinjaCheckDelay();
                 return ninjaCheckDelay.nextAttack(currentTime, nextAttack, specialType, attack);
             case "Monk":
                 MonkCheckDelay monkCheckDelay = new MonkCheckDelay();
                 return monkCheckDelay.nextAttack(currentTime, nextAttack, specialType, attack);
-        }return nextAttack;
-    }
-
-
-
-    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs timer, BuffsDebuffs state, Resources resources){
-        switch (job){
-            case "Ninja":
-                Rotation ninjaRotation = new Rotation();
-                return ninjaRotation.getNextGCD(timers, prevSkill, timer, state, resources);
-            case "Monk":
-                io.github.krindor.ffxivsimulator.Monk.Priority.Rotation monkRotation = new io.github.krindor.ffxivsimulator.Monk.Priority.Rotation();
-                return monkRotation.getNextGCD(timers, prevSkill, timer, state, resources);
-        }return "NoN";
-    }
-
-    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs timer, BuffsDebuffs state, Resources resources){
-        switch (job){
-            case "Ninja":
-                Rotation ninjaRotation = new Rotation();
-                return ninjaRotation.getNextOGCD(timers, timer, state, resources);
-            case "Monk":
-                io.github.krindor.ffxivsimulator.Monk.Priority.Rotation monkRotation = new io.github.krindor.ffxivsimulator.Monk.Priority.Rotation();
-                return monkRotation.getNextOGCD(timers, timer, state, resources);
-        }return "NoN";
-    }
-
-    private String type;
-    private String specialType;
-    private int potency;
-    private String attack;
-    private String type2;
-    private BuffsDebuffs timers;
-    private BuffsDebuffs state;
-    private ArrayList<DamageOverTime> dotsArray;
-    private Resources resources;
-    private BuffBar buffBar;
-
-    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray, Resources resources, BuffBar buffBar){
-        switch (job){
-            case "Ninja":
-                NinjaSkillUsed ninjaSkillUsed = new NinjaSkillUsed();
-                ninjaSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray, resources, buffBar);
-                this.type = ninjaSkillUsed.getType();
-                this.specialType = ninjaSkillUsed.getSpecialType();
-                this.potency = ninjaSkillUsed.getPotency();
-                this.attack = ninjaSkillUsed.getAttack();
-                this.type2 = ninjaSkillUsed.getType2();
-                this.timers = ninjaSkillUsed.getTimers();
-                this.state = ninjaSkillUsed.getState();
-                this.dotsArray = ninjaSkillUsed.getDotsArray();
-                this.resources = ninjaSkillUsed.getResources();
-                break;
-            case "Monk":
-
-                MonkSkillUsed monkSkillUsed = new MonkSkillUsed();
-                monkSkillUsed.skillUsed(type, specialType, potency, attack, type2, timers, state, dotsArray, resources);
-                this.type = monkSkillUsed.getType();
-                this.specialType = monkSkillUsed.getSpecialType();
-                this.potency = monkSkillUsed.getPotency();
-                this.attack = monkSkillUsed.getAttack();
-                this.type2 = monkSkillUsed.getType2();
-                this.timers = monkSkillUsed.getTimers();
-                this.state = monkSkillUsed.getState();
-                this.dotsArray = monkSkillUsed.getDotsArray();
-                this.resources = monkSkillUsed.getResources();
-
         }
+        return nextAttack;
     }
 
-    public String getType() {
-        return type;
+
+    public String getNextGCD(ArrayList<Double> timers, String prevSkill, AllBuffs buffs, Resources resources) {
+        switch (job) {
+            case "Ninja":
+                Rotation ninjaRotation = new Rotation();
+                return ninjaRotation.getNextGCD(timers, prevSkill, buffs, resources);
+            case "Monk":
+                io.github.krindor.ffxivsimulator.Monk.Priority.Rotation monkRotation = new io.github.krindor.ffxivsimulator.Monk.Priority.Rotation();
+                return monkRotation.getNextGCD(timers, prevSkill, buffs, resources);
+        }
+        return "NoN";
     }
 
-    public String getSpecialType() {
-        return specialType;
+    public String getNextOGCD(ArrayList<Double> timers, AllBuffs buffs, Resources resources) {
+        switch (job) {
+            case "Ninja":
+                Rotation ninjaRotation = new Rotation();
+                return ninjaRotation.getNextOGCD(timers, buffs, resources);
+            case "Monk":
+                io.github.krindor.ffxivsimulator.Monk.Priority.Rotation monkRotation = new io.github.krindor.ffxivsimulator.Monk.Priority.Rotation();
+                return monkRotation.getNextOGCD(timers, buffs, resources);
+        }
+        return "NoN";
     }
 
-    public int getPotency() {
-        return potency;
-    }
 
-    public String getAttack() {
-        return attack;
-    }
-
-    public String getType2() {
-        return type2;
-    }
-
-    public BuffsDebuffs getTimers() {
-        return timers;
-    }
-
-    public BuffsDebuffs getState() {
-        return state;
-    }
-
-    public ArrayList<DamageOverTime> getDotsArray() {
-        return dotsArray;
-    }
-
-    public Resources getResources(){return resources;}
-
-    public BuffBar getBuffBar() {
-        return buffBar;
-    }
 }

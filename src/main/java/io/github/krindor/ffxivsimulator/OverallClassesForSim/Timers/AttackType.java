@@ -7,7 +7,7 @@ public class AttackType {
     private String type;
     private double time;
 
-    public AttackType(String type, double time){
+    public AttackType(String type, double time) {
         this.time = time;
         this.type = type;
     }

@@ -3,7 +3,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 /**
  * Created by andre on 2017-05-02.
  */
-public class OtherBuffs extends Stances{
+public class OtherBuffs extends Stances {
     private boolean kassatsu;
 
     private double kassatsuTime;
@@ -30,14 +30,14 @@ public class OtherBuffs extends Stances{
 
     private double powerSurgeTime;
 
-    public OtherBuffs(){
+    public OtherBuffs() {
         kassatsuTime = 0;
         dualityTime = 0;
         suitonTime = 0;
         perfectBalance = 0;
     }
 
-    public void timeChangeOther(double change){
+    public void timeChangeOther(double change) {
         kassatsuTime = kassatsuTime - change;
         dualityTime = dualityTime - change;
         perfectBalance = perfectBalance - change;

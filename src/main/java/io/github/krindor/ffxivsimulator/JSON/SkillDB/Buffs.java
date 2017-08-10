@@ -20,6 +20,10 @@ public class Buffs {
         return duration;
     }
 
+    public void setDuration(double duration) {
+        this.duration = duration;
+    }
+
     public String getType() {
         return type;
     }
@@ -36,12 +40,8 @@ public class Buffs {
         return type2;
     }
 
-    public void timeChange(double change){
+    public void timeChange(double change) {
         duration = duration - change;
-    }
-
-    public void setDuration(double duration) {
-        this.duration = duration;
     }
 
     public int getMaxStacks() {

@@ -27,17 +27,13 @@ public class JobInfo {
     private ActionObject actionObjects;
     private String resistance;
 
-    public JobInfo(StatModel stats, String jobName, int time, int iterations, ActionObject actionObjects){
+    public JobInfo(StatModel stats, String jobName, int time, int iterations, ActionObject actionObjects) {
         JobJSON jobJSON = new JobJSON();
         job = jobJSON.getJobs(jobName);
         this.time = time;
         this.iterations = iterations;
         this.stats = stats;
         this.actionObjects = actionObjects;
-    }
-
-    public void setTime(int times) {
-        time = times;
     }
 
     public void setMainStat(StatModel stats) {
@@ -58,12 +54,12 @@ public class JobInfo {
         }
     }
 
-    protected void setJobName(String jobName) {
-        this.jobName = jobName;
+    public String getJobName() {
+        return jobName;
     }
 
-    public String getJobName(){
-        return jobName;
+    protected void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
     public StatModel getStats() {
@@ -72,6 +68,10 @@ public class JobInfo {
 
     public int getTime() {
         return time;
+    }
+
+    public void setTime(int times) {
+        time = times;
     }
 
     public boolean isMachinist() {

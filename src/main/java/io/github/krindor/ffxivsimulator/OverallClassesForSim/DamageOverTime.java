@@ -1,14 +1,12 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.Attacks;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.DamageBuffs;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 /**
  * Created by andre on 2017-05-02.
  */
-public class DamageOverTime{
+public class DamageOverTime {
 
     private int potency;
 
@@ -22,21 +20,19 @@ public class DamageOverTime{
 
     private BuffBar buffBar;
 
-    public DamageOverTime(int potency, StatModel statModel, int jobmod, String name){
+    public DamageOverTime(int potency, StatModel statModel, int jobmod, String name) {
         formulas = new Formulas(statModel, jobmod);
         this.potency = potency;
         this.name = name;
 
     }
 
-    public double getDamage(String job){
+    public double getDamage(String job) {
         /*Type1 = All Type2 = Crit */
         formulas.setCritMultiplier(buffBar.getMultiplier("All", "Crit"));
 
 
-
         damage = formulas.getMultiplier() * (potency / 100.0) * buffBar.getMultiplier("Physical", "All") * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(buffBar.getMultiplier("All", "Potion"));
-
 
 
         return damage;
@@ -54,7 +50,7 @@ public class DamageOverTime{
         this.time = time;
     }
 
-    public void timeChange(double change){
+    public void timeChange(double change) {
         time = time - change;
     }
 

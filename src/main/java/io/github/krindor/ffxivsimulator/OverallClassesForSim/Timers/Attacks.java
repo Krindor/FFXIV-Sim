@@ -3,7 +3,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 /**
  * Created by andre on 2017-05-07.
  */
-public class Attacks extends OtherBuffs{
+public class Attacks extends OtherBuffs {
     private double jugulate;
 
     private double dreamWithinADream;
@@ -18,7 +18,7 @@ public class Attacks extends OtherBuffs{
 
     private double elixirField;
 
-    public Attacks(){
+    public Attacks() {
         jugulate = 0;
         dreamWithinADream = 0;
         mug = 0;
@@ -28,7 +28,7 @@ public class Attacks extends OtherBuffs{
         elixirField = 0;
     }
 
-    public void timeChangeAttacks(double change){
+    public void timeChangeAttacks(double change) {
         jugulate = jugulate - change;
         dreamWithinADream = dreamWithinADream - change;
         mug = mug - change;

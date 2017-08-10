@@ -35,15 +35,15 @@ public class Resources {
         this.classSpecific = classSpecific;
     }
 
-    public void manaChange(int change){
+    public void manaChange(int change) {
         manaPoints = manaPoints + change;
     }
 
-    public void tacticalChange(int change){
+    public void tacticalChange(int change) {
         tacticalPoints = tacticalPoints + change;
     }
 
-    public void classChange(int change){
+    public void classChange(int change) {
         classSpecific = classSpecific + change;
     }
 

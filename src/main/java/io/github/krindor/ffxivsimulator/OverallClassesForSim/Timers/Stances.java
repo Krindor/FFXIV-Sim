@@ -3,7 +3,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
 /**
  * Created by andre on 2017-04-30.
  */
-public class Stances extends DamageBuffs{
+public class Stances extends DamageBuffs {
     private double hutonTime;
     private double glStacks;
     private double chakraStacks;
@@ -12,21 +12,17 @@ public class Stances extends DamageBuffs{
     private double bloodOfTheDragoon;
 
 
-
-
-
-    public void timeChangeStances(double change){
-        hutonTime = hutonTime - change;
-        glTime = glTime - change;
-        bloodOfTheDragoon = bloodOfTheDragoon - change;
-    }
-
-
-    public Stances(){
+    public Stances() {
         hutonTime = 0;
         glTime = 0;
         glStacks = 0;
         chakraStacks = 5;
+    }
+
+    public void timeChangeStances(double change) {
+        hutonTime = hutonTime - change;
+        glTime = glTime - change;
+        bloodOfTheDragoon = bloodOfTheDragoon - change;
     }
 
     public double getBloodOfTheDragoon() {
@@ -37,44 +33,44 @@ public class Stances extends DamageBuffs{
         this.bloodOfTheDragoon = bloodOfTheDragoon;
     }
 
-    public void setGlTime(double glTime){
-        this.glTime = glTime;
-    }
-
-    public void setHutonTime(double hutonTime){
-        this.hutonTime = hutonTime;
-    }
-
-    public void setGlStacks(double glStacks){
-        this.glStacks = glStacks;
-    }
-
-    public void setChakraStacks(double chakraStacks){
-        this.chakraStacks = chakraStacks;
-    }
-
-    public void setForm(double form){
-        this.form = form;
-    }
-
-    public double getGlTime(){
+    public double getGlTime() {
         return glTime;
     }
 
-    public double getHutonTime(){
+    public void setGlTime(double glTime) {
+        this.glTime = glTime;
+    }
+
+    public double getHutonTime() {
         return hutonTime;
     }
 
-    public double getGlStacks(){
+    public void setHutonTime(double hutonTime) {
+        this.hutonTime = hutonTime;
+    }
+
+    public double getGlStacks() {
         return glStacks;
     }
 
-    public double getChakraStacks(){
+    public void setGlStacks(double glStacks) {
+        this.glStacks = glStacks;
+    }
+
+    public double getChakraStacks() {
         return chakraStacks;
     }
 
-    public double getForm(){
+    public void setChakraStacks(double chakraStacks) {
+        this.chakraStacks = chakraStacks;
+    }
+
+    public double getForm() {
         return form;
+    }
+
+    public void setForm(double form) {
+        this.form = form;
     }
 
 

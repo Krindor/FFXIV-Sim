@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 
@@ -30,13 +29,13 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class NinjaCustomOpenerController extends GUIclass{
+public class NinjaCustomOpenerController extends GUIclass {
 
 
+    private static ArrayList<String> opener;
+    private static ArrayList<ImageView> saveCurrent;
     @FXML
     private GridPane gridOpener;
-
-
     @FXML
     private ImageView Spinning_Edge;
     @FXML
@@ -75,15 +74,8 @@ public class NinjaCustomOpenerController extends GUIclass{
     private ImageView Internal_Release;
     @FXML
     private ImageView Potion;
-
-
     private int columnIndex;
     private int rowIndex;
-    private static ArrayList<String> opener;
-    private static ArrayList<ImageView> saveCurrent;
-
-
-
 
     public void closeProgram(MouseEvent event) {
         ((Node) (event.getSource())).getScene().getWindow().hide();

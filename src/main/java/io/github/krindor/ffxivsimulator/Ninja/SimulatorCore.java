@@ -17,31 +17,30 @@ package io.github.krindor.ffxivsimulator.Ninja;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SimulatorCore extends io.github.krindor.ffxivsimulator.OverallClassesForSim.SimulatorCore{
+public class SimulatorCore extends io.github.krindor.ffxivsimulator.OverallClassesForSim.SimulatorCore {
 
-   public SimulatorCore(){
-       setJob("Ninja");
-       setJobmod(110);
-   }
     private static boolean warThere;
-
     private static int hutonTime;
 
+    public SimulatorCore() {
+        setJob("Ninja");
+        setJobmod(110);
+    }
 
-    public void setWarThere(boolean war) {
-        warThere = war;
+    public int getHutonTime() {
+        return hutonTime;
     }
 
     public void setHutonTime(int huton) {
         hutonTime = huton;
     }
 
-    public int getHutonTime(){
-        return hutonTime;
+    public boolean isWarThere() {
+        return warThere;
     }
 
-    public boolean isWarThere(){
-        return warThere;
+    public void setWarThere(boolean war) {
+        warThere = war;
     }
 
 

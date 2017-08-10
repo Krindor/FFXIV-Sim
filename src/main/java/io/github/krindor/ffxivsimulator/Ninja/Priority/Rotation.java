@@ -1,26 +1,26 @@
 package io.github.krindor.ffxivsimulator.Ninja.Priority;
 
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Resources;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffsDebuffs;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
 
 import java.util.ArrayList;
 
 /**
- FFXIV Simulator
- Copyright (C) 2017  Andreas Lund
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * FFXIV Simulator
+ * Copyright (C) 2017  Andreas Lund
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Rotation {
     private double timer;
@@ -54,9 +54,9 @@ public class Rotation {
 
     }
 
-    public String getNextGCD(ArrayList<Double> timers, String prevSkill, BuffsDebuffs buffsDebuffs, BuffsDebuffs state, Resources resources) {
-        time(timers, buffsDebuffs);
-        dualityUsed = state.isDuality();
+    public String getNextGCD(ArrayList<Double> timers, String prevSkill, AllBuffs buffs, Resources resources) {
+        time(timers, buffs);
+        dualityUsed = buffs.getBuffBar("Player").skillActive("Duality");
         if (prevSkill.equals("Spinning_Edge") && sfdoTTime < recast * 2) {
             return "Shadow_Fang";
         } else if (prevSkill.equals("Spinning_Edge")) {
@@ -78,10 +78,10 @@ public class Rotation {
 
     }
 
-    public String getNextOGCD(ArrayList<Double> timers, BuffsDebuffs buffsDebuffs, BuffsDebuffs state, Resources resources) {
-        time(timers, buffsDebuffs);
-        kassatsuUsed = state.isKassatsu();
-        suitonUsed = state.isSuiton();
+    public String getNextOGCD(ArrayList<Double> timers, AllBuffs buffs, Resources resources) {
+        time(timers, buffs);
+        kassatsuUsed = buffs.getBuffBar("Player").skillActive("Kassatsu");
+        suitonUsed = buffs.getBuffBar("Player").skillActive("Suiton");
         if (bFBTime <= 0) {
             return "Blood_for_Blood";
         } else if (iRTime <= 0) {
@@ -119,7 +119,7 @@ public class Rotation {
 
     }
 
-    private void time(ArrayList<Double> timersForRotation, BuffsDebuffs timer) {
+    private void time(ArrayList<Double> timersForRotation, AllBuffs buffs) {
         bFBTime = timer.getBloodForBlood();
         iRTime = timer.getInternalRelease();
         kassatsuTime = timer.getKassatsuTime();
@@ -139,7 +139,7 @@ public class Rotation {
 
     }
 
-    public void setSuitonUsed(boolean suitonUsed){
+    public void setSuitonUsed(boolean suitonUsed) {
         this.suitonUsed = suitonUsed;
     }
 }
