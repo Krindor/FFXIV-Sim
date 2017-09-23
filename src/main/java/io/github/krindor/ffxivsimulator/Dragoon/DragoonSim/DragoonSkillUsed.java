@@ -5,6 +5,7 @@ import io.github.krindor.ffxivsimulator.CrossClassSkills.General;
 import io.github.krindor.ffxivsimulator.Dragoon.Skills.Ability;
 import io.github.krindor.ffxivsimulator.Dragoon.Skills.WeaponSkills;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.DamageOverTime;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 
 import java.util.ArrayList;
@@ -18,22 +19,20 @@ public class DragoonSkillUsed {
     private int potency;
     private String attack;
     private String type2;
-    private BuffsDebuffs timers;
-    private BuffsDebuffs state;
-    private BuffBar buffBar;
+
+    private AllBuffs allBuffs;
 
     private ArrayList<DamageOverTime> dotsArray;
 
-    public void skillUsed(String type, String specialType, int potency, String attack, String type2, BuffsDebuffs timers, BuffsDebuffs state, ArrayList<DamageOverTime> dotsArray)
+    public void skillUsed(String type, String specialType, int potency, String attack, String type2, ArrayList<DamageOverTime> dotsArray, AllBuffs allBuffs)
 
     {
         this.attack = attack;
         this.dotsArray = dotsArray;
         this.potency = potency;
-
+        this.allBuffs = allBuffs;
         this.specialType = specialType;
-        this.state = state;
-        this.timers = timers;
+
         this.type = type;
         this.type2 = type2;
         useSkill();
@@ -194,12 +193,8 @@ public class DragoonSkillUsed {
         return type2;
     }
 
-    public BuffsDebuffs getTimers() {
-        return timers;
-    }
-
-    public BuffsDebuffs getState() {
-        return state;
+    public AllBuffs getAllBuffs() {
+        return allBuffs;
     }
 
     public ArrayList<DamageOverTime> getDotsArray() {

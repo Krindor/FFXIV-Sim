@@ -9,6 +9,15 @@ public class Job {
     Skills[] skills;
     Abilities[] abilities;
 
+    public void addEnumBuffs(){
+
+        for (int i = 0; i<buffs.length; i++){
+            Buffs buffs1 = buffs[i];
+            buffs1.setTargetEnum();
+            buffs[i] = buffs1;
+        }
+    }
+
     public String getName() {
         return name;
     }

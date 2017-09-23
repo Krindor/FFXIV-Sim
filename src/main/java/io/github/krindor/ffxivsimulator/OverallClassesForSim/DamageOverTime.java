@@ -1,5 +1,6 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
 import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
@@ -18,21 +19,21 @@ public class DamageOverTime {
 
     private String name;
 
-    private BuffBar buffBar;
+    private AllBuffs allBuffs;
 
-    public DamageOverTime(int potency, StatModel statModel, int jobmod, String name) {
+    public DamageOverTime(int potency, StatModel statModel, int jobmod, String name, AllBuffs allBuffs) {
         formulas = new Formulas(statModel, jobmod);
         this.potency = potency;
         this.name = name;
-
+        this.allBuffs = allBuffs;
     }
 
     public double getDamage(String job) {
         /*Type1 = All Type2 = Crit */
-        formulas.setCritMultiplier(buffBar.getMultiplier("All", "Crit"));
+        formulas.setCritMultiplier(allBuffs.getMultiplier("All", "Crit"));
 
 
-        damage = formulas.getMultiplier() * (potency / 100.0) * buffBar.getMultiplier("Physical", "All") * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(buffBar.getMultiplier("All", "Potion"));
+        damage = formulas.getMultiplier() * (potency / 100.0) * allBuffs.getMultiplier("Physical", "All") * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(allBuffs.getMultiplier("All", "Potion"));
 
 
         return damage;
@@ -54,7 +55,5 @@ public class DamageOverTime {
         time = time - change;
     }
 
-    public void setBuffBar(BuffBar buffBar) {
-        this.buffBar = buffBar;
-    }
+
 }

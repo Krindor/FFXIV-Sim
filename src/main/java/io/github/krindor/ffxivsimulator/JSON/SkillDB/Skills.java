@@ -12,6 +12,16 @@ public class Skills {
     int buffTime;
     int dotPotency;
     int dotTime;
+    boolean hasBuff;
+    boolean hasDoT;
+
+    public boolean hasBuff() {
+        return hasBuff;
+    }
+
+    public boolean hasDoT() {
+        return hasDoT;
+    }
 
     public String getName() {
         return name;
@@ -44,4 +54,6 @@ public class Skills {
     public int getDotTime() {
         return dotTime;
     }
+
+
 }

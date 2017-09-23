@@ -5,10 +5,7 @@ import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AttackType;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
+import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.*;
 import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
 import io.github.krindor.ffxivsimulator.RotationOpenerClasses.SkillAction;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
@@ -18,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 /**
  * Created by andre on 2017-02-08.
@@ -59,12 +57,12 @@ public class Simulatorpart {
     private JobHub jobHub;
     private AllBuffs allBuffs;
     private ArrayList<Skills> skills;
-    private ArrayList<Buffs> buffs;
+    private TreeMap<String, Buffs> buffs;
     private ArrayList<Abilities> abilities;
     private AttackType attackType;
     private double nextGCD;
     private Resources resources;
-    private ArrayList<String> buffTargets;
+    private ArrayList<BuffBarNames> buffTargets;
     private DamageCalculation damageCalculation;
 
     private LinkedList<SkillAction> skillActions;
@@ -78,10 +76,10 @@ public class Simulatorpart {
         resources.setTotalTactical(1000);
         Job job = jobInfo.getJob();
         skills = new ArrayList<>(job.getSkills().length);
-        buffs = new ArrayList<>(job.getAbilities().length);
+        buffs = jobInfo.getTreeMap();
         abilities = new ArrayList<>(job.getAbilities().length);
         Collections.addAll(skills, job.getSkills());
-        Collections.addAll(buffs, job.getBuffs());
+
         Collections.addAll(abilities, job.getAbilities());
         currentTime = 0;
         skillActions = new LinkedList<>();
@@ -95,12 +93,12 @@ public class Simulatorpart {
         damageCalculation = new DamageCalculation(jobName, formulas);
         nextAttack = new NextAttack();
         resistance = jobInfo.getResistance();
-
+        allBuffs = new AllBuffs();
         nextGCD = 0;
         buffTargets = new ArrayList<>(3);
-        buffTargets.add("Player");
-        buffTargets.add("Party");
-        buffTargets.add("Target");
+        buffTargets.add(BuffBarNames.Player);
+        buffTargets.add(BuffBarNames.Party);
+        buffTargets.add(BuffBarNames.Target);
 
     }
 
@@ -187,7 +185,7 @@ public class Simulatorpart {
                     nextAttack.addNextAttack("DoT", 3);
                 }
                 case "Buff": {
-                    for (String i : buffTargets) {
+                    for (BuffBarNames i : buffTargets) {
                         BuffBar bar = allBuffs.getBuffBar(i);
                         damageLog.add(bar.buffRunOut());
                         allBuffs.setBuffBar(i, bar);
@@ -227,6 +225,10 @@ public class Simulatorpart {
 
             damage = damageCalculation.getDamage(skill.getPotency(), skill.getType(), skill.getType2(), allBuffs);
         }
+        if (skill.hasBuff()){
+            BuffBarNames target = buffs.get(skill.getBuff()).getTargetEnum();
+            allBuffs.addBuff(target, buffs.get(skill.getBuff()));
+        }
 
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
     }
@@ -248,6 +250,11 @@ public class Simulatorpart {
             damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getType(), abilitie.getType2(), allBuffs);
         }
 
+        if (abilitie.hasBuffs()){
+            BuffBarNames target = buffs.get(abilitie.getBuff()).getTargetEnum();
+            allBuffs.addBuff(target, buffs.get(abilitie.getBuff()));
+        }
+
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
     }
 
@@ -259,7 +266,7 @@ public class Simulatorpart {
 
     private void timeChange(double change) {
         nextAttack.timeChange(change);
-        timers.timeChange(change);
+        allBuffs.timeChange(change);
         nextGCD = nextGCD - attackType.getTime();
         if (nextGCD < 0) {
             nextGCD = 0;
@@ -282,9 +289,7 @@ public class Simulatorpart {
 
     private void loadNinja() {
 
-        dotsArray = new ArrayList<>(2);
-        dotsArray.add(new DamageOverTime(40, stats, jobmod, "Shadow Fang"));
-        dotsArray.add(new DamageOverTime(30, stats, jobmod, "Mutilate"));
+
         resources.setManaPoints(5000);
         resources.setTotalMana(5000);
         resources.setClassSpecific(0);
@@ -296,19 +301,14 @@ public class Simulatorpart {
     private void loadMonk() {
 
 
-        dotsArray = new ArrayList<>(2);
-        dotsArray.add(new DamageOverTime(50, stats, jobmod, "Demolish"));
-        dotsArray.add(new DamageOverTime(25, stats, jobmod, "Touch of Death"));
-        dotsArray.add(new DamageOverTime(20, stats, jobmod, "Fracture"));
+
 
     }
 
     private void loadDragoon() {
 
 
-        dotsArray = new ArrayList<>(2);
-        dotsArray.add(new DamageOverTime(35, stats, jobmod, "Chaos Thrust"));
-        dotsArray.add(new DamageOverTime(30, stats, jobmod, "Phlebotomize"));
+
 
 
     }

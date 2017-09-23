@@ -4,43 +4,41 @@ import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TreeMap;
 
 public class AllBuffs {
-    private BuffBar playerBuffs;
-    private BuffBar partyBuffs;
-    private BuffBar targetBuffs;
+    private TreeMap<BuffBarNames, BuffBar> treeMap;
 
     public AllBuffs() {
-        playerBuffs = new BuffBar();
-        partyBuffs = new BuffBar();
-        targetBuffs = new BuffBar();
-    }
-
-    public BuffBar getBuffBar(String target) {
-        switch (target) {
-            case "Player":
-                return playerBuffs;
-            case "Party":
-                return partyBuffs;
-            case "Target":
-                return targetBuffs;
-        }
-        return null;
-    }
-
-    public void setBuffBar(String target, BuffBar buffBar) {
-        switch (target) {
-            case "Player":
-                playerBuffs = buffBar;
-                break;
-            case "Party":
-                partyBuffs = buffBar;
-                break;
-            case "Target":
-                targetBuffs = buffBar;
-                break;
+        treeMap = new TreeMap<>();
+        for (BuffBarNames names: BuffBarNames.values()){
+            treeMap.put(names, new BuffBar());
         }
 
+    }
+
+    public BuffBar getBuffBar(BuffBarNames target) {
+
+        return treeMap.get(target);
+    }
+
+    public void setBuffBar(BuffBarNames target, BuffBar buffBar) {
+        treeMap.replace(target, buffBar);
+
+    }
+
+    public void timeChange(double change){
+        for (BuffBarNames barNames: BuffBarNames.values()){
+            BuffBar newValue = treeMap.get(barNames);
+            newValue.timeChange(change);
+            treeMap.replace(barNames, newValue);
+        }
+    }
+
+    public void addBuff(BuffBarNames target, Buffs buffs){
+        BuffBar value = treeMap.get(target);
+        value.addBuff(buffs);
+        treeMap.replace(target, value);
     }
 
 
@@ -48,13 +46,18 @@ public class AllBuffs {
         double multiplier = 1;
 
         if (type2.equals("Crit")) {
-            multiplier = multiplier + barMultiplier(playerBuffs, type, type2);
-            multiplier = multiplier + barMultiplier(partyBuffs, type, type2);
-            multiplier = multiplier + barMultiplier(targetBuffs, type, type2);
+            for (BuffBarNames barNames: BuffBarNames.values()){
+                if (barNames != BuffBarNames.Cooldown) {
+                    multiplier += barMultiplier(treeMap.get(barNames), type, type2);
+                }
+            }
+
         } else {
-            multiplier = multiplier * barMultiplier(playerBuffs, type, type2);
-            multiplier = multiplier * barMultiplier(partyBuffs, type, type2);
-            multiplier = multiplier * barMultiplier(targetBuffs, type, type2);
+            for (BuffBarNames barNames: BuffBarNames.values()){
+                if (barNames != BuffBarNames.Cooldown) {
+                    multiplier *= barMultiplier(treeMap.get(barNames), type, type2);
+                }
+            }
         }
 
 
@@ -63,10 +66,10 @@ public class AllBuffs {
 
 
     public double getNextRunOut() {
-        ArrayList<Double> runOut = new ArrayList<>(3);
-        runOut.add(playerBuffs.getNextBuffRunOut());
-        runOut.add(partyBuffs.getNextBuffRunOut());
-        runOut.add(targetBuffs.getNextBuffRunOut());
+        ArrayList<Double> runOut = new ArrayList<>(4);
+        for (BuffBarNames barNames: BuffBarNames.values()){
+            runOut.add(treeMap.get(barNames).getNextBuffRunOut());
+        }
         return Collections.min(runOut);
     }
 

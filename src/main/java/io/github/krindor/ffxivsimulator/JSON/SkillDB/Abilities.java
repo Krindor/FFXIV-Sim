@@ -11,6 +11,11 @@ public class Abilities {
     String type;
     String type2;
     int specialValue;
+    boolean hasBuffs;
+
+    public boolean hasBuffs() {
+        return hasBuffs;
+    }
 
     public String getName() {
         return name;

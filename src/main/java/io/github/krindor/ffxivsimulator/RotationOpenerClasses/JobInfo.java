@@ -1,12 +1,18 @@
 package io.github.krindor.ffxivsimulator.RotationOpenerClasses;
 
+import com.jsoniter.JsonIterator;
+import io.github.krindor.ffxivsimulator.JSON.JSONParse;
 import io.github.krindor.ffxivsimulator.JSON.OpeningSequence.ActionObject;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.ConfigObject;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
 import io.github.krindor.ffxivsimulator.JobClasses.JobJSON;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.scene.image.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * Created by andre on 2017-08-02.
@@ -26,10 +32,12 @@ public class JobInfo {
     private int iterations;
     private ActionObject actionObjects;
     private String resistance;
+    private TreeMap<String, Buffs> treeMap;
 
     public JobInfo(StatModel stats, String jobName, int time, int iterations, ActionObject actionObjects) {
         JobJSON jobJSON = new JobJSON();
-        job = jobJSON.getJobs(jobName);
+        job = readJSON();
+        jobJsonToBuffMap(job);
         this.time = time;
         this.iterations = iterations;
         this.stats = stats;
@@ -52,6 +60,35 @@ public class JobInfo {
             CurrentOpener = new ArrayList<>(30);
             return CurrentOpener;
         }
+    }
+
+    private Job readJSON(){
+        JSONParse jsonParse = new JSONParse();
+        JsonIterator iterator = jsonParse.parseJSON("./JSON/Buffs.json");
+        ConfigObject configObject;
+        try {
+            configObject = iterator.read(ConfigObject.class);
+            for (Job i : configObject.getJob()) {
+                if (i.getName().equals(jobName)) {
+                    return i;
+                }
+            }
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void jobJsonToBuffMap(Job job){
+        treeMap = new TreeMap();
+        job.addEnumBuffs();
+        for (Buffs i: job.getBuffs()){
+            treeMap.put(i.getName(), i);
+        }
+
     }
 
     public String getJobName() {
@@ -117,5 +154,9 @@ public class JobInfo {
 
     public Job getJob() {
         return job;
+    }
+
+    public TreeMap<String, Buffs> getTreeMap() {
+        return treeMap;
     }
 }
