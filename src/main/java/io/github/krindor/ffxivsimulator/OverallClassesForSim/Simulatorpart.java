@@ -1,13 +1,17 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
 
+import io.github.krindor.ffxivsimulator.Damage.DamageCalculation;
+import io.github.krindor.ffxivsimulator.Damage.DamageOverTime;
+import io.github.krindor.ffxivsimulator.Damage.Formulas;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.*;
-import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
-import io.github.krindor.ffxivsimulator.RotationOpenerClasses.SkillAction;
+import io.github.krindor.ffxivsimulator.JobClasses.Resources;
+import io.github.krindor.ffxivsimulator.Timers.*;
+import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
+import io.github.krindor.ffxivsimulator.model.SkillModel;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
@@ -65,7 +69,7 @@ public class Simulatorpart {
     private ArrayList<BuffBarNames> buffTargets;
     private DamageCalculation damageCalculation;
 
-    private LinkedList<SkillAction> skillActions;
+    private LinkedList<SkillModel> skillModels;
 
     public Simulatorpart(JobInfo jobInfo) {
 
@@ -82,11 +86,11 @@ public class Simulatorpart {
 
         Collections.addAll(abilities, job.getAbilities());
         currentTime = 0;
-        skillActions = new LinkedList<>();
-        Collections.addAll(skillActions, jobInfo.getActionObjects().getSkillAction());
+        skillModels = new LinkedList<>();
+        Collections.addAll(skillModels, jobInfo.getActionObjects().getSkillModel());
 
         jobmod = jobInfo.getJobmod();
-        loadClass();
+
         jobHub = new JobHub(jobName);
         resources = new Resources();
         formulas = new Formulas(stats, jobmod);
@@ -102,21 +106,7 @@ public class Simulatorpart {
 
     }
 
-    private void loadClass() {
-        switch (jobName) {
-            case "Ninja":
-                loadNinja();
-                break;
-            case "Monk":
-                loadMonk();
-                break;
-            case "Dragoon":
-                loadDragoon();
-                break;
-        }
 
-
-    }
 
     public ArrayList<String> runSim(AllBuffs buffs) {
 
@@ -131,24 +121,24 @@ public class Simulatorpart {
 
             switch (attackType.getType()) {
                 case "Opener": {
-                    SkillAction skillAction = skillActions.getFirst();
-                    attack = skillAction.getName();
+                    SkillModel skillModel = skillModels.getFirst();
+                    attack = skillModel.getName();
                     double nextTime = 0;
-                    if (skillAction.getFixedTime() < 0.7) {
-                        switch (skillAction.getType()) {
+                    if (skillModel.getFixedTime() < 0.7) {
+                        switch (skillModel.getType()) {
                             case "GCD":
                                 nextTime = nextGCD;
                                 nextGCD = formulas.getRecast();
                                 break;
                             case "oGCD":
                                 nextTime = 0.7;
-                                if (nextGCD < 0.7 + skillAction.getOffset()) {
-                                    nextGCD = 0.7 + skillAction.getOffset();
+                                if (nextGCD < 0.7 + skillModel.getOffset()) {
+                                    nextGCD = 0.7 + skillModel.getOffset();
                                 }
                                 break;
                         }
-                    } else nextTime = skillAction.getFixedTime();
-                    nextTime = nextTime + skillAction.getOffset();
+                    } else nextTime = skillModel.getFixedTime();
+                    nextTime = nextTime + skillModel.getOffset();
                     nextAttack.addNextAttack("Opener", nextTime);
                 }
                 break;
@@ -255,6 +245,8 @@ public class Simulatorpart {
             allBuffs.addBuff(target, buffs.get(abilitie.getBuff()));
         }
 
+        allBuffs.setCooldown(abilitie);
+
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
     }
 
@@ -287,31 +279,9 @@ public class Simulatorpart {
 
     }
 
-    private void loadNinja() {
-
-
-        resources.setManaPoints(5000);
-        resources.setTotalMana(5000);
-        resources.setClassSpecific(0);
-        resources.setTotalClass(100);
-
-
-    }
-
-    private void loadMonk() {
 
 
 
-
-    }
-
-    private void loadDragoon() {
-
-
-
-
-
-    }
 
     private ArrayList<String> loadOpener(String job) {
 

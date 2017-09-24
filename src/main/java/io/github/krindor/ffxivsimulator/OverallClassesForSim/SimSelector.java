@@ -2,7 +2,7 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
 
 import io.github.krindor.ffxivsimulator.JSON.OpeningSequence.ActionObject;
-import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
+import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.util.ArrayList;

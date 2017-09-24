@@ -1,6 +1,8 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
+import io.github.krindor.ffxivsimulator.Damage.DamageOverTime;
+import io.github.krindor.ffxivsimulator.JobClasses.Resources;
+import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,9 @@
-package io.github.krindor.ffxivsimulator.RotationOpenerClasses;
+package io.github.krindor.ffxivsimulator.model;
 
 /**
  * Created by andre on 2017-08-02.
  */
-public class SkillAction {
+public class SkillModel {
     private String name;
     private double offset;
     private double fixedTime;

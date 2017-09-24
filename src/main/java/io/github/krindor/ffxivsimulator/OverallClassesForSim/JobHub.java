@@ -1,10 +1,12 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
+import io.github.krindor.ffxivsimulator.JSON.Rotation.Rotation;
+import io.github.krindor.ffxivsimulator.JobClasses.Resources;
 import io.github.krindor.ffxivsimulator.Monk.MonkSim.MonkCheckDelay;
 import io.github.krindor.ffxivsimulator.Ninja.NinjaSim.NinjaCheckDelay;
 import io.github.krindor.ffxivsimulator.Ninja.Priority.Rotation;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.NextAttack;
+import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
+import io.github.krindor.ffxivsimulator.Timers.NextAttack;
 
 import java.util.ArrayList;
 

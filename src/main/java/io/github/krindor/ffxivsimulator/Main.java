@@ -1,17 +1,11 @@
 package io.github.krindor.ffxivsimulator;
 
-import com.jsoniter.*;
-import io.github.krindor.ffxivsimulator.JSON.JSONParse;
-import io.github.krindor.ffxivsimulator.JSON.SkillDB.ConfigObject;
-import io.github.krindor.ffxivsimulator.JobClasses.JobJSON;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.io.IOException;
 
 /**
  * FFXIV Simulator

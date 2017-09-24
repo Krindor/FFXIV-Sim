@@ -1,6 +1,6 @@
 package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 
-import io.github.krindor.ffxivsimulator.RotationOpenerClasses.JobInfo;
+import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
 
 import java.util.ArrayList;
 import java.util.concurrent.*;

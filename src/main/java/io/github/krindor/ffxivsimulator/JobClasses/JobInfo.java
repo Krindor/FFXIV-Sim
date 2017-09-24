@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.RotationOpenerClasses;
+package io.github.krindor.ffxivsimulator.JobClasses;
 
 import com.jsoniter.JsonIterator;
 import io.github.krindor.ffxivsimulator.JSON.JSONParse;
@@ -6,7 +6,6 @@ import io.github.krindor.ffxivsimulator.JSON.OpeningSequence.ActionObject;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.ConfigObject;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
-import io.github.krindor.ffxivsimulator.JobClasses.JobJSON;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 import javafx.scene.image.ImageView;
 
@@ -35,7 +34,7 @@ public class JobInfo {
     private TreeMap<String, Buffs> treeMap;
 
     public JobInfo(StatModel stats, String jobName, int time, int iterations, ActionObject actionObjects) {
-        JobJSON jobJSON = new JobJSON();
+
         job = readJSON();
         jobJsonToBuffMap(job);
         this.time = time;

@@ -1,14 +1,14 @@
 package io.github.krindor.ffxivsimulator.JSON.OpeningSequence;
 
-import io.github.krindor.ffxivsimulator.RotationOpenerClasses.SkillAction;
+import io.github.krindor.ffxivsimulator.model.SkillModel;
 
 /**
  * Created by andre on 2017-08-02.
  */
 public class ActionObject {
-    private SkillAction[] skillAction;
+    private SkillModel[] skillModel;
 
-    public SkillAction[] getSkillAction() {
-        return skillAction;
+    public SkillModel[] getSkillModel() {
+        return skillModel;
     }
 }

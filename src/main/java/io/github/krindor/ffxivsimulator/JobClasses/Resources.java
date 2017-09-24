@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.OverallClassesForSim;
+package io.github.krindor.ffxivsimulator.JobClasses;
 
 /**
  * Created by andre on 2017-06-20.

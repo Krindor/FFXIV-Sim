@@ -1,9 +1,11 @@
-package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
+package io.github.krindor.ffxivsimulator.Timers;
 
+import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class AllBuffs {
@@ -41,6 +43,22 @@ public class AllBuffs {
         treeMap.replace(target, value);
     }
 
+    public void setCooldown(Abilities abilities){
+        Buffs cooldown = new Buffs();
+        cooldown.setDuration(abilities.getCooldown());
+        cooldown.setName(abilities.getName());
+        BuffBar buffBar = treeMap.get(BuffBarNames.Cooldown);
+        buffBar.addBuff(cooldown);
+        treeMap.replace(BuffBarNames.Cooldown, buffBar);
+    }
+
+    public Buffs getBuff(BuffBarNames target, String buffName){
+        return treeMap.get(target).getTreeMap().get(buffName);
+    }
+
+    public boolean buffExists(BuffBarNames target, String buffName){
+        return treeMap.get(target).getTreeMap().containsKey(buffName);
+    }
 
     public double getMultiplier(String type, String type2) {
         double multiplier = 1;
@@ -76,14 +94,15 @@ public class AllBuffs {
 
     private double barMultiplier(BuffBar buffBar, String type, String type2) {
         double multiplier = 1;
-        for (Buffs i : buffBar.getBuffsArrayList()) {
-            if ((i.getType().equals(type) && (i.getType2().equals(type2) || i.getType2().equals("All"))) || i.getType().equals("All")) {
-                if (i.getType2().equals("Crit")) {
-                    multiplier = multiplier + i.getIncrease();
-                } else if (i.getType().equals("Haste")) {
-                    multiplier = multiplier * (1 - i.getIncrease());
+        for (Map.Entry<String, Buffs> entry : buffBar.getTreeMap().entrySet()) {
+            Buffs value = entry.getValue();
+            if ((value.getType().equals(type) && (value.getType2().equals(type2) || value.getType2().equals("All"))) || value.getType().equals("All")) {
+                if (value.getType2().equals("Crit")) {
+                    multiplier = multiplier + value.getIncrease();
+                } else if (value.getType().equals("Haste")) {
+                    multiplier = multiplier * (1 - value.getIncrease());
                 } else {
-                    multiplier = multiplier * i.getIncrease();
+                    multiplier = multiplier * value.getIncrease();
                 }
             }
 

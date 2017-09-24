@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.RotationOpenerClasses;
+package io.github.krindor.ffxivsimulator.OpenerClasses;
 
 import com.jsoniter.JsonIterator;
 import io.github.krindor.ffxivsimulator.JSON.JSONParse;

@@ -1,6 +1,6 @@
-package io.github.krindor.ffxivsimulator.OverallClassesForSim;
+package io.github.krindor.ffxivsimulator.Damage;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.AllBuffs;
+import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 /**

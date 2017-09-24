@@ -1,4 +1,4 @@
-package io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers;
+package io.github.krindor.ffxivsimulator.Timers;
 
 /**
  * Created by andre on 2017-08-09.

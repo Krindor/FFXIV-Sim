@@ -1,6 +1,6 @@
 package io.github.krindor.ffxivsimulator.JSON.SkillDB;
 
-import io.github.krindor.ffxivsimulator.OverallClassesForSim.Timers.BuffBarNames;
+import io.github.krindor.ffxivsimulator.Timers.BuffBarNames;
 
 /**
  * Created by andre on 2017-07-09.
@@ -45,6 +45,9 @@ public class Buffs {
 
     public void timeChange(double change) {
         duration = duration - change;
+        if (duration < 0){
+            duration = 0;
+        }
     }
 
     public int getMaxStacks() {
@@ -58,4 +61,10 @@ public class Buffs {
     public BuffBarNames getTargetEnum() {
         return targetEnum;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 }
