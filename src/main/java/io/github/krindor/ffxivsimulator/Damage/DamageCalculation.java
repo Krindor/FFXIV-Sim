@@ -1,5 +1,6 @@
 package io.github.krindor.ffxivsimulator.Damage;
 
+import io.github.krindor.ffxivsimulator.Enums.TypeNames;
 import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
 
 /**
@@ -17,19 +18,19 @@ public class DamageCalculation {
         this.formulas = formulas;
     }
 
-    public double getDamage(int potency, String damageTypes, String resistanceType, AllBuffs buffs) {
-        String damageType;
+    public double getDamage(int potency, TypeNames damageTypes, TypeNames resistanceType, AllBuffs buffs) {
+        TypeNames damageType;
 
         double generalMultiplier;
         damageType = damageTypes;
 
 
-        if (damageType.equals("Auto-Attack")) {
+        if (damageType.equals(TypeNames.AutoAttack)) {
             generalMultiplier = formulas.getAaMultiplier();
         } else {
-            generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffs.getMultiplier("All", "Potion"));
+            generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffs.getMultiplier(TypeNames.All, TypeNames.Potion));
         }
-        formulas.setCritMultiplier(buffs.getMultiplier("All", "Crit"));
+        formulas.setCritMultiplier(buffs.getMultiplier(TypeNames.All, TypeNames.Crit));
         double critMultiplier = formulas.getCritMultiplier();
 
         double damage = generalMultiplier * buffs.getMultiplier(damageType, resistanceType) * critMultiplier;

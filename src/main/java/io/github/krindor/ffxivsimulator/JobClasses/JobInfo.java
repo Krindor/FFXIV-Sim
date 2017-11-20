@@ -1,6 +1,8 @@
 package io.github.krindor.ffxivsimulator.JobClasses;
 
+
 import com.jsoniter.JsonIterator;
+import io.github.krindor.ffxivsimulator.Enums.TypeNames;
 import io.github.krindor.ffxivsimulator.JSON.JSONParse;
 import io.github.krindor.ffxivsimulator.JSON.OpeningSequence.ActionObject;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
@@ -30,7 +32,7 @@ public class JobInfo {
     private int jobmod;
     private int iterations;
     private ActionObject actionObjects;
-    private String resistance;
+    private TypeNames resistance;
     private TreeMap<String, Buffs> treeMap;
 
     public JobInfo(StatModel stats, String jobName, int time, int iterations, ActionObject actionObjects) {
@@ -61,7 +63,7 @@ public class JobInfo {
         }
     }
 
-    private Job readJSON(){
+    private Job readJSON() {
         JSONParse jsonParse = new JSONParse();
         JsonIterator iterator = jsonParse.parseJSON("./JSON/Buffs.json");
         ConfigObject configObject;
@@ -74,17 +76,16 @@ public class JobInfo {
             }
 
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private void jobJsonToBuffMap(Job job){
+    private void jobJsonToBuffMap(Job job) {
         treeMap = new TreeMap();
-        job.addEnumBuffs();
-        for (Buffs i: job.getBuffs()){
+        job.addEnum();
+        for (Buffs i : job.getBuffs()) {
             treeMap.put(i.getName(), i);
         }
 
@@ -143,11 +144,11 @@ public class JobInfo {
         this.jobmod = jobmod;
     }
 
-    public String getResistance() {
+    public TypeNames getResistance() {
         return resistance;
     }
 
-    public void setResistance(String resistance) {
+    public void setResistance(TypeNames resistance) {
         this.resistance = resistance;
     }
 

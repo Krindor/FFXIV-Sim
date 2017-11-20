@@ -6,7 +6,7 @@ import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
 
 import java.util.ArrayList;
 
-public class CurrentState {
+class CurrentState {
     private String type;
     private String specialType;
     private int potency;

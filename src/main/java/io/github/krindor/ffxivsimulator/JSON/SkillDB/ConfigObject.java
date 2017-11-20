@@ -6,7 +6,7 @@ package io.github.krindor.ffxivsimulator.JSON.SkillDB;
  */
 public class ConfigObject {
 
-    Job[] job;
+    private Job[] job;
 
     public Job[] getJob() {
         return job;

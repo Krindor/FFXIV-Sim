@@ -57,7 +57,7 @@ public class BuffBar {
 
     }
 
-    public Buffs getBuff(String name){
+    public Buffs getBuff(String name) {
         return treeMap.get(name);
     }
 
@@ -72,16 +72,13 @@ public class BuffBar {
     }
 
     public void extendBuff(String buffName, double timeExtension) {
-        treeMap.forEach((k,v)-> {
+        treeMap.forEach((k, v) -> {
             if (v.getName().equals(buffName)) {
                 v.setDuration(v.getDuration() + timeExtension);
             }
         });
 
-        }
-
-
-
+    }
 
 
 }

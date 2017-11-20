@@ -7,6 +7,7 @@ public class StatModel {
     private final int criticalHitRating;
     private final int skillSpeed;
     private final int spellSpeed;
+
     public StatModel(int weaponDamage, int mainStat, int determination, int criticalHitRating, int skillSpeed, int spellSpeed) {
         this.weaponDamage = weaponDamage;
         this.mainStat = mainStat;

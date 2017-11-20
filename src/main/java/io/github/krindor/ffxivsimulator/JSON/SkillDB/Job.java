@@ -4,17 +4,27 @@ package io.github.krindor.ffxivsimulator.JSON.SkillDB;
  * Created by andre on 2017-07-09.
  */
 public class Job {
-    String name;
-    Buffs[] buffs;
-    Skills[] skills;
-    Abilities[] abilities;
+    private String name;
+    private Buffs[] buffs;
+    private Skills[] skills;
+    private Abilities[] abilities;
 
-    public void addEnumBuffs(){
+    public void addEnum() {
 
-        for (int i = 0; i<buffs.length; i++){
+        for (int i = 0; i < buffs.length; i++) {
             Buffs buffs1 = buffs[i];
-            buffs1.setTargetEnum();
+            buffs1.stringToEnum();
             buffs[i] = buffs1;
+        }
+        for (int i = 0; i < skills.length; i++) {
+            Skills skills1 = skills[i];
+            skills1.stringToEnum();
+            skills[i] = skills1;
+        }
+        for (int i = 0; i < abilities.length; i++) {
+            Abilities abilities1 = abilities[i];
+            abilities1.stringToEnum();
+            abilities[i] = abilities1;
         }
     }
 

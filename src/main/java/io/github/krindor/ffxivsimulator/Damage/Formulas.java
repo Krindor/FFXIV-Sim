@@ -30,7 +30,7 @@ public class Formulas {
 
         critDamage = ((statModel.getCriticalHitRating() - 354.0) / (5 * 858) + 0.45);
 
-        recast = Math.floor(((Math.floor((1 - ((Math.floor((((double) this.statModel.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100)) * 100) / 100;
+        recast = Math.floor(((Math.floor((1 - ((Math.floor(((this.statModel.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100)) * 100) / 100;
 
         aaRecast = Math.floor((2.56) * 100) / 100;
     }
@@ -48,7 +48,7 @@ public class Formulas {
 
     public void changeRecast(AllBuffs buffs) {
         double speedChange = buffs.getMultiplier("Haste", "All");
-        recast = Math.floor(((Math.floor((1 - ((Math.floor((((double) statModel.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100) * speedChange) * 100) / 100;
+        recast = Math.floor(((Math.floor((1 - ((Math.floor(((statModel.getSkillSpeed() - 354) * 0.13 / 858) * 1000) / 1000))) * (2.5) * 100) / 100) * speedChange) * 100) / 100;
         aaRecast = Math.floor((2.56 * speedChange) * 100) / 100;
     }
 

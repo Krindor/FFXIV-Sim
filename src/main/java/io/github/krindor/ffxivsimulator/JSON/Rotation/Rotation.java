@@ -10,13 +10,13 @@ public class Rotation {
     private RotationConditionArray[] rotationConditionArrays;
     private LinkedList<RotationConditionArray> rotationList;
 
-    public void makeArray(){
+    public void makeArray() {
         rotationList = new LinkedList<>(Arrays.asList(rotationConditionArrays));
     }
 
-    public String getNext(AllBuffs allBuffs){
-        for (RotationConditionArray array:rotationList){
-            if (array.passes(allBuffs)){
+    public String getNext(AllBuffs allBuffs) {
+        for (RotationConditionArray array : rotationList) {
+            if (array.passes(allBuffs)) {
                 return array.getName();
             }
         }

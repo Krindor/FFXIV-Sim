@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Created by andre on 2017-08-02.
  */
-public class OpenerSequence {
+class OpenerSequence {
     private ActionObject actionObject;
 
     public OpenerSequence(String path) {

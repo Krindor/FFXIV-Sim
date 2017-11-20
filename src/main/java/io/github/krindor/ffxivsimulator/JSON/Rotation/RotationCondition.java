@@ -1,7 +1,7 @@
 package io.github.krindor.ffxivsimulator.JSON.Rotation;
 
+import io.github.krindor.ffxivsimulator.Enums.BuffBarNames;
 import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
-import io.github.krindor.ffxivsimulator.Timers.BuffBarNames;
 
 public class RotationCondition {
     private String name;
@@ -42,35 +42,35 @@ public class RotationCondition {
                     }
                     break;
                 case "<":
-                    if (value < duration){
+                    if (value < duration) {
                         check = true;
                     }
                     break;
                 case "=":
-                    if (value == duration){
+                    if (value == duration) {
                         check = true;
                     }
                     break;
-                case  ">=":
-                    if (value >= duration){
-                        check =true;
+                case ">=":
+                    if (value >= duration) {
+                        check = true;
                     }
                     break;
                 case "<=":
-                    if (value <= duration){
+                    if (value <= duration) {
                         check = true;
                     }
                     break;
                 case "!=":
-                    if (value != duration){
+                    if (value != duration) {
                         check = true;
                     }
                     break;
             }
         }
-        if (notBoolean.equals("True")){
+        if (notBoolean.equals("True")) {
             check = buffs.buffExists(buffType, name);
-        }else if (notBoolean.equals("False")){
+        } else if (notBoolean.equals("False")) {
             check = !buffs.buffExists(buffType, name);
         }
         return check;

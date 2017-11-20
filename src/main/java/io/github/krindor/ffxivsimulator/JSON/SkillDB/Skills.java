@@ -1,19 +1,24 @@
 package io.github.krindor.ffxivsimulator.JSON.SkillDB;
 
+import io.github.krindor.ffxivsimulator.Enums.TypeNames;
+
 /**
  * Created by andre on 2017-07-13.
  */
 public class Skills {
-    String name;
-    int potency;
-    String type;
-    String type2;
-    String buff;
-    int buffTime;
-    int dotPotency;
-    int dotTime;
-    boolean hasBuff;
-    boolean hasDoT;
+    private String name;
+    private int potency;
+    private String type;
+    private String type2;
+    private TypeNames types;
+    private TypeNames type2s;
+
+    private String buff;
+    private int buffTime;
+    private int dotPotency;
+    private int dotTime;
+    private boolean hasBuff;
+    private boolean hasDoT;
 
     public boolean hasBuff() {
         return hasBuff;
@@ -31,12 +36,20 @@ public class Skills {
         return potency;
     }
 
-    public String getType() {
-        return type;
+    public TypeNames getTypes() {
+        return types;
     }
 
-    public String getType2() {
-        return type2;
+    public TypeNames getType2s() {
+        return type2s;
+    }
+
+    public boolean isHasBuff() {
+        return hasBuff;
+    }
+
+    public boolean isHasDoT() {
+        return hasDoT;
     }
 
     public String getBuff() {
@@ -53,6 +66,11 @@ public class Skills {
 
     public int getDotTime() {
         return dotTime;
+    }
+
+    public void stringToEnum() {
+        types = TypeNames.valueOf(type);
+        type2s = TypeNames.valueOf(type2);
     }
 
 

@@ -1,22 +1,29 @@
 package io.github.krindor.ffxivsimulator.JSON.SkillDB;
 
-import io.github.krindor.ffxivsimulator.Timers.BuffBarNames;
+import io.github.krindor.ffxivsimulator.Enums.BuffBarNames;
+import io.github.krindor.ffxivsimulator.Enums.TypeNames;
 
 /**
  * Created by andre on 2017-07-09.
  */
 public class Buffs {
-    String name;
-    double duration;
-    String type;
-    double increase;
-    String target;
-    BuffBarNames targetEnum;
-    String type2;
-    int maxStacks;
+    private String name;
+    private double duration;
+    private String type;
+    private double increase;
+    private String target;
+    private BuffBarNames targetEnum;
+    private String type2;
+    private TypeNames types;
+    private TypeNames type2s;
+    private int maxStacks;
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public double getDuration() {
@@ -27,9 +34,6 @@ public class Buffs {
         this.duration = duration;
     }
 
-    public String getType() {
-        return type;
-    }
 
     public double getIncrease() {
         return increase;
@@ -39,13 +43,25 @@ public class Buffs {
         return target;
     }
 
-    public String getType2() {
-        return type2;
+    public TypeNames getTypes() {
+        return types;
+    }
+
+    public void setTypes(TypeNames types) {
+        this.types = types;
+    }
+
+    public TypeNames getType2s() {
+        return type2s;
+    }
+
+    public void setType2s(TypeNames type2s) {
+        this.type2s = type2s;
     }
 
     public void timeChange(double change) {
         duration = duration - change;
-        if (duration < 0){
+        if (duration < 0) {
             duration = 0;
         }
     }
@@ -54,16 +70,14 @@ public class Buffs {
         return maxStacks;
     }
 
-    public void setTargetEnum(){
+    public void stringToEnum() {
         targetEnum = BuffBarNames.valueOf(target);
+        types = TypeNames.valueOf(type);
+        type2s = TypeNames.valueOf(type2);
     }
 
     public BuffBarNames getTargetEnum() {
         return targetEnum;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 

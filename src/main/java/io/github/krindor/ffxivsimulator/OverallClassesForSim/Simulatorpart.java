@@ -4,15 +4,22 @@ package io.github.krindor.ffxivsimulator.OverallClassesForSim;
 import io.github.krindor.ffxivsimulator.Damage.DamageCalculation;
 import io.github.krindor.ffxivsimulator.Damage.DamageOverTime;
 import io.github.krindor.ffxivsimulator.Damage.Formulas;
+import io.github.krindor.ffxivsimulator.Enums.BuffBarNames;
+import io.github.krindor.ffxivsimulator.Enums.TimerNames;
+import io.github.krindor.ffxivsimulator.Enums.TypeNames;
+import io.github.krindor.ffxivsimulator.JSON.Rotation.Rotation;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
-import io.github.krindor.ffxivsimulator.JobClasses.Resources;
-import io.github.krindor.ffxivsimulator.Timers.*;
 import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
-import io.github.krindor.ffxivsimulator.model.SkillModel;
+import io.github.krindor.ffxivsimulator.JobClasses.Resources;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
+import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
+import io.github.krindor.ffxivsimulator.Timers.AttackType;
+import io.github.krindor.ffxivsimulator.Timers.BuffBar;
+import io.github.krindor.ffxivsimulator.Timers.NextAttack;
+import io.github.krindor.ffxivsimulator.model.SkillModel;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.io.File;
@@ -24,7 +31,7 @@ import java.util.TreeMap;
 /**
  * Created by andre on 2017-02-08.
  */
-public class Simulatorpart {
+class Simulatorpart {
 
 
     private StatModel stats;
@@ -44,21 +51,21 @@ public class Simulatorpart {
     private double damagePerSecond;
     private String attack;
     private int potency;
-    private String type;
     private String type2;
     private String specialType;
     private String prevAttack;
-
+    private Rotation rotationGCD;
+    private Rotation rotationoGCD;
     private ArrayList<DamageOverTime> dotsArray;
     private NextAttack nextAttack;
     private ArrayList<Double> timersForRotation;
 
 
     private Formulas formulas;
-    private String resistance;
+    private TypeNames resistance;
     private int jobmod;
     private String jobName;
-    private JobHub jobHub;
+
     private AllBuffs allBuffs;
     private ArrayList<Skills> skills;
     private TreeMap<String, Buffs> buffs;
@@ -91,7 +98,7 @@ public class Simulatorpart {
 
         jobmod = jobInfo.getJobmod();
 
-        jobHub = new JobHub(jobName);
+
         resources = new Resources();
         formulas = new Formulas(stats, jobmod);
         damageCalculation = new DamageCalculation(jobName, formulas);
@@ -107,7 +114,6 @@ public class Simulatorpart {
     }
 
 
-
     public ArrayList<String> runSim(AllBuffs buffs) {
 
 
@@ -120,7 +126,7 @@ public class Simulatorpart {
             damage = 0;
 
             switch (attackType.getType()) {
-                case "Opener": {
+                case Opener: {
                     SkillModel skillModel = skillModels.getFirst();
                     attack = skillModel.getName();
                     double nextTime = 0;
@@ -139,32 +145,32 @@ public class Simulatorpart {
                         }
                     } else nextTime = skillModel.getFixedTime();
                     nextTime = nextTime + skillModel.getOffset();
-                    nextAttack.addNextAttack("Opener", nextTime);
+                    nextAttack.addNextAttack(TimerNames.Opener, nextTime);
                 }
                 break;
-                case "GCD": {
-                    attack = jobHub.getNextGCD(timersForRotation, prevAttack, allBuffs, resources);
+                case GCD: {
+                    attack = rotationGCD.getNext(allBuffs);
                     GCD();
 
-                    nextAttack.addNextAttack("GCD", formulas.getRecast());
-                    nextAttack.addNextAttack("oGCD", 0.7);
+                    nextAttack.addNextAttack(TimerNames.GCD, formulas.getRecast());
+                    nextAttack.addNextAttack(TimerNames.oGCD, 0.7);
                 }
                 break;
-                case "oGCD": {
-                    attack = jobHub.getNextOGCD(timersForRotation, allBuffs, resources);
-                    if (jobHub.getNextOGCD(timersForRotation, allBuffs, resources) != null) {
+                case oGCD: {
+                    attack = rotationoGCD.getNext(allBuffs);
+                    if (attack != null) {
                         oGCD();
 
                     } else checkDelay();
                 }
                 break;
-                case "Auto-Attack": {
-                    type = "Auto-Attack";
-                    damage = damageCalculation.getDamage(0, type, resistance, allBuffs);
+                case AutoAttack: {
+                    TimerNames type = TimerNames.AutoAttack;
+                    damage = damageCalculation.getDamage(0, TypeNames.AutoAttack, resistance, allBuffs);
                     nextAttack.addNextAttack(type, formulas.getAaRecast());
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
                 }
-                case "DoT": {
+                case DoT: {
                     for (DamageOverTime dot : dotsArray) {
                         if (dot.getTime() > 0) {
                             damage = damage + dot.getDamage(jobName);
@@ -172,9 +178,9 @@ public class Simulatorpart {
                             damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getDamage(jobName) * 100) / 100 + " Type: " + dot.getName());
                         }
                     }
-                    nextAttack.addNextAttack("DoT", 3);
+                    nextAttack.addNextAttack(TimerNames.DoT, 3);
                 }
-                case "Buff": {
+                case Buff: {
                     for (BuffBarNames i : buffTargets) {
                         BuffBar bar = allBuffs.getBuffBar(i);
                         damageLog.add(bar.buffRunOut());
@@ -183,7 +189,7 @@ public class Simulatorpart {
                 }
             }
 
-            nextAttack.addNextAttack("Buff", allBuffs.getNextRunOut());
+            nextAttack.addNextAttack(TimerNames.Buff, allBuffs.getNextRunOut());
 
             attackType = nextAttack.getNextAttack();
 
@@ -213,9 +219,9 @@ public class Simulatorpart {
         prevAttack = attack;
         if (skill.getPotency() > 0) {
 
-            damage = damageCalculation.getDamage(skill.getPotency(), skill.getType(), skill.getType2(), allBuffs);
+            damage = damageCalculation.getDamage(skill.getPotency(), skill.getTypes(), skill.getType2s(), allBuffs);
         }
-        if (skill.hasBuff()){
+        if (skill.hasBuff()) {
             BuffBarNames target = buffs.get(skill.getBuff()).getTargetEnum();
             allBuffs.addBuff(target, buffs.get(skill.getBuff()));
         }
@@ -237,10 +243,10 @@ public class Simulatorpart {
 
         if (abilitie.getPotency() > 0) {
 
-            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getType(), abilitie.getType2(), allBuffs);
+            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getTypes(), abilitie.getType2s(), allBuffs);
         }
 
-        if (abilitie.hasBuffs()){
+        if (abilitie.hasBuffs()) {
             BuffBarNames target = buffs.get(abilitie.getBuff()).getTargetEnum();
             allBuffs.addBuff(target, buffs.get(abilitie.getBuff()));
         }
@@ -252,7 +258,7 @@ public class Simulatorpart {
 
     private void checkDelay() {
 
-        nextAttack = jobHub.nextAttack(currentTime, nextAttack, specialType, attack);
+
     }
 
 
@@ -278,9 +284,6 @@ public class Simulatorpart {
         timersForRotation.add(formulas.getRecast());
 
     }
-
-
-
 
 
     private ArrayList<String> loadOpener(String job) {

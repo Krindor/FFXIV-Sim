@@ -1,5 +1,7 @@
 package io.github.krindor.ffxivsimulator.Timers;
 
+import io.github.krindor.ffxivsimulator.Enums.TimerNames;
+
 import java.util.LinkedList;
 
 /**
@@ -15,7 +17,7 @@ public class NextAttack {
     }
 
 
-    public void addNextAttack(String type, double time) {
+    public void addNextAttack(TimerNames type, double time) {
         AttackType attackType = new AttackType(type, time);
         for (AttackType i : timers) {
             if (i.getType().equals(type)) {
