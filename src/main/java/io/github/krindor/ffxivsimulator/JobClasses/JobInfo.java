@@ -5,6 +5,7 @@ import com.jsoniter.JsonIterator;
 import io.github.krindor.ffxivsimulator.Enums.TypeNames;
 import io.github.krindor.ffxivsimulator.JSON.JSONParse;
 import io.github.krindor.ffxivsimulator.JSON.OpeningSequence.ActionObject;
+import io.github.krindor.ffxivsimulator.JSON.Rotation.Rotation;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.ConfigObject;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
@@ -25,8 +26,6 @@ public class JobInfo {
 
     private Job job;
     private int time;
-    private ArrayList<ImageView> CurrentOpener;
-    private boolean openerCalled;
     private boolean machinist = false;
     private boolean dragoon = false;
     private int jobmod;
@@ -34,10 +33,14 @@ public class JobInfo {
     private ActionObject actionObjects;
     private TypeNames resistance;
     private TreeMap<String, Buffs> treeMap;
+    private Rotation rotationGCD;
+    private Rotation rotationOGCD;
 
     public JobInfo(StatModel stats, String jobName, int time, int iterations, ActionObject actionObjects) {
 
-        job = readJSON();
+        job = getSkillInfo(jobName);
+        rotationGCD = getRotationInfo("GCD");
+        rotationOGCD = getRotationInfo("oGCD");
         jobJsonToBuffMap(job);
         this.time = time;
         this.iterations = iterations;
@@ -49,31 +52,30 @@ public class JobInfo {
         this.stats = stats;
     }
 
-    public void setCurentOpener(ArrayList<ImageView> imageViews) {
-        openerCalled = true;
-        CurrentOpener = imageViews;
-    }
-
-    public ArrayList<ImageView> loadCurrentOpener() {
-        if (openerCalled) {
-            return CurrentOpener;
-        } else {
-            CurrentOpener = new ArrayList<>(30);
-            return CurrentOpener;
-        }
-    }
-
-    private Job readJSON() {
+    private Job getSkillInfo(String jobName) {
         JSONParse jsonParse = new JSONParse();
-        JsonIterator iterator = jsonParse.parseJSON("./JSON/Buffs.json");
+        JsonIterator iterator = jsonParse.parseJSON("./JSON/" + jobName + ".json");
         ConfigObject configObject;
         try {
             configObject = iterator.read(ConfigObject.class);
-            for (Job i : configObject.getJob()) {
-                if (i.getName().equals(jobName)) {
-                    return i;
-                }
-            }
+
+            return configObject.getJob()[0];
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private Rotation getRotationInfo(String rotationName) {
+        JSONParse jsonParse = new JSONParse();
+        JsonIterator iterator = jsonParse.parseJSON("./JSON/" + rotationName + ".json");
+        Rotation rotation;
+        try {
+            rotation = iterator.read(Rotation.class);
+            return rotation;
 
 
         } catch (IOException e) {
@@ -93,10 +95,6 @@ public class JobInfo {
 
     public String getJobName() {
         return jobName;
-    }
-
-    protected void setJobName(String jobName) {
-        this.jobName = jobName;
     }
 
     public StatModel getStats() {
@@ -158,5 +156,13 @@ public class JobInfo {
 
     public TreeMap<String, Buffs> getTreeMap() {
         return treeMap;
+    }
+
+    public Rotation getRotationGCD() {
+        return rotationGCD;
+    }
+
+    public Rotation getRotationOGCD() {
+        return rotationOGCD;
     }
 }

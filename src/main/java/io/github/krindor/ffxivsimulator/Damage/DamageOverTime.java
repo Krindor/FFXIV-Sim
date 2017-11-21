@@ -1,5 +1,6 @@
 package io.github.krindor.ffxivsimulator.Damage;
 
+import io.github.krindor.ffxivsimulator.Enums.TypeNames;
 import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
@@ -14,25 +15,25 @@ public class DamageOverTime {
 
     private Formulas formulas;
 
-    private double time;
+    private double duration;
 
     private String name;
 
     private AllBuffs allBuffs;
 
-    public DamageOverTime(int potency, StatModel statModel, int jobmod, String name, AllBuffs allBuffs) {
-        formulas = new Formulas(statModel, jobmod);
+    public DamageOverTime(int potency, StatModel statModel, String name, AllBuffs allBuffs) {
+        formulas = new Formulas(statModel);
         this.potency = potency;
         this.name = name;
         this.allBuffs = allBuffs;
     }
 
-    public double getDamage(String job) {
+    public double getDamage() {
         /*Type1 = All Type2 = Crit */
-        formulas.setCritMultiplier(allBuffs.getMultiplier("All", "Crit"));
+        formulas.setCritMultiplier(allBuffs.getMultiplier(TypeNames.All, TypeNames.Crit));
 
 
-        damage = formulas.getMultiplier() * (potency / 100.0) * allBuffs.getMultiplier("Physical", "All") * formulas.getCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(allBuffs.getMultiplier("All", "Potion"));
+        damage = formulas.getMultiplier() * (potency / 100.0) * allBuffs.getMultiplier(TypeNames.Physical, TypeNames.All) * formulas.getDhCritMultiplier() * formulas.getSSModifier() * formulas.getPotionMultiplier(allBuffs.getMultiplier(TypeNames.All, TypeNames.Potion));
 
 
         return damage;
@@ -42,16 +43,16 @@ public class DamageOverTime {
         return name + " DoT";
     }
 
-    public double getTime() {
-        return time;
+    public double getDuration() {
+        return duration;
     }
 
-    public void setTime(double time) {
-        this.time = time;
+    public void setDuration(double duration) {
+        this.duration = duration;
     }
 
     public void timeChange(double change) {
-        time = time - change;
+        duration = duration - change;
     }
 
 

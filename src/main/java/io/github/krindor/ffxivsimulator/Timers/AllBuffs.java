@@ -65,7 +65,7 @@ public class AllBuffs {
     public double getMultiplier(TypeNames type, TypeNames type2) {
         double multiplier = 1;
 
-        if (type2.equals("Crit")) {
+        if (type2.equals(TypeNames.Crit)) {
             for (BuffBarNames barNames : BuffBarNames.values()) {
                 if (barNames != BuffBarNames.Cooldown) {
                     multiplier += barMultiplier(treeMap.get(barNames), type, type2);
@@ -98,10 +98,10 @@ public class AllBuffs {
         double multiplier = 1;
         for (Map.Entry<String, Buffs> entry : buffBar.getTreeMap().entrySet()) {
             Buffs value = entry.getValue();
-            if ((value.getType().equals(type) && (value.getType2().equals(type2) || value.getType2().equals("All"))) || value.getType().equals("All")) {
-                if (value.getType2().equals("Crit")) {
+            if ((value.getTypes().equals(type) && (value.getType2s().equals(type2) || value.getType2s().equals(TypeNames.All))) || value.getTypes().equals(TypeNames.All)) {
+                if (value.getType2s().equals(TypeNames.Crit)) {
                     multiplier = multiplier + value.getIncrease();
-                } else if (value.getType().equals("Haste")) {
+                } else if (value.getTypes().equals(TypeNames.Haste)) {
                     multiplier = multiplier * (1 - value.getIncrease());
                 } else {
                     multiplier = multiplier * value.getIncrease();

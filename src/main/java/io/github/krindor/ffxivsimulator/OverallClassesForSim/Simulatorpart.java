@@ -15,18 +15,12 @@ import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
 import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
 import io.github.krindor.ffxivsimulator.JobClasses.Resources;
 import io.github.krindor.ffxivsimulator.TextFileLoader;
-import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
-import io.github.krindor.ffxivsimulator.Timers.AttackType;
-import io.github.krindor.ffxivsimulator.Timers.BuffBar;
-import io.github.krindor.ffxivsimulator.Timers.NextAttack;
+import io.github.krindor.ffxivsimulator.Timers.*;
 import io.github.krindor.ffxivsimulator.model.SkillModel;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by andre on 2017-02-08.
@@ -50,20 +44,17 @@ class Simulatorpart {
 
     private double damagePerSecond;
     private String attack;
-    private int potency;
-    private String type2;
-    private String specialType;
+
     private String prevAttack;
     private Rotation rotationGCD;
     private Rotation rotationoGCD;
-    private ArrayList<DamageOverTime> dotsArray;
+    private DoTBar dotBar;
     private NextAttack nextAttack;
-    private ArrayList<Double> timersForRotation;
+
 
 
     private Formulas formulas;
     private TypeNames resistance;
-    private int jobmod;
     private String jobName;
 
     private AllBuffs allBuffs;
@@ -73,7 +64,7 @@ class Simulatorpart {
     private AttackType attackType;
     private double nextGCD;
     private Resources resources;
-    private ArrayList<BuffBarNames> buffTargets;
+
     private DamageCalculation damageCalculation;
 
     private LinkedList<SkillModel> skillModels;
@@ -96,20 +87,17 @@ class Simulatorpart {
         skillModels = new LinkedList<>();
         Collections.addAll(skillModels, jobInfo.getActionObjects().getSkillModel());
 
-        jobmod = jobInfo.getJobmod();
-
+        rotationGCD = jobInfo.getRotationGCD();
+        rotationoGCD = jobInfo.getRotationOGCD();
 
         resources = new Resources();
-        formulas = new Formulas(stats, jobmod);
+        formulas = new Formulas(stats);
         damageCalculation = new DamageCalculation(jobName, formulas);
         nextAttack = new NextAttack();
         resistance = jobInfo.getResistance();
         allBuffs = new AllBuffs();
         nextGCD = 0;
-        buffTargets = new ArrayList<>(3);
-        buffTargets.add(BuffBarNames.Player);
-        buffTargets.add(BuffBarNames.Party);
-        buffTargets.add(BuffBarNames.Target);
+
 
     }
 
@@ -122,7 +110,7 @@ class Simulatorpart {
 
 
             formulas.changeRecast(buffs);
-            setTimersForRotation();
+
             damage = 0;
 
             switch (attackType.getType()) {
@@ -166,22 +154,22 @@ class Simulatorpart {
                 break;
                 case AutoAttack: {
                     TimerNames type = TimerNames.AutoAttack;
-                    damage = damageCalculation.getDamage(0, TypeNames.AutoAttack, resistance, allBuffs);
+                    damage = damageCalculation.getDamage(110, TypeNames.AutoAttack, resistance, allBuffs);
                     nextAttack.addNextAttack(type, formulas.getAaRecast());
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
                 }
                 case DoT: {
-                    for (DamageOverTime dot : dotsArray) {
-                        if (dot.getTime() > 0) {
-                            damage = damage + dot.getDamage(jobName);
+                    for (Map.Entry<String, DamageOverTime> dot : dotBar.getTreeMap().entrySet()) {
 
-                            damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getDamage(jobName) * 100) / 100 + " Type: " + dot.getName());
-                        }
+                            damage = damage + dot.getValue().getDamage();
+
+                            damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getValue().getDamage() * 100) / 100 + " Type: " + dot.getValue().getName());
+
                     }
                     nextAttack.addNextAttack(TimerNames.DoT, 3);
                 }
                 case Buff: {
-                    for (BuffBarNames i : buffTargets) {
+                    for (BuffBarNames i : BuffBarNames.values()) {
                         BuffBar bar = allBuffs.getBuffBar(i);
                         damageLog.add(bar.buffRunOut());
                         allBuffs.setBuffBar(i, bar);
@@ -224,6 +212,11 @@ class Simulatorpart {
         if (skill.hasBuff()) {
             BuffBarNames target = buffs.get(skill.getBuff()).getTargetEnum();
             allBuffs.addBuff(target, buffs.get(skill.getBuff()));
+        }
+
+        if (skill.hasDoT()){
+            DamageOverTime newDoT = new DamageOverTime(skill.getDotPotency(), stats, skill.getName(), allBuffs);
+            dotBar.addDoT(newDoT);
         }
 
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
@@ -269,22 +262,8 @@ class Simulatorpart {
         if (nextGCD < 0) {
             nextGCD = 0;
         }
-        for (DamageOverTime dot : dotsArray) {
-            dot.timeChange(change);
-        }
-
+        dotBar.timeChange(change);
     }
-
-    private void setTimersForRotation() {
-        timersForRotation = new ArrayList<>(4);
-        for (DamageOverTime dot : dotsArray) {
-            timersForRotation.add(dot.getTime());
-        }
-
-        timersForRotation.add(formulas.getRecast());
-
-    }
-
 
     private ArrayList<String> loadOpener(String job) {
 

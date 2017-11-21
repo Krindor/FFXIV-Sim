@@ -25,15 +25,12 @@ public class DamageCalculation {
         damageType = damageTypes;
 
 
-        if (damageType.equals(TypeNames.AutoAttack)) {
-            generalMultiplier = formulas.getAaMultiplier();
-        } else {
-            generalMultiplier = (potency / 100.0) * formulas.getMultiplier() * formulas.getPotionMultiplier(buffs.getMultiplier(TypeNames.All, TypeNames.Potion));
-        }
+        generalMultiplier = Math.floor((potency) * formulas.getMultiplier()) * formulas.getPotionMultiplier(buffs.getMultiplier(TypeNames.All, TypeNames.Potion));
+        formulas.setDirectHitMultiplier(buffs.getMultiplier(TypeNames.All, TypeNames.DirectHit));
         formulas.setCritMultiplier(buffs.getMultiplier(TypeNames.All, TypeNames.Crit));
-        double critMultiplier = formulas.getCritMultiplier();
+        double dhCritMultiplier = formulas.getDhCritMultiplier();
 
-        double damage = generalMultiplier * buffs.getMultiplier(damageType, resistanceType) * critMultiplier;
+        double damage = generalMultiplier * buffs.getMultiplier(damageType, resistanceType) * dhCritMultiplier;
 
         return damage;
     }
