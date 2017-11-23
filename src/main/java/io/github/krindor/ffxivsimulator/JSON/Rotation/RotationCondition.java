@@ -10,6 +10,7 @@ public class RotationCondition {
     private String notBoolean;
     private String type;
     private BuffBarNames buffType;
+    private String comboSkill;
 
     public String getName() {
         return name;
@@ -31,8 +32,11 @@ public class RotationCondition {
         buffType = BuffBarNames.valueOf(type);
     }
 
-    public boolean compare(AllBuffs buffs) {
+    public boolean compare(AllBuffs buffs, String prevAttack) {
         boolean check = false;
+        if (prevAttack.equals("null") && prevAttack.equals(comboSkill)){
+            check = true;
+        }
         if (value != -1) {
             double duration = buffs.getBuff(buffType, name).getDuration();
             switch (compare) {

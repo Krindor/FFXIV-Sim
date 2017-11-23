@@ -4,13 +4,12 @@ package io.github.krindor.ffxivsimulator.Timers;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 
 /**
  * Created by andre on 2017-06-20.
  */
-public class BuffBar extends BarBase<Buffs>{
+public class BuffBar extends BarBase<Buffs> {
 
 
     public void timeChange(double change) {
@@ -56,8 +55,6 @@ public class BuffBar extends BarBase<Buffs>{
         });
 
     }
-
-
 
 
 }

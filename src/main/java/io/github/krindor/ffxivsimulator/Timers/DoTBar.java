@@ -2,11 +2,10 @@ package io.github.krindor.ffxivsimulator.Timers;
 
 import io.github.krindor.ffxivsimulator.Damage.DamageOverTime;
 
-
 import java.util.Map;
-import java.util.TreeMap;
 
-public class DoTBar extends BarBase<DamageOverTime>{
+
+public class DoTBar extends BarBase<DamageOverTime> {
 
 
     public void timeChange(double change) {
@@ -19,11 +18,6 @@ public class DoTBar extends BarBase<DamageOverTime>{
         String damageOverTimeName = damageOverTime.getName();
         return addBuff(damageOverTimeName, damageOverTime);
 
-    }
-
-
-    public TreeMap<String, DamageOverTime> getTreeMap() {
-        return treeMap;
     }
 
     public String buffRunOut() {

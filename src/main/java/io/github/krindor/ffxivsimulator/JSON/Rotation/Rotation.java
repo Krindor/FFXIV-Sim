@@ -14,9 +14,9 @@ public class Rotation {
         rotationList = new LinkedList<>(Arrays.asList(rotationConditionArrays));
     }
 
-    public String getNext(AllBuffs allBuffs) {
+    public String getNext(AllBuffs allBuffs, String prevAttack) {
         for (RotationConditionArray array : rotationList) {
-            if (array.passes(allBuffs)) {
+            if (array.passes(allBuffs, prevAttack)) {
                 return array.getName();
             }
         }

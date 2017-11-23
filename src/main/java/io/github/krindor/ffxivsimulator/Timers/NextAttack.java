@@ -38,7 +38,7 @@ public class NextAttack {
         return timers.removeFirst();
     }
 
-    public double getNextAttack(String type) {
+    public double getNextAttack(TimerNames type) {
 
         for (AttackType i : timers) {
             if (i.getType().equals(type)) {

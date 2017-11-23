@@ -19,9 +19,9 @@ class RotationConditionArray {
         }
     }
 
-    public boolean passes(AllBuffs allBuffs) {
+    public boolean passes(AllBuffs allBuffs, String prevAttack) {
         for (RotationCondition i : rotationConditions) {
-            if (!i.compare(allBuffs)) {
+            if (!i.compare(allBuffs, prevAttack)) {
                 return false;
             }
         }

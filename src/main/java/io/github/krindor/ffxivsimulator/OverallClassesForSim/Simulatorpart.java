@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Created by andre on 2017-02-08.
  */
-class Simulatorpart {
+public class Simulatorpart {
 
 
     private StatModel stats;
@@ -52,15 +52,14 @@ class Simulatorpart {
     private NextAttack nextAttack;
 
 
-
     private Formulas formulas;
     private TypeNames resistance;
     private String jobName;
 
     private AllBuffs allBuffs;
-    private ArrayList<Skills> skills;
+    private final ArrayList<Skills> skills;
     private TreeMap<String, Buffs> buffs;
-    private ArrayList<Abilities> abilities;
+    private final ArrayList<Abilities> abilities;
     private AttackType attackType;
     private double nextGCD;
     private Resources resources;
@@ -81,7 +80,7 @@ class Simulatorpart {
         buffs = jobInfo.getTreeMap();
         abilities = new ArrayList<>(job.getAbilities().length);
         Collections.addAll(skills, job.getSkills());
-
+        dotBar = new DoTBar();
         Collections.addAll(abilities, job.getAbilities());
         currentTime = 0;
         skillModels = new LinkedList<>();
@@ -102,14 +101,14 @@ class Simulatorpart {
     }
 
 
-    public ArrayList<String> runSim(AllBuffs buffs) {
+    public ArrayList<String> runSim() {
 
 
         damageLog = new ArrayList<>(150);
         while (currentTime <= time) {
 
 
-            formulas.changeRecast(buffs);
+            formulas.changeRecast(allBuffs);
 
             damage = 0;
 
@@ -117,39 +116,50 @@ class Simulatorpart {
                 case Opener: {
                     SkillModel skillModel = skillModels.getFirst();
                     attack = skillModel.getName();
+                    if (skillModel.getType().equals("GCD")){
+                        GCD(false);
+                    }else if (skillModel.equals("oGCD")){
+                        oGCD(false);
+                    }
                     double nextTime = 0;
                     if (skillModel.getFixedTime() < 0.7) {
-                        switch (skillModel.getType()) {
+                        switch (skillModels.get(0).getType()) {
                             case "GCD":
                                 nextTime = nextGCD;
-                                nextGCD = formulas.getRecast();
                                 break;
                             case "oGCD":
                                 nextTime = 0.7;
-                                if (nextGCD < 0.7 + skillModel.getOffset()) {
-                                    nextGCD = 0.7 + skillModel.getOffset();
-                                }
+
                                 break;
                         }
                     } else nextTime = skillModel.getFixedTime();
+                    if (skillModel.getType().equals("GCD")){
+                        nextGCD = formulas.getRecast(0, allBuffs);
+                    }else if (skillModel.getType().equals("oGCD")){
+                        if (nextGCD < 0.7 + skillModel.getOffset()) {
+                            nextGCD = 0.7 + skillModel.getOffset();
+                        }
+                    }
                     nextTime = nextTime + skillModel.getOffset();
                     nextAttack.addNextAttack(TimerNames.Opener, nextTime);
                 }
                 break;
                 case GCD: {
-                    attack = rotationGCD.getNext(allBuffs);
-                    GCD();
+                    attack = rotationGCD.getNext(allBuffs, prevAttack);
+                    GCD(true);
 
-                    nextAttack.addNextAttack(TimerNames.GCD, formulas.getRecast());
-                    nextAttack.addNextAttack(TimerNames.oGCD, 0.7);
+
                 }
                 break;
                 case oGCD: {
-                    attack = rotationoGCD.getNext(allBuffs);
+                    attack = rotationoGCD.getNext(allBuffs, prevAttack);
                     if (attack != null) {
-                        oGCD();
+                        oGCD(true);
 
-                    } else checkDelay();
+                    } else {
+                        nextAttack.addNextAttack(TimerNames.oGCD, 0.7);
+                        nextAttack.addNextAttack(TimerNames.GCD, 0.7);
+                    }
                 }
                 break;
                 case AutoAttack: {
@@ -161,9 +171,9 @@ class Simulatorpart {
                 case DoT: {
                     for (Map.Entry<String, DamageOverTime> dot : dotBar.getTreeMap().entrySet()) {
 
-                            damage = damage + dot.getValue().getDamage();
+                        damage = damage + dot.getValue().getDamage();
 
-                            damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getValue().getDamage() * 100) / 100 + " Type: " + dot.getValue().getName());
+                        damageLog.add("[" + currentTime + "] Damage: " + Math.floor(dot.getValue().getDamage() * 100) / 100 + " Type: " + dot.getValue().getName());
 
                     }
                     nextAttack.addNextAttack(TimerNames.DoT, 3);
@@ -195,7 +205,7 @@ class Simulatorpart {
         return damageLog;
     }
 
-    private void GCD() {
+    private void GCD(boolean notOpener) {
         Skills skill = null;
         for (Skills i : skills) {
             if (i.getName().equals(attack)) {
@@ -203,7 +213,9 @@ class Simulatorpart {
                 break;
             }
         }
-
+        if (notOpener) {
+            checkDelay(skill.getDelayOffset(), TimerNames.GCD);
+        }
         prevAttack = attack;
         if (skill.getPotency() > 0) {
 
@@ -214,7 +226,7 @@ class Simulatorpart {
             allBuffs.addBuff(target, buffs.get(skill.getBuff()));
         }
 
-        if (skill.hasDoT()){
+        if (skill.hasDoT()) {
             DamageOverTime newDoT = new DamageOverTime(skill.getDotPotency(), stats, skill.getName(), allBuffs);
             dotBar.addDoT(newDoT);
         }
@@ -222,9 +234,8 @@ class Simulatorpart {
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
     }
 
-    private void oGCD() {
+    private void oGCD(boolean notOpener) {
 
-        checkDelay();
 
         Abilities abilitie = null;
         for (Abilities i : abilities) {
@@ -233,7 +244,9 @@ class Simulatorpart {
                 break;
             }
         }
-
+        if (notOpener) {
+            checkDelay(abilitie.getDelayOffset(), TimerNames.oGCD);
+        }
         if (abilitie.getPotency() > 0) {
 
             damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getTypes(), abilitie.getType2s(), allBuffs);
@@ -249,8 +262,16 @@ class Simulatorpart {
         damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + attack);
     }
 
-    private void checkDelay() {
-
+    private void checkDelay(double offset, TimerNames name) {
+        if (name == TimerNames.GCD){
+            nextAttack.addNextAttack(name, formulas.getRecast(2.5+offset, allBuffs));
+            nextAttack.addNextAttack(TimerNames.oGCD, 0.7);
+        }else if (name == TimerNames.oGCD){
+            if (nextAttack.getNextAttack(TimerNames.GCD)< 0.7+offset){
+                nextAttack.addNextAttack(TimerNames.GCD, 0.7+offset);
+            }
+            nextAttack.addNextAttack(TimerNames.oGCD, 0.7+offset);
+        }
 
     }
 

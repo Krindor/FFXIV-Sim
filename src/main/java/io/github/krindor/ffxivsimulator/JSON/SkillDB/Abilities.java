@@ -16,6 +16,7 @@ public class Abilities {
     private TypeNames type2s;
     private int specialValue;
     private boolean hasBuffs;
+    private double delayOffset;
 
     public boolean hasBuffs() {
         return hasBuffs;
@@ -60,5 +61,9 @@ public class Abilities {
 
     public int getSpecialValue() {
         return specialValue;
+    }
+
+    public double getDelayOffset() {
+        return delayOffset;
     }
 }

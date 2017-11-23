@@ -5,11 +5,11 @@ import java.util.TreeMap;
 public class BarBase<T> {
     protected TreeMap<String, T> treeMap;
 
-    public BarBase(){
+    public BarBase() {
         treeMap = new TreeMap<>();
     }
 
-    public String addBuff(String name, T value){
+    public String addBuff(String name, T value) {
         if (treeMap.containsKey(name)) {
             treeMap.replace(name, value);
             return name + " is refreshed.";

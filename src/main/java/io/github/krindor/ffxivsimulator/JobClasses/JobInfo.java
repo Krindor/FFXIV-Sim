@@ -10,10 +10,8 @@ import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.ConfigObject;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
 import io.github.krindor.ffxivsimulator.model.StatModel;
-import javafx.scene.image.ImageView;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**

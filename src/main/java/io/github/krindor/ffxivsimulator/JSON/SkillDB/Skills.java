@@ -12,7 +12,7 @@ public class Skills {
     private String type2;
     private TypeNames types;
     private TypeNames type2s;
-
+    private double delayOffset;
     private String buff;
     private int buffTime;
     private int dotPotency;
@@ -73,5 +73,7 @@ public class Skills {
         type2s = TypeNames.valueOf(type2);
     }
 
-
+    public double getDelayOffset() {
+        return delayOffset;
+    }
 }
