@@ -25,6 +25,17 @@ public class NextAttack {
             }
         }
         timers.add(attackType);
+        if (type.equals(TimerNames.Cast))
+        for (AttackType i: timers){
+            switch(i.getType()){
+                case AutoAttack: case GCD: case oGCD: case Opener:
+                    if (i.getTime() <= time) {
+                        i.setTime(time);
+                    }
+                    break;
+            }
+
+        }
     }
 
     public void timeChange(double change) {

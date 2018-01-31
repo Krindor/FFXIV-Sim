@@ -19,6 +19,11 @@ public class Skills {
     private int dotTime;
     private boolean hasBuff;
     private boolean hasDoT;
+    private double castTime;
+
+    public double getCastTime() {
+        return castTime;
+    }
 
     public boolean hasBuff() {
         return hasBuff;

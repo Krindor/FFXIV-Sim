@@ -17,6 +17,11 @@ public class Abilities {
     private int specialValue;
     private boolean hasBuffs;
     private double delayOffset;
+    private double castTime;
+
+    public double getCastTime() {
+        return castTime;
+    }
 
     public boolean hasBuffs() {
         return hasBuffs;

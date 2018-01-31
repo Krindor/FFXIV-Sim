@@ -63,13 +63,14 @@ public class Simulatorpart {
     private AttackType attackType;
     private double nextGCD;
     private Resources resources;
-
+    private Skills skill;
     private DamageCalculation damageCalculation;
-
+    private Abilities abilitie;
     private LinkedList<SkillModel> skillModels;
 
     public Simulatorpart(JobInfo jobInfo) {
-
+        abilitie = null;
+        skill = null;
         jobName = jobInfo.getJobName();
         stats = jobInfo.getStats();
         time = jobInfo.getTime();
@@ -85,9 +86,11 @@ public class Simulatorpart {
         currentTime = 0;
         skillModels = new LinkedList<>();
         Collections.addAll(skillModels, jobInfo.getActionObjects().getSkillModel());
-
         rotationGCD = jobInfo.getRotationGCD();
         rotationoGCD = jobInfo.getRotationOGCD();
+
+        rotationGCD.makeArray();
+        rotationoGCD.makeArray();
 
         resources = new Resources();
         formulas = new Formulas(stats);
@@ -107,8 +110,6 @@ public class Simulatorpart {
         damageLog = new ArrayList<>(150);
         while (currentTime <= time) {
 
-
-            formulas.changeRecast(allBuffs);
 
             damage = 0;
 
@@ -165,7 +166,7 @@ public class Simulatorpart {
                 case AutoAttack: {
                     TimerNames type = TimerNames.AutoAttack;
                     damage = damageCalculation.getDamage(110, TypeNames.AutoAttack, resistance, allBuffs);
-                    nextAttack.addNextAttack(type, formulas.getAaRecast());
+                    nextAttack.addNextAttack(type, formulas.getAaRecast(allBuffs));
                     damageLog.add("[" + currentTime + "] Damage: " + Math.floor(damage * 100) / 100 + " Type: " + "Auto Attack");
                 }
                 case DoT: {
@@ -206,7 +207,7 @@ public class Simulatorpart {
     }
 
     private void GCD(boolean notOpener) {
-        Skills skill = null;
+
         for (Skills i : skills) {
             if (i.getName().equals(attack)) {
                 skill = i;
@@ -237,7 +238,7 @@ public class Simulatorpart {
     private void oGCD(boolean notOpener) {
 
 
-        Abilities abilitie = null;
+
         for (Abilities i : abilities) {
             if (i.getName().equals(attack)) {
                 abilitie = i;
@@ -266,11 +267,13 @@ public class Simulatorpart {
         if (name == TimerNames.GCD){
             nextAttack.addNextAttack(name, formulas.getRecast(2.5+offset, allBuffs));
             nextAttack.addNextAttack(TimerNames.oGCD, 0.7);
+            nextAttack.addNextAttack(TimerNames.Cast, skill.getCastTime());
         }else if (name == TimerNames.oGCD){
             if (nextAttack.getNextAttack(TimerNames.GCD)< 0.7+offset){
                 nextAttack.addNextAttack(TimerNames.GCD, 0.7+offset);
             }
             nextAttack.addNextAttack(TimerNames.oGCD, 0.7+offset);
+            nextAttack.addNextAttack(TimerNames.Cast, abilitie.getCastTime());
         }
 
     }

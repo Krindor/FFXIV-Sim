@@ -14,9 +14,9 @@ public class Formulas {
     private double ssModifier;
     private double potionMultiplier;
     private double critDamage;
-    private double aaRecast;
     private double directHitChance;
     private double directHitMultiplier;
+
 
 
     public Formulas(StatModel statModel) {
@@ -32,8 +32,6 @@ public class Formulas {
 
         critDamage = (1000 + Math.floor(200 * (statModel.getCriticalHitRating() - 364) / 2170 + 400)) / 1000;
 
-        aaRecast = Math.floor((2.56) * 100) / 100;
-
         directHitChance = Math.floor(550 * (statModel.getDirectHit() - 364) / 2170) / 1000;
     }
 
@@ -44,18 +42,14 @@ public class Formulas {
         return 1;
     }
 
-    public void changeRecast(AllBuffs buffs) {
+    public double getAaRecast(AllBuffs buffs) {
         double speedChange = buffs.getMultiplier(TypeNames.Haste, TypeNames.All);
-        aaRecast = Math.floor((2.56 * speedChange) * 100) / 100;
+        return Math.floor((2.56 * speedChange) * 100) / 100;
     }
 
     public double getRecast(double recastTime, AllBuffs buffs) {
         double speedChange = buffs.getMultiplier(TypeNames.Haste, TypeNames.All);
         return Math.floor((Math.floor(recastTime * Math.floor(1000 - (((statModel.getSkillSpeed() - 364) * 130)/2170)))/10000) * speedChange)/100;
-    }
-
-    public double getAaRecast() {
-        return aaRecast;
     }
 
     public double getMultiplier() {
