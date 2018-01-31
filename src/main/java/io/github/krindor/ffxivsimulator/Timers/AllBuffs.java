@@ -59,7 +59,18 @@ public class AllBuffs {
     }
 
     public boolean buffExists(BuffBarNames target, String buffName) {
-        return treeMap.get(target).getTreeMap().containsKey(buffName);
+        if (target.equals(BuffBarNames.All)){
+            for (Map.Entry<BuffBarNames, BuffBar> map: treeMap.entrySet()){
+                BuffBarNames key = map.getKey();
+                if (treeMap.get(key).getTreeMap().containsKey(buffName)){
+                    return true;
+                }
+            }
+            return false;
+        }
+        else{
+            return treeMap.get(target).getTreeMap().containsKey(buffName);
+        }
     }
 
     public double getMultiplier(TypeNames type, TypeNames type2) {

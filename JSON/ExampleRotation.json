@@ -1,0 +1,12 @@
+{
+  "name": "Gust Slash",
+  "rotationSkill": [{
+    "name": "Armor Crush",
+    "rotationConditions":[{
+    "name": "Huton",
+    "compare": "<",
+    "value": 8,
+    "type": "Player"
+    }]
+  }]
+}

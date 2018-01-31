@@ -39,6 +39,8 @@ public class JobInfo {
         job = getSkillInfo(jobName);
         rotationGCD = getRotationInfo("GCD");
         rotationOGCD = getRotationInfo("oGCD");
+        rotationGCD.makeTreemap();
+        rotationOGCD.makeTreemap();
         jobJsonToBuffMap(job);
         this.time = time;
         this.iterations = iterations;

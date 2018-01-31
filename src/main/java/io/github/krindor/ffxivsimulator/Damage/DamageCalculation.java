@@ -8,13 +8,13 @@ import io.github.krindor.ffxivsimulator.Timers.AllBuffs;
  */
 public class DamageCalculation {
 
-    private String job;
+
     private Formulas formulas;
 
 
-    public DamageCalculation(String job, Formulas formulas) {
+    public DamageCalculation(Formulas formulas) {
 
-        this.job = job;
+
         this.formulas = formulas;
     }
 

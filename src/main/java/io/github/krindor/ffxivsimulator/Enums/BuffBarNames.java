@@ -1,5 +1,5 @@
 package io.github.krindor.ffxivsimulator.Enums;
 
 public enum BuffBarNames {
-    Player, Party, Target, Cooldown
+    Player, Party, Target, Cooldown, All
 }

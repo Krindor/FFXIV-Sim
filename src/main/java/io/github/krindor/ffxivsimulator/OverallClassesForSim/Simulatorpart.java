@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Created by andre on 2017-02-08.
+ * Primary class for the sim
  */
 public class Simulatorpart {
 
@@ -54,7 +54,6 @@ public class Simulatorpart {
 
     private Formulas formulas;
     private TypeNames resistance;
-    private String jobName;
 
     private AllBuffs allBuffs;
     private final ArrayList<Skills> skills;
@@ -71,7 +70,6 @@ public class Simulatorpart {
     public Simulatorpart(JobInfo jobInfo) {
         abilitie = null;
         skill = null;
-        jobName = jobInfo.getJobName();
         stats = jobInfo.getStats();
         time = jobInfo.getTime();
         resources.setTacticalPoints(1000);
@@ -89,12 +87,10 @@ public class Simulatorpart {
         rotationGCD = jobInfo.getRotationGCD();
         rotationoGCD = jobInfo.getRotationOGCD();
 
-        rotationGCD.makeArray();
-        rotationoGCD.makeArray();
 
         resources = new Resources();
         formulas = new Formulas(stats);
-        damageCalculation = new DamageCalculation(jobName, formulas);
+        damageCalculation = new DamageCalculation(formulas);
         nextAttack = new NextAttack();
         resistance = jobInfo.getResistance();
         allBuffs = new AllBuffs();
@@ -103,7 +99,7 @@ public class Simulatorpart {
 
     }
 
-
+//each time runSim is executed equals one event happening
     public ArrayList<String> runSim() {
 
 
@@ -112,17 +108,21 @@ public class Simulatorpart {
 
 
             damage = 0;
-
+            //Switch to check for the next event
             switch (attackType.getType()) {
+                //handles the opener to overwrite the regular rotation
                 case Opener: {
+                    //gets the next part of the opener
                     SkillModel skillModel = skillModels.getFirst();
                     attack = skillModel.getName();
+                    //checks type to execute the corresponding method
                     if (skillModel.getType().equals("GCD")){
                         GCD(false);
-                    }else if (skillModel.equals("oGCD")){
+                    }else if (skillModel.getType().equals("oGCD")){
                         oGCD(false);
                     }
                     double nextTime = 0;
+                    //For some openers you want to delay skills, this checks if the delay is less than the standard animation lock and then adds the time for the next attack
                     if (skillModel.getFixedTime() < 0.7) {
                         switch (skillModels.get(0).getType()) {
                             case "GCD":
@@ -134,6 +134,7 @@ public class Simulatorpart {
                                 break;
                         }
                     } else nextTime = skillModel.getFixedTime();
+                    //checks for the current recast if GCD or 0.7 if it's an oGCD
                     if (skillModel.getType().equals("GCD")){
                         nextGCD = formulas.getRecast(0, allBuffs);
                     }else if (skillModel.getType().equals("oGCD")){
@@ -145,7 +146,9 @@ public class Simulatorpart {
                     nextAttack.addNextAttack(TimerNames.Opener, nextTime);
                 }
                 break;
+                //The regular rotation checking what the next move is
                 case GCD: {
+                    //gets next skill that matches the conditions in the GCD rotation
                     attack = rotationGCD.getNext(allBuffs, prevAttack);
                     GCD(true);
 
@@ -289,13 +292,7 @@ public class Simulatorpart {
         dotBar.timeChange(change);
     }
 
-    private ArrayList<String> loadOpener(String job) {
 
-        File file = new File("resources.io.github.krindor.ffxivsimulator.Openers." + job);
-        TextFileLoader textFileLoader = new TextFileLoader();
-
-        return textFileLoader.loadText(file);
-    }
 
 
 }
