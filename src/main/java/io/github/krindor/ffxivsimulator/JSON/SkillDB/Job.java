@@ -6,7 +6,7 @@ package io.github.krindor.ffxivsimulator.JSON.SkillDB;
 public class Job {
     private String name;
     private Buffs[] buffs;
-    private Skills[] skills;
+    private Abilities[] skills;
     private Abilities[] abilities;
 
     public void addEnum() {
@@ -17,13 +17,13 @@ public class Job {
             buffs[i] = buffs1;
         }
         for (int i = 0; i < skills.length; i++) {
-            Skills skills1 = skills[i];
-            skills1.stringToEnum();
+            Abilities skills1 = skills[i];
+
             skills[i] = skills1;
         }
         for (int i = 0; i < abilities.length; i++) {
             Abilities abilities1 = abilities[i];
-            abilities1.stringToEnum();
+
             abilities[i] = abilities1;
         }
     }
@@ -36,7 +36,7 @@ public class Job {
         return buffs;
     }
 
-    public Skills[] getSkills() {
+    public Abilities[] getSkills() {
         return skills;
     }
 

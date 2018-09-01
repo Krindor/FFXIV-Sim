@@ -7,19 +7,17 @@ import io.github.krindor.ffxivsimulator.Damage.Formulas;
 import io.github.krindor.ffxivsimulator.Enums.BuffBarNames;
 import io.github.krindor.ffxivsimulator.Enums.TimerNames;
 import io.github.krindor.ffxivsimulator.Enums.TypeNames;
+import io.github.krindor.ffxivsimulator.Interfaces.ISkill;
 import io.github.krindor.ffxivsimulator.JSON.Rotation.Rotation;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Abilities;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Buffs;
 import io.github.krindor.ffxivsimulator.JSON.SkillDB.Job;
-import io.github.krindor.ffxivsimulator.JSON.SkillDB.Skills;
 import io.github.krindor.ffxivsimulator.JobClasses.JobInfo;
 import io.github.krindor.ffxivsimulator.JobClasses.Resources;
-import io.github.krindor.ffxivsimulator.TextFileLoader;
 import io.github.krindor.ffxivsimulator.Timers.*;
 import io.github.krindor.ffxivsimulator.model.SkillModel;
 import io.github.krindor.ffxivsimulator.model.StatModel;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -56,20 +54,19 @@ public class Simulatorpart {
     private TypeNames resistance;
 
     private AllBuffs allBuffs;
-    private final ArrayList<Skills> skills;
+    private final ArrayList<Abilities> skills;
     private TreeMap<String, Buffs> buffs;
     private final ArrayList<Abilities> abilities;
     private AttackType attackType;
     private double nextGCD;
     private Resources resources;
-    private Skills skill;
+    private Abilities skill;
     private DamageCalculation damageCalculation;
     private Abilities abilitie;
     private LinkedList<SkillModel> skillModels;
 
     public Simulatorpart(JobInfo jobInfo) {
-        abilitie = null;
-        skill = null;
+
         stats = jobInfo.getStats();
         time = jobInfo.getTime();
         resources.setTacticalPoints(1000);
@@ -211,7 +208,7 @@ public class Simulatorpart {
 
     private void GCD(boolean notOpener) {
 
-        for (Skills i : skills) {
+        for (Abilities i : skills) {
             if (i.getName().equals(attack)) {
                 skill = i;
                 break;
@@ -223,14 +220,14 @@ public class Simulatorpart {
         prevAttack = attack;
         if (skill.getPotency() > 0) {
 
-            damage = damageCalculation.getDamage(skill.getPotency(), skill.getTypes(), skill.getType2s(), allBuffs);
+            damage = damageCalculation.getDamage(skill.getPotency(), skill.getType(), skill.getType2(), allBuffs);
         }
-        if (skill.hasBuff()) {
+        if (skill.hasBuffs()) {
             BuffBarNames target = buffs.get(skill.getBuff()).getTargetEnum();
             allBuffs.addBuff(target, buffs.get(skill.getBuff()));
         }
 
-        if (skill.hasDoT()) {
+        if (skill.getDotPotency() > 0) {
             DamageOverTime newDoT = new DamageOverTime(skill.getDotPotency(), stats, skill.getName(), allBuffs);
             dotBar.addDoT(newDoT);
         }
@@ -253,7 +250,7 @@ public class Simulatorpart {
         }
         if (abilitie.getPotency() > 0) {
 
-            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getTypes(), abilitie.getType2s(), allBuffs);
+            damage = damageCalculation.getDamage(abilitie.getPotency(), abilitie.getType(), abilitie.getType2(), allBuffs);
         }
 
         if (abilitie.hasBuffs()) {

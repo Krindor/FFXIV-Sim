@@ -10,14 +10,14 @@ public class Abilities {
     private int cooldown;
     private int potency;
     private String buff;
-    private String type;
-    private String type2;
-    private TypeNames types;
-    private TypeNames type2s;
+    private TypeNames type;
+    private TypeNames type2;
     private int specialValue;
     private boolean hasBuffs;
     private double delayOffset;
     private double castTime;
+    private int dotPotency;
+    private int dotTime;
 
     public double getCastTime() {
         return castTime;
@@ -43,25 +43,28 @@ public class Abilities {
         return buff;
     }
 
-    public TypeNames getTypes() {
-        return types;
+    public TypeNames getType() {
+        return type;
     }
 
-    public void setTypes(TypeNames types) {
-        this.types = types;
+    public void setType(TypeNames type) {
+        this.type = type;
     }
 
-    public TypeNames getType2s() {
-        return type2s;
+    public TypeNames getType2() {
+        return type2;
     }
 
-    public void setType2s(TypeNames type2s) {
-        this.type2s = type2s;
+    public void setType2(TypeNames type2) {
+        this.type2 = type2;
     }
 
-    public void stringToEnum() {
-        types = TypeNames.valueOf(type);
-        type2s = TypeNames.valueOf(type2);
+    public int getDotPotency() {
+        return dotPotency;
+    }
+
+    public int getDotTime() {
+        return dotTime;
     }
 
     public int getSpecialValue() {
